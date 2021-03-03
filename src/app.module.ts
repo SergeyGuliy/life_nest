@@ -2,12 +2,14 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './modules/users/user.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
-import { DatabaseModule } from './common/database/database.module';
+// import { DatabaseModule } from './common/database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeormConfig } from './common/database/typeorm-config';
 
 @Module({
   imports: [
     UserModule,
-    DatabaseModule,
+    TypeOrmModule.forRoot(typeormConfig),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),

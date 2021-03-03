@@ -4,6 +4,8 @@ import User from '../../common/database/entities/user.entity';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const phone = require('phone');
 
 @Injectable()
 export default class UserService {
@@ -33,6 +35,7 @@ export default class UserService {
   }
 
   async createPost(post: CreateUserDto) {
+    post.phoneCountryCode = phone(post.phone)[1];
     const newPost = await this.postsRepository.create(post);
     await this.postsRepository.save(newPost);
     return newPost;

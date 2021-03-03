@@ -17,7 +17,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migration-make": "ts-node ./node_modules/typeorm/cli -f ./src/common/database/typeorm-config.ts migration:create -n UserFullName -d src/common/database/migration",
+    "migration-run": "ts-node ./node_modules/typeorm/cli -f ./src/common/database/typeorm-config.ts migration:run -d src/common/database/migration",
+    "migration-migrate": "ts-node ./node_modules/typeorm/cli -f ./src/common/database/typeorm-config.ts migration:run"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
@@ -30,7 +33,10 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dotenv": "^8.2.0",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "pg": "^8.5.1",
+    "phone": "^2.4.21",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
