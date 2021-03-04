@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './modules/users/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 // import { DatabaseModule } from './common/database/database.module';
@@ -8,6 +9,7 @@ import { typeormConfig } from './common/database/typeorm-config';
 
 @Module({
   imports: [
+    AuthModule,
     UserModule,
     TypeOrmModule.forRoot(typeormConfig),
     ConfigModule.forRoot({

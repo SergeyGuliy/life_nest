@@ -1,9 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/createUser.dto';
-import User from '../../common/database/entities/user.entity';
-import { UpdateUserDto } from './dto/updateUser.dto';
+
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { CreateUserDto } from './dto/createUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
+
+import User from '../../common/database/entities/user.entity';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const phone = require('phone');
 
