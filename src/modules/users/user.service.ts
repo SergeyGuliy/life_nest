@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,8 +11,11 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 
-import User from '../../common/database/entities/user.entity';
-
+import User from '../../plugins/database/entities/user.entity';
+import {
+  generatePasswordHash,
+  checkPassword,
+} from '../../plugins/helpers/password-encoder';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const phone = require('phone');
 
@@ -15,40 +23,58 @@ const phone = require('phone');
 export default class UserService {
   constructor(
     @InjectRepository(User)
-    private postsRepository: Repository<User>,
+    private usersRepository: Repository<User>,
   ) {}
-  async getAllPosts() {
-    return await this.postsRepository.find();
+  async getAllUsers() {
+    return await this.usersRepository.find();
   }
 
-  async getPostById(id: number) {
-    const post = await this.postsRepository.findOne(id);
-    if (post) {
-      return post;
+  async getUserById(id: number) {
+    const user = await this.usersRepository.findOne(id);
+    if (user) {
+      return user;
     }
-    throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
-  async replacePost(id: number, post: UpdateUserDto) {
-    await this.postsRepository.update(id, post);
-    const updatedPost = await this.postsRepository.findOne(id);
+  async getUserByEmail(email: string) {
+    return await this.usersRepository.findOne({
+      where: [{ email }],
+    });
+  }
+
+  async getUserByPhone(phone: string) {
+    return await this.usersRepository.findOne({
+      where: [{ phone }],
+    });
+  }
+
+  async getUserByPhoneOrEmail(phone: string, email: string) {
+    return await this.usersRepository.findOne({
+      where: [{ phone }, { email }],
+    });
+  }
+  async editUser(id: number, user: UpdateUserDto) {
+    await this.usersRepository.update(id, user);
+    const updatedPost = await this.usersRepository.findOne(id);
     if (updatedPost) {
       return updatedPost;
     }
-    throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
-  async createPost(post: CreateUserDto) {
-    post.phoneCountryCode = phone(post.phone)[1];
-    const newPost = await this.postsRepository.create(post);
-    await this.postsRepository.save(newPost);
-    return newPost;
+  async createUser(user: CreateUserDto) {
+    user.phoneCountryCode = phone(user.phone)[1];
+    user.password = await generatePasswordHash(user.password);
+    const newUser = await this.usersRepository.create(user);
+    await this.usersRepository.save(newUser);
+    return newUser;
   }
 
-  async deletePost(id: number) {
-    const deleteResponse = await this.postsRepository.delete(id);
+  async deleteUser(id: number) {
+    const deleteResponse = await this.usersRepository.delete(id);
     if (!deleteResponse.affected) {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
   }
 }

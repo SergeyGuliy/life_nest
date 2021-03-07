@@ -6,10 +6,19 @@ import {
   Matches,
 } from 'class-validator';
 const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z]).{8,16}$/;
+const phoneRegex = /^[+][0-9]{1}[(][0-9]{3}[)][ ][0-9]{3}[-][0-9]{3}$/;
 
 export class RegistrationDto {
   @IsEmail()
+  @MinLength(5)
+  @MaxLength(20)
   email: string;
+
+  @IsString()
+  @Matches(phoneRegex, {
+    message: 'phone is invalid. Example: +1(234) 567-890',
+  })
+  phone: string;
 
   @IsString()
   @MinLength(8)

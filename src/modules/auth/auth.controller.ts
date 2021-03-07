@@ -1,19 +1,19 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { RegistrationDto } from './dto/registrationDto';
-import AuthService from './auth.service';
+import { LoginDto } from './dto/loginDto';
+import { LocalStrategy } from './strategies/local.strategy';
 
-console.log(RegistrationDto);
 @Controller('auth')
 export default class AuthController {
-  constructor(private readonly userService: AuthService) {}
+  constructor(private readonly localStrategy: LocalStrategy) {}
 
   @Post('registration')
   registration(@Body() userData: RegistrationDto) {
-    return this.userService.registration(userData);
+    return this.localStrategy.register(userData);
   }
 
   @Post('login')
-  logIn(@Body() userData: RegistrationDto) {
-    return this.userService.login(userData);
+  logIn(@Body() userData: LoginDto) {
+    return this.localStrategy.login(userData);
   }
 }
