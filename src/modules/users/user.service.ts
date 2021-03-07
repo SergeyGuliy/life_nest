@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,12 +7,9 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 
 import { Users } from '../../plugins/database/entities/user.entity';
-import {
-  generatePasswordHash,
-  checkPassword,
-} from '../../plugins/helpers/password-encoder';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const phone = require('phone');
+import { generatePasswordHash } from '../../plugins/helpers/password-encoder';
+
+import * as phone from 'phone';
 
 @Injectable()
 export class UserService {
@@ -25,6 +17,7 @@ export class UserService {
     @InjectRepository(Users)
     private usersRepository: Repository<Users>,
   ) {}
+
   async getAllUsers() {
     return await this.usersRepository.find();
   }
@@ -56,15 +49,17 @@ export class UserService {
   }
   async editUser(id: number, user: UpdateUserDto) {
     await this.usersRepository.update(id, user);
-    const updatedPost = await this.usersRepository.findOne(id);
-    if (updatedPost) {
-      return updatedPost;
+    const updatedUser = await this.usersRepository.findOne(id);
+    if (updatedUser) {
+      return updatedUser;
     }
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
   async createUser(user: CreateUserDto) {
-    user.phoneCountryCode = phone(user.phone)[1];
+    const formattedPhone = phone(user.phone);
+    user.phoneCountryCode = formattedPhone[0];
+    user.country = formattedPhone[1];
     user.password = await generatePasswordHash(user.password);
     const newUser = await this.usersRepository.create(user);
     await this.usersRepository.save(newUser);

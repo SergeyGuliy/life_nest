@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './modules/users/user.module';
+import { SqlHelperModule } from './modules/sql-helper/sql-helper.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
@@ -10,6 +11,7 @@ import { typeormConfig } from './plugins/database/typeorm-config';
   imports: [
     AuthModule,
     UserModule,
+    SqlHelperModule,
     TypeOrmModule.forRoot(typeormConfig),
     ConfigModule.forRoot({
       envFilePath: '.env',
@@ -24,7 +26,5 @@ import { typeormConfig } from './plugins/database/typeorm-config';
       }),
     }),
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

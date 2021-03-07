@@ -19,27 +19,31 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  getAllPosts() {
-    return this.userService.getAllUsers();
+  async getAllUsers() {
+    return await this.userService.getAllUsers();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  getPostById(@Param('id') id: string) {
-    return this.userService.getUserById(Number(id));
+  async getUserById(@Param('id') id: string) {
+    return await this.userService.getUserById(Number(id));
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  async createPost(@Body() post: CreateUserDto) {
-    return this.userService.createUser(post);
+  async createUser(@Body() post: CreateUserDto) {
+    return await this.userService.createUser(post);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
-  async replacePost(@Param('id') id: string, @Body() post: UpdateUserDto) {
-    return this.userService.editUser(Number(id), post);
+  async editUser(@Param('id') id: string, @Body() post: UpdateUserDto) {
+    return await this.userService.editUser(Number(id), post);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async deletePost(@Param('id') id: string) {
-    this.userService.deleteUser(Number(id));
+  async deleteUser(@Param('id') id: string) {
+    return await this.userService.deleteUser(Number(id));
   }
 }

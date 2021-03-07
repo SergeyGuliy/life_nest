@@ -19,10 +19,4 @@ export class CreateUserDto {
   lastName: string;
 
   country: string;
-  //
-  // @IsString()
-  // password: string;
-  //
-  // @IsString()
-  // password: string;
 }
