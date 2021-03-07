@@ -11,7 +11,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 
-import User from '../../plugins/database/entities/user.entity';
+import { Users } from '../../plugins/database/entities/user.entity';
 import {
   generatePasswordHash,
   checkPassword,
@@ -20,10 +20,10 @@ import {
 const phone = require('phone');
 
 @Injectable()
-export default class UserService {
+export class UserService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
   ) {}
   async getAllUsers() {
     return await this.usersRepository.find();

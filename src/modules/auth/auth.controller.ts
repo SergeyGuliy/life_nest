@@ -4,7 +4,7 @@ import { LoginDto } from './dto/loginDto';
 import { LocalStrategy } from './strategies/local.strategy';
 
 @Controller('auth')
-export default class AuthController {
+export class AuthController {
   constructor(private readonly localStrategy: LocalStrategy) {}
 
   @Post('registration')

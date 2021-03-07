@@ -8,13 +8,13 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import UserService from './user.service';
+import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { JwtAuthGuard } from '../auth/jwt/auth.guard';
 
 @Controller('users')
-export default class UserController {
+export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(JwtAuthGuard)
