@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './plugins/database/typeorm-config';
+import { RoomsModule } from './modules/rooms/rooms.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { typeormConfig } from './plugins/database/typeorm-config';
         PORT: Joi.number(),
       }),
     }),
+    RoomsModule,
   ],
 })
 export class AppModule {}
