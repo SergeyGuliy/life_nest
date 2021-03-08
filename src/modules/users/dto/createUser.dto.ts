@@ -9,14 +9,6 @@ export class CreateUserDto {
   @MaxLength(16)
   phone: string;
 
-  phoneCountryCode: string;
-
   @IsString()
   password: string;
-
-  firstName: string;
-
-  lastName: string;
-
-  country: string;
 }

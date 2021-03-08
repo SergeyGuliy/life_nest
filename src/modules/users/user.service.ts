@@ -57,11 +57,16 @@ export class UserService {
   }
 
   async createUser(user: CreateUserDto) {
+    const formattedUser = {
+      phoneCountryCode: '',
+      country: '',
+      ...user,
+    };
     const formattedPhone = phone(user.phone);
-    user.phoneCountryCode = formattedPhone[0];
-    user.country = formattedPhone[1];
-    user.password = await generatePasswordHash(user.password);
-    const newUser = await this.usersRepository.create(user);
+    formattedUser.phoneCountryCode = formattedPhone[0];
+    formattedUser.country = formattedPhone[1];
+    formattedUser.password = await generatePasswordHash(user.password);
+    const newUser = await this.usersRepository.create(formattedUser);
     await this.usersRepository.save(newUser);
     return newUser;
   }
