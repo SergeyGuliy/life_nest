@@ -41,6 +41,15 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Put(':id')
+  async changeUserTheme(
+    @Param('id') id: string,
+    @Body() post: { isDarkTheme: boolean },
+  ) {
+    return await this.userService.changeUserTheme(Number(id), post);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
     return await this.userService.deleteUser(Number(id));

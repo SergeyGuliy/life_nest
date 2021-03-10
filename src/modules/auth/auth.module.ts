@@ -6,7 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserService } from '../users/user.service';
 import { LocalStrategy } from './strategies/local.strategy';
-import { Users } from '../../plugins/database/entities/user.entity';
+import { Users } from '../../plugins/database/entities/users.entity';
 
 @Module({
   imports: [

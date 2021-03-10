@@ -17,23 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return {
-      id: payload.id,
-      email: payload.email,
-      phone: payload.phone,
-      role: payload.role,
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      country: payload.country,
-    };
-  }
-
-  async register(body): Promise<any> {
-    return await this.authService.createUser(body);
-  }
-
-  async login(body): Promise<any> {
-    const user = await this.authService.validateUser(body);
+    const user = await this.authService.validateUser(payload.id);
     if (!user) {
       throw new UnauthorizedException();
     }

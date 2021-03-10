@@ -1,15 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+import * as phone from 'phone';
 
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
-
-import { Users } from '../../plugins/database/entities/user.entity';
+import { Users } from '../../plugins/database/entities/users.entity';
 import { generatePasswordHash } from '../../plugins/helpers/password-encoder';
-
-import * as phone from 'phone';
 
 @Injectable()
 export class UserService {
@@ -19,7 +17,12 @@ export class UserService {
   ) {}
 
   async getAllUsers() {
-    return await this.usersRepository.find();
+    const users = await this.usersRepository.find();
+    users.forEach((user) => {
+      delete user.password;
+      delete user.refreshToken;
+    });
+    return users;
   }
 
   async getUserById(id: number) {
@@ -47,8 +50,18 @@ export class UserService {
       where: [{ phone }, { email }],
     });
   }
+
   async editUser(id: number, user: UpdateUserDto) {
     await this.usersRepository.update(id, user);
+    const updatedUser = await this.usersRepository.findOne(id);
+    if (updatedUser) {
+      return updatedUser;
+    }
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  }
+
+  async changeUserTheme(id: number, { isDarkTheme }) {
+    await this.usersRepository.update(id, isDarkTheme);
     const updatedUser = await this.usersRepository.findOne(id);
     if (updatedUser) {
       return updatedUser;
@@ -76,5 +89,12 @@ export class UserService {
     if (!deleteResponse.affected) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+  }
+
+  async setNewRefreshTokenToUser(userId: number) {
+    await this.usersRepository.update(userId, {
+      refreshToken: uuidv4(),
+    });
+    return this.getUserById(userId);
   }
 }
