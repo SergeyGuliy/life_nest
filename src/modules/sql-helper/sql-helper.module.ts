@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SqlHelperController } from './sql-helper.controller';
 import { SqlHelperService } from './sql-helper.service';
-import { Users } from '../../plugins/database/entities/user.entity';
+import { Users } from '../../plugins/database/entities/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({

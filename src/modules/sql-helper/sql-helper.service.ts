@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Users } from '../../plugins/database/entities/user.entity';
+import { Users } from '../../plugins/database/entities/users.entity';
 
 @Injectable()
 export class SqlHelperService {
