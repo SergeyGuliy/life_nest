@@ -58,7 +58,9 @@ export class AuthService {
     if (!user || !(await this.validatePassword(body.password, user.password))) {
       throw new HttpException('Wrong password or login', HttpStatus.NOT_FOUND);
     } else {
-      const newUser = await this.usersService.setNewRefreshTokenToUser(user.id);
+      const newUser = await this.usersService.setNewRefreshTokenToUser(
+        user.userId,
+      );
       const { password, refreshToken, ...userData } = newUser;
       return {
         userData,
@@ -71,7 +73,9 @@ export class AuthService {
   async refreshToken(userId, oldRefreshToken) {
     const user = await this.usersService.getUserById(userId);
     if (user.refreshToken === oldRefreshToken) {
-      const newUser = await this.usersService.setNewRefreshTokenToUser(user.id);
+      const newUser = await this.usersService.setNewRefreshTokenToUser(
+        user.userId,
+      );
       const { password, refreshToken, ...userData } = newUser;
       return {
         userData,
@@ -79,7 +83,7 @@ export class AuthService {
         accessToken: this.jwtService.sign(userData),
       };
     } else {
-      await this.usersService.setNewRefreshTokenToUser(user.id);
+      await this.usersService.setNewRefreshTokenToUser(user.userId);
       throw new HttpException('Invalid refreshToken', HttpStatus.BAD_REQUEST);
     }
   }

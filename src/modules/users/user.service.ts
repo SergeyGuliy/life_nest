@@ -25,8 +25,8 @@ export class UserService {
     return users;
   }
 
-  async getUserById(id: number) {
-    const user = await this.usersRepository.findOne(id);
+  async getUserById(userId: number) {
+    const user = await this.usersRepository.findOne(userId);
     if (user) {
       return user;
     }
@@ -51,18 +51,18 @@ export class UserService {
     });
   }
 
-  async editUser(id: number, user: UpdateUserDto) {
-    await this.usersRepository.update(id, user);
-    const updatedUser = await this.usersRepository.findOne(id);
+  async editUser(userId: number, user: UpdateUserDto) {
+    await this.usersRepository.update(userId, user);
+    const updatedUser = await this.usersRepository.findOne(userId);
     if (updatedUser) {
       return updatedUser;
     }
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
-  async changeUserTheme(id: number, { isDarkTheme }) {
-    await this.usersRepository.update(id, isDarkTheme);
-    const updatedUser = await this.usersRepository.findOne(id);
+  async changeUserTheme(userId: number, { isDarkTheme }) {
+    await this.usersRepository.update(userId, isDarkTheme);
+    const updatedUser = await this.usersRepository.findOne(userId);
     if (updatedUser) {
       return updatedUser;
     }
@@ -84,8 +84,8 @@ export class UserService {
     return newUser;
   }
 
-  async deleteUser(id: number) {
-    const deleteResponse = await this.usersRepository.delete(id);
+  async deleteUser(userId: number) {
+    const deleteResponse = await this.usersRepository.delete(userId);
     if (!deleteResponse.affected) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }

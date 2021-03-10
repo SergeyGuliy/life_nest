@@ -1,14 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
-
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  GUEST = 'GUEST',
-}
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { UserRole } from './enums';
+import { Rooms } from './rooms.entity';
 
 @Entity()
 export class Users {
   @PrimaryGeneratedColumn()
-  public id: number;
+  public userId: number;
 
   @Column()
   public email: string;
@@ -53,4 +56,8 @@ export class Users {
     default: true,
   })
   public isDarkTheme?: boolean;
+
+  // @OneToOne(() => Rooms, (rooms) => rooms.roomHostId)
+  // @JoinColumn()
+  // public roomHostId: string;
 }

@@ -23,9 +23,9 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  async getUserById(@Param('id') id: string) {
-    return await this.userService.getUserById(Number(id));
+  @Get(':userId')
+  async getUserById(@Param('userId') userId: string) {
+    return await this.userService.getUserById(Number(userId));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -35,23 +35,23 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':id')
-  async editUser(@Param('id') id: string, @Body() post: UpdateUserDto) {
-    return await this.userService.editUser(Number(id), post);
+  @Put(':userId')
+  async editUser(@Param('userId') userId: string, @Body() post: UpdateUserDto) {
+    return await this.userService.editUser(Number(userId), post);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':id')
+  @Put(':userId')
   async changeUserTheme(
-    @Param('id') id: string,
+    @Param('userId') userId: string,
     @Body() post: { isDarkTheme: boolean },
   ) {
-    return await this.userService.changeUserTheme(Number(id), post);
+    return await this.userService.changeUserTheme(Number(userId), post);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  async deleteUser(@Param('id') id: string) {
-    return await this.userService.deleteUser(Number(id));
+  @Delete(':userId')
+  async deleteUser(@Param('userId') userId: string) {
+    return await this.userService.deleteUser(Number(userId));
   }
 }

@@ -1,38 +1,36 @@
-import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
-
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  GUEST = 'GUEST',
-}
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { RoomTypes } from './enums';
+import { Users } from './users.entity';
 
 @Entity()
-export class Users {
+export class Rooms {
   @PrimaryGeneratedColumn()
-  public id: number;
+  public roomId: number;
 
   @Column()
   public email: string;
 
   @Column()
-  public phone: string;
+  public isPublic: boolean;
 
-  // @Column()
-  // public phoneCountryCode: string;
+  @Column()
+  public roomPassword: string;
 
   @Column()
   public password: string;
 
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.GUEST,
-  })
-  public role: UserRole;
+  @Column()
+  public role: RoomTypes;
 
-  @Column({
-    default: null,
-  })
-  public firstName: string;
+  // @OneToOne(() => Users, (users) => users.userId)
+  // @JoinColumn()
+  // public roomHostId: string;
 
   @Column({
     default: null,
