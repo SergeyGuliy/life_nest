@@ -7,12 +7,10 @@ import * as Joi from '@hapi/joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './plugins/database/typeorm-config';
 import { RoomsModule } from './modules/rooms/rooms.module';
+import { WebSocketModule } from './modules/web-socket/web-socket.module';
 
 @Module({
   imports: [
-    AuthModule,
-    UserModule,
-    SqlHelperModule,
     TypeOrmModule.forRoot(typeormConfig),
     ConfigModule.forRoot({
       envFilePath: '.env',
@@ -27,6 +25,10 @@ import { RoomsModule } from './modules/rooms/rooms.module';
       }),
     }),
     RoomsModule,
+    WebSocketModule,
+    AuthModule,
+    UserModule,
+    SqlHelperModule,
   ],
 })
 export class AppModule {}

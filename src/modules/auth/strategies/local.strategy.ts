@@ -24,7 +24,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       clearTimeout(timeoutsList[payload.userId]);
     }
     timeoutsList[payload.userId] = setTimeout(function () {
-      console.log('LogOut');
+      // console.log('LogOut');
     }, 5000);
     if (!user) {
       throw new UnauthorizedException();
