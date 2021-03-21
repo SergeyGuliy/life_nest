@@ -6,8 +6,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { AuthService } from '../auth.service';
 
-const timeoutsList = {};
-
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
@@ -20,12 +18,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     const user = await this.authService.validateUser(payload.userId);
-    if (timeoutsList[payload.userId]) {
-      clearTimeout(timeoutsList[payload.userId]);
-    }
-    timeoutsList[payload.userId] = setTimeout(function () {
-      // console.log('LogOut');
-    }, 5000);
     if (!user) {
       throw new UnauthorizedException();
     }

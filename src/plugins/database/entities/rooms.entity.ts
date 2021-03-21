@@ -5,40 +5,38 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
+import { BaseEntity } from './base.entity';
+
 import { RoomTypes } from './enums';
 import { Users } from './users.entity';
 
 @Entity()
-export class Rooms {
+export class Rooms extends BaseEntity {
   @PrimaryGeneratedColumn()
   public roomId: number;
 
   @Column()
-  public email: string;
-
-  @Column()
-  public isPublic: boolean;
+  public roomName: string;
 
   @Column()
   public roomPassword: string;
 
-  @Column()
-  public password: string;
+  @Column({
+    type: 'enum',
+    enum: RoomTypes,
+  })
+  public typeOfRoom: RoomTypes;
 
   @Column()
-  public role: RoomTypes;
+  public minCountOfUsers: number;
+
+  @Column()
+  public maxCountOfUsers: number;
+
+  @OneToOne((type) => Users, (user) => user.createdRoomId)
+  public creatorId: Users;
 
   // @OneToOne(() => Users, (users) => users.userId)
   // @JoinColumn()
   // public roomHostId: string;
-
-  @Column({
-    default: null,
-  })
-  public lastName: string;
-
-  @Column({
-    default: null,
-  })
-  public country: string;
 }

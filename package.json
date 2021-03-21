@@ -16,11 +16,13 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
+    "docker-compose": "docker-compose up",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migration-make": "ts-node ./node_modules/typeorm/cli -f src/plugins/database/typeorm-config.ts migration:create -n UserFullName -d src/common/database/migration",
     "migration-run": "ts-node ./node_modules/typeorm/cli -f src/plugins/database/typeorm-config.ts migration:run -d src/common/database/migration",
-    "migration-migrate": "ts-node ./node_modules/typeorm/cli -f src/plugins/database/typeorm-config.ts migration:run"
+    "migration-migrate": "ts-node ./node_modules/typeorm/cli -f src/plugins/database/typeorm-config.ts migration:run",
+    "starDb": "docker-compose up"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",

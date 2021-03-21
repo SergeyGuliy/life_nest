@@ -4,6 +4,6 @@ export enum UserRole {
 }
 
 export enum RoomTypes {
-  ADMIN = 'ADMIN',
-  GUEST = 'GUEST',
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE',
 }

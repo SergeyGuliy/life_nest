@@ -36,7 +36,9 @@ export class AuthService {
       return {
         userData,
         refreshToken,
-        accessToken: this.jwtService.sign(userData),
+        accessToken: this.jwtService.sign({
+          userId: userData.userId,
+        }),
       };
     }
   }
@@ -44,7 +46,7 @@ export class AuthService {
   async validateUser(userId): Promise<any> {
     const user = await this.usersService.getUserById(userId);
     if (user) {
-      const { password, ...result } = user;
+      const { password, refreshToken, ...result } = user;
       return result;
     }
     return null;
@@ -65,7 +67,9 @@ export class AuthService {
       return {
         userData,
         refreshToken,
-        accessToken: this.jwtService.sign(userData),
+        accessToken: this.jwtService.sign({
+          userId: userData.userId,
+        }),
       };
     }
   }
@@ -80,7 +84,9 @@ export class AuthService {
       return {
         userData,
         refreshToken,
-        accessToken: this.jwtService.sign(userData),
+        accessToken: this.jwtService.sign({
+          userId: userData.userId,
+        }),
       };
     } else {
       await this.usersService.setNewRefreshTokenToUser(user.userId);

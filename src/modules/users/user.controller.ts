@@ -30,23 +30,23 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createUser(@Body() post) {
-    return await this.userService.createUser(post);
+  async createUser(@Body() user) {
+    return await this.userService.createUser(user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put(':userId')
-  async editUser(@Param('userId') userId: string, @Body() post: UpdateUserDto) {
-    return await this.userService.editUser(Number(userId), post);
+  async editUser(@Param('userId') userId: string, @Body() user: UpdateUserDto) {
+    return await this.userService.editUser(Number(userId), user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put(':userId')
   async changeUserTheme(
     @Param('userId') userId: string,
-    @Body() post: { isDarkTheme: boolean },
+    @Body() user: { isDarkTheme: boolean },
   ) {
-    return await this.userService.changeUserTheme(Number(userId), post);
+    return await this.userService.changeUserTheme(Number(userId), user);
   }
 
   @UseGuards(JwtAuthGuard)

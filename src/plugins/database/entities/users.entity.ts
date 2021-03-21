@@ -7,9 +7,10 @@ import {
 } from 'typeorm';
 import { UserRole } from './enums';
 import { Rooms } from './rooms.entity';
+import { BaseEntity } from './base.entity';
 
 @Entity()
-export class Users {
+export class Users extends BaseEntity {
   @PrimaryGeneratedColumn()
   public userId: number;
 
@@ -56,6 +57,10 @@ export class Users {
     default: true,
   })
   public isDarkTheme?: boolean;
+
+  @OneToOne((type) => Rooms, (room) => room.creatorId)
+  @JoinColumn()
+  public createdRoomId: Rooms;
 
   // @OneToOne(() => Rooms, (rooms) => rooms.roomHostId)
   // @JoinColumn()

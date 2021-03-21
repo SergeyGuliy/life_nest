@@ -18,5 +18,6 @@ import { Users } from '../../plugins/database/entities/users.entity';
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, LocalStrategy],
+  exports: [AuthService, UserService, LocalStrategy],
 })
 export class AuthModule {}
