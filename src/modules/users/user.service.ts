@@ -79,8 +79,8 @@ export class UserService {
     formattedUser.phoneCountryCode = formattedPhone[0];
     formattedUser.country = formattedPhone[1];
     formattedUser.password = await generatePasswordHash(user.password);
-    const newUser = await this.usersRepository.create(formattedUser);
-    await this.usersRepository.save(newUser);
+    const newUser = await this.usersRepository.save(formattedUser);
+    // await this.usersRepository.save(newUser);
     return newUser;
   }
 

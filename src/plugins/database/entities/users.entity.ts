@@ -3,13 +3,14 @@ import {
   Entity,
   JoinColumn,
   OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserRole } from './enums';
 import { Rooms } from './rooms.entity';
 import { BaseEntity } from './base.entity';
 
-@Entity()
+@Entity('users')
 export class Users extends BaseEntity {
   @PrimaryGeneratedColumn()
   public userId: number;
@@ -58,11 +59,25 @@ export class Users extends BaseEntity {
   })
   public isDarkTheme?: boolean;
 
-  @OneToOne((type) => Rooms, (room) => room.creatorId)
-  @JoinColumn()
-  public createdRoomId: Rooms;
+  // @OneToOne((type) => Rooms, (room) => room.creatorId)
+  // @JoinColumn()
+  // public createdRoomId: Rooms;
 
+  @Column({
+    default: null,
+  })
+  public createdRoomId: null | number;
   // @OneToOne(() => Rooms, (rooms) => rooms.roomHostId)
   // @JoinColumn()
-  // public roomHostId: string;
+  // public createdRoomId: Rooms;
+
+  // @ManyToOne(() => Rooms, (rooms: Rooms) => rooms.usersInRoomsId, {
+  //   onDelete: 'SET NULL',
+  // })
+  // public roomJoinedId: Rooms;
+
+  @Column({
+    default: null,
+  })
+  public roomJoinedId: null | number;
 }

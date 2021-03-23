@@ -8,8 +8,9 @@ import {
   Body,
   Head,
   Header,
+  Query,
   Headers,
-  UseGuards,
+  UseGuards, Patch,
 } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { JwtAuthGuard } from '../auth/jwt/auth.guard';
@@ -25,25 +26,32 @@ export class RoomsController {
     private readonly localStrategy: LocalStrategy,
   ) {}
 
-  @Post()
+  @Post('create')
   async createRoom(
     @Body() roomData: CreateRoomDto,
     @Headers() header: any,
     @User() user: any,
   ) {
-    return await this.roomsService.createRoom({
-      ...roomData,
-      creatorId: user.userId,
-    });
+    return await this.roomsService.createRoom(user.userId, roomData);
   }
 
   @Get()
-  async getRooms() {
-    return await this.roomsService.getRooms();
+  async getRooms(@Query() query) {
+    return await this.roomsService.getRooms(query);
   }
 
   @Get(':roomId')
   async getRoomById(@Param('roomId') roomId: string) {
     return await this.roomsService.getRoomById(roomId);
+  }
+
+  @Delete(':roomId')
+  async deleteRoom(@Param('roomId') roomId: string) {
+    return await this.roomsService.deleteRoom(roomId);
+  }
+
+  @Patch('leave')
+  async leaveRoom(@User() user: any) {
+    return await this.roomsService.leaveRoom(user);
   }
 }

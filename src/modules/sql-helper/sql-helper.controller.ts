@@ -7,8 +7,14 @@ export class SqlHelperController {
   constructor(private readonly sqlHelperService: SqlHelperService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Delete()
+  @Delete('users')
   async deleteAllUser() {
     return await this.sqlHelperService.deleteAllUser();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('rooms')
+  async deleteAllRooms() {
+    return await this.sqlHelperService.deleteAllRooms();
   }
 }
