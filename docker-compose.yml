@@ -1,7 +1,7 @@
 version: "3"
 services:
   postgres:
-    container_name: life_postgres
+    container_name: life_postgres_local
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -15,7 +15,7 @@ services:
   pgadmin:
     links:
       - postgres:postgres
-    container_name: life_pgadmin
+    container_name: life_pgadmin_local
     image: dpage/pgadmin4
     ports:
       - "9000:80"

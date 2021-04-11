@@ -8,6 +8,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './plugins/database/typeorm-config';
 import { RoomsModule } from './modules/rooms/rooms.module';
 import { WebSocketModule } from './modules/web-socket/web-socket.module';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -30,5 +32,7 @@ import { WebSocketModule } from './modules/web-socket/web-socket.module';
     UserModule,
     SqlHelperModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
