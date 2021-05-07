@@ -7,7 +7,7 @@ import * as Joi from '@hapi/joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './plugins/database/typeorm-config';
 import { RoomsModule } from './modules/rooms/rooms.module';
-import { WebSocketModule } from './modules/web-socket/web-socket.module';
+import { ChatsModule } from './modules/chats/chats.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
 
@@ -27,7 +27,7 @@ import { AppController } from './app.controller';
       }),
     }),
     RoomsModule,
-    WebSocketModule,
+    ChatsModule,
     AuthModule,
     UserModule,
     SqlHelperModule,

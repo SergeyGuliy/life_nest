@@ -27,6 +27,11 @@ export class RoomsSocketGateway
       roomData,
     });
   }
+  //
+  // @SubscribeMessage('userConnectsRoom')
+  // public userConnectsRoom(client: Socket, data) {
+  //   console.log(data);
+  // }
 
   @SubscribeMessage('subscribeRoomsUpdate')
   public subscribeRoomsUpdate(client: Socket): void {

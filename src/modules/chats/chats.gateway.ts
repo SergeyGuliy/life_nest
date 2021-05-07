@@ -5,17 +5,17 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  MessageBody,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-// import { Server } from 'ws';
+import { ChatsService } from './chats.service';
 
 @WebSocketGateway()
-export class CustomSocketGateway
+export class ChatsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private chatService: ChatsService) {}
+
   @WebSocketServer() server: Server;
-  // @WebSocketServer() socket: Socket;
   private logger: Logger = new Logger('MessageGateway');
 
   @SubscribeMessage('msgToServer')
@@ -39,6 +39,7 @@ export class CustomSocketGateway
 
   @SubscribeMessage('messageToServer')
   public messageToServer(client: Socket, payload): void {
+    this.chatService.saveMessage(payload);
     this.sendMessageToClient(payload.target, payload.messageData);
     // client.leave(room);
     // client.emit('leftRoom', room);
@@ -46,19 +47,14 @@ export class CustomSocketGateway
 
   public handleConnection(client: Socket): void {
     client.emit('connected', client.id);
-    // this.eventEmitter();
     client.join('global');
-    // this.logger.warn(`Client connected: ${client.id}`);
   }
 
   public handleDisconnect(client: Socket): void {
     client.leave('global');
-    // this.logger.warn(`Client disconnected: ${client.id}`);
   }
 
-  public afterInit(client: Server): void {
-    // this.logger.warn('Init websocket connection.');
-  }
+  public afterInit(client: Server): void {}
 
   public sendMessageToClient(room, messageData): void {
     // this.socket.to('roomList').emit('connected', data);
