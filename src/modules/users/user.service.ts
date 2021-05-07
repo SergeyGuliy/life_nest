@@ -51,6 +51,35 @@ export class UserService {
     });
   }
 
+  async getUserByQuery(query) {
+    const userData = await this.usersRepository.findOne(query);
+    if (userData) {
+      const {
+        password,
+        refreshToken,
+        createdAt,
+        updatedAt,
+        ...userDataCropped
+      } = userData;
+      return userDataCropped;
+    }
+    return userData;
+  }
+
+  async getUsersByQuery(query) {
+    const users = await this.usersRepository.find(query);
+    return users.map((user) => {
+      const {
+        password,
+        refreshToken,
+        createdAt,
+        updatedAt,
+        ...userData
+      } = user;
+      return userData;
+    });
+  }
+
   async editUser(userId: number, user: UpdateUserDto) {
     await this.usersRepository.update(userId, user);
     const updatedUser = await this.usersRepository.findOne(userId);
@@ -58,6 +87,10 @@ export class UserService {
       return updatedUser;
     }
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  }
+
+  async updateUser(userId: number, newUserData: UpdateUserDto) {
+    await this.usersRepository.update(userId, newUserData);
   }
 
   async changeUserTheme(userId: number, { isDarkTheme }) {

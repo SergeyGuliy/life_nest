@@ -8,6 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import { UserService } from '../users/user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { Users } from '../../plugins/database/entities/users.entity';
+import { RoomsSocketGateway } from './rooms.gateway';
 
 @Module({
   imports: [
@@ -18,6 +19,12 @@ import { Users } from '../../plugins/database/entities/users.entity';
     }),
   ],
   controllers: [RoomsController],
-  providers: [RoomsService, LocalStrategy, AuthService, UserService],
+  providers: [
+    RoomsService,
+    LocalStrategy,
+    AuthService,
+    UserService,
+    RoomsSocketGateway,
+  ],
 })
 export class RoomsModule {}

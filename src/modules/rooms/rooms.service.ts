@@ -2,41 +2,19 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Rooms } from '../../plugins/database/entities/rooms.entity';
 import { Repository } from 'typeorm';
-import { Users } from '../../plugins/database/entities/users.entity';
+import { RoomsSocketGateway } from './rooms.gateway';
+import { UserService } from '../users/user.service';
+import { random } from 'lodash';
+import { log } from 'util';
 
 @Injectable()
 export class RoomsService {
   constructor(
     @InjectRepository(Rooms)
     private roomsRepository: Repository<Rooms>,
-    @InjectRepository(Users)
-    private userRepository: Repository<Users>,
+    private roomsSocketGateway: RoomsSocketGateway,
+    private userService: UserService,
   ) {}
-
-  async createRoom(creatorId, roomData) {
-    const newRoom = await this.roomsRepository.save({
-      ...roomData,
-      creatorId,
-      roomJoinedId: creatorId,
-    });
-    await this.userRepository.update(creatorId, {
-      createdRoomId: newRoom.roomId,
-      roomJoinedId: newRoom.roomId,
-    });
-    const updatedUser = await this.userRepository.findOne({
-      where: {
-        userId: creatorId,
-      },
-    });
-    // console.log(updatedUser);
-
-    // console.log(await this.getUsersInRoom(newRoom.roomId));
-    return newRoom;
-  }
-
-  async getUsersInRoom(roomId) {
-    return await this.userRepository.find({ where: { roomJoinedId: roomId } });
-  }
 
   async getRooms(query) {
     if (query.typeOfRoom?.length) {
@@ -49,58 +27,174 @@ export class RoomsService {
         }
         return newI;
       });
-      return await this.roomsRepository.find({
+      const rooms = await this.roomsRepository.find({
         where,
       });
+      const roomsWIthUsers = await Promise.all(
+        rooms.map(async (room) => {
+          return {
+            ...room,
+            usersInRoom: await this.userService.getUsersByQuery({
+              where: {
+                roomJoinedId: room.roomId,
+              },
+            }),
+          };
+        }),
+      );
+      return roomsWIthUsers;
     } else {
       return [];
     }
   }
 
+  async getRoomDataById(query) {
+    return await this.roomsRepository.findOne(query);
+  }
+
   async getRoomById(roomId) {
-    const usersInRoom = await this.userRepository.find({
+    const usersInRoom = await this.userService.getUsersByQuery({
       where: { roomJoinedId: roomId },
     });
-    const roomData = await this.roomsRepository.findOne({
+    const creator = await this.userService.getUserByQuery({
+      where: { createdRoomId: roomId },
+    });
+    const { roomPassword, ...roomData } = await this.getRoomDataById({
       where: { roomId },
     });
     return {
       ...roomData,
-      usersInRoom: usersInRoom.map((user) => {
-        const { password, refreshToken, ...userData } = user;
-        return userData;
-      }),
+      usersInRoom,
+      creator,
     };
   }
 
-  async deleteRoom(roomId) {
-    return await this.roomsRepository.delete(roomId);
+  async createRoom(creatorId, roomData) {
+    const newRoom = await this.roomsRepository.save({
+      ...roomData,
+      creatorId,
+      roomJoinedId: creatorId,
+    });
+    await this.userService.updateUser(creatorId, {
+      createdRoomId: newRoom.roomId,
+      roomJoinedId: newRoom.roomId,
+    });
+    const usersInRoom = await this.userService.getUsersByQuery({
+      where: { roomJoinedId: newRoom.roomId },
+    });
+    this.roomsSocketGateway.roomInListCreated({ ...newRoom, usersInRoom });
+    return newRoom;
   }
 
-  async leaveRoom(user) {
-    const { roomJoinedId, userId } = user;
-    await this.userRepository.update(userId, {
-      createdRoomId: null,
-      roomJoinedId: null,
+  async joinRoom(userId: number, roomId: number, roomPassword: string) {
+    const roomData = await this.getRoomDataById({
+      where: { roomId },
     });
+    passwordValidation(roomData, roomPassword);
 
-    const newUserData = await this.userRepository.findOne({
+    let usersInRoom = await this.userService.getUsersByQuery({
+      where: { roomJoinedId: roomId },
+    });
+    countOfUsersValidation(usersInRoom.length, roomData.maxCountOfUsers);
+
+    await this.userService.updateUser(userId, {
+      createdRoomId: null,
+      roomJoinedId: roomId,
+    });
+    usersInRoom = await this.userService.getUsersByQuery({
+      where: { roomJoinedId: roomId },
+    });
+    this.roomsSocketGateway.roomInListUpdated(roomId, {
+      ...roomData,
+      usersInRoom,
+    });
+    return await this.userService.getUserByQuery({
       where: {
         userId,
       },
     });
-    await this.checkIsUsersInRoom(roomJoinedId);
+  }
+
+  async leaveRoom(user) {
+    const { roomJoinedId, createdRoomId, userId } = user;
+
+    await this.userService.updateUser(userId, {
+      createdRoomId: null,
+      roomJoinedId: null,
+    });
+    const newUserData = await this.userService.getUserByQuery({
+      where: {
+        userId,
+      },
+    });
+    const roomData = await this.getRoomDataById({
+      where: { roomId: roomJoinedId },
+    });
+
+    await this.setNewAdminOrDelete(roomJoinedId, createdRoomId, roomData);
     return newUserData;
   }
 
-  async checkIsUsersInRoom(roomId) {
-    const usersInRoom = await this.userRepository.find({
+  async setNewAdminOrDelete(
+    roomJoinedId: number,
+    createdRoomId: number,
+    roomData,
+  ) {
+    const usersInRoom = await this.userService.getUsersByQuery({
       where: {
-        roomJoinedId: roomId,
+        roomJoinedId,
       },
     });
     if (!usersInRoom.length) {
-      this.deleteRoom(roomId);
+      await this.deleteRoom(roomJoinedId);
+    } else {
+      await this.setNewAdmin(
+        createdRoomId,
+        roomJoinedId,
+        usersInRoom,
+        roomData,
+      );
     }
+  }
+
+  async setNewAdmin(
+    createdRoomId: number,
+    roomJoinedId: number,
+    usersInRoom,
+    roomData,
+  ) {
+    this.roomsSocketGateway.roomInListUpdated(roomJoinedId, {
+      ...roomData,
+      usersInRoom,
+    });
+    if (createdRoomId === roomJoinedId) {
+      const indexOfNewAdmin =
+        usersInRoom[random(usersInRoom.length - 1)].userId;
+      await this.userService.updateUser(indexOfNewAdmin, {
+        createdRoomId: roomJoinedId,
+      });
+    }
+  }
+
+  async kickUserFromRoom() {}
+
+  async deleteRoom(roomId) {
+    this.roomsSocketGateway.roomInListDeleted(roomId);
+    return await this.roomsRepository.delete(roomId);
+  }
+}
+
+function passwordValidation(roomData, roomPassword) {
+  if (
+    roomData.typeOfRoom === 'PRIVATE' &&
+    roomData.roomPassword !== roomPassword
+  ) {
+    throw new HttpException('Wrong room password', HttpStatus.BAD_REQUEST);
+  }
+}
+
+function countOfUsersValidation(usersInRoomLength, maxCountOfUsers) {
+  if (usersInRoomLength > maxCountOfUsers) {
+    throw new HttpException('Room already full', HttpStatus.BAD_REQUEST);
   }
 }
