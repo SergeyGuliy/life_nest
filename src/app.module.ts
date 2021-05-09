@@ -10,6 +10,7 @@ import { RoomsModule } from './modules/rooms/rooms.module';
 import { ChatsModule } from './modules/chats/chats.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { WebSocketModule } from './modules/web-socket/web-socket.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AppController } from './app.controller';
     ChatsModule,
     AuthModule,
     UserModule,
+    WebSocketModule,
     SqlHelperModule,
   ],
   controllers: [AppController],
