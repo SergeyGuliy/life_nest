@@ -1,13 +1,6 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { UserRole } from './enums';
-import { Rooms } from './rooms.entity';
+import { Messages } from './messages.entity';
 import { BaseEntity } from './base.entity';
 
 @Entity('users')
@@ -20,9 +13,6 @@ export class Users extends BaseEntity {
 
   @Column()
   public phone: string;
-
-  // @Column()
-  // public phoneCountryCode: string;
 
   @Column()
   public password: string;
@@ -59,25 +49,21 @@ export class Users extends BaseEntity {
   })
   public isDarkTheme?: boolean;
 
-  // @OneToOne((type) => Rooms, (room) => room.creatorId)
-  // @JoinColumn()
-  // public createdRoomId: Rooms;
-
   @Column({
     default: null,
   })
   public createdRoomId: null | number;
-  // @OneToOne(() => Rooms, (rooms) => rooms.roomHostId)
-  // @JoinColumn()
-  // public createdRoomId: Rooms;
 
-  // @ManyToOne(() => Rooms, (rooms: Rooms) => rooms.usersInRoomsId, {
-  //   onDelete: 'SET NULL',
-  // })
-  // public roomJoinedId: Rooms;
+  @OneToMany(() => Messages, (message) => message.messageSender)
+  public messages: Messages[];
 
   @Column({
     default: null,
   })
   public roomJoinedId: null | number;
+
+  constructor(partial: Partial<Users>) {
+    super();
+    Object.assign(this, partial);
+  }
 }

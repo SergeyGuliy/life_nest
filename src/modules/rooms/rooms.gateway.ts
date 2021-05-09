@@ -7,6 +7,7 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
+import { MessageReceiverTypes } from '../../plugins/database/entities/enums';
 
 @WebSocketGateway()
 export class RoomsSocketGateway
@@ -27,11 +28,12 @@ export class RoomsSocketGateway
       roomData,
     });
   }
-  //
-  // @SubscribeMessage('userConnectsRoom')
-  // public userConnectsRoom(client: Socket, data) {
-  //   console.log(data);
-  // }
+
+  @SubscribeMessage('userConnectsRoom')
+  public userConnectsRoom(client: Socket, data) {
+    client.join(`${MessageReceiverTypes.ROOM}-${data.roomId}`);
+    client.emit('joinRoom', data.roomId);
+  }
 
   @SubscribeMessage('subscribeRoomsUpdate')
   public subscribeRoomsUpdate(client: Socket): void {
@@ -43,6 +45,10 @@ export class RoomsSocketGateway
   public unSubscribeRoomsUpdate(client: Socket): void {
     client.leave('RoomsUpdater');
     // console.log(this.server.sockets.adapter.rooms.get('RoomsUpdater'));
+  }
+
+  public leaveRoom(userId): void {
+    this.server.to(userId).emit('leaveRoom');
   }
 
   public handleConnection(client: Socket): void {}

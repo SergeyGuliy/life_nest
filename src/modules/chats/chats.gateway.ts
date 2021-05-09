@@ -6,9 +6,11 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import { ChatsService } from './chats.service';
+import { MessageReceiverTypes } from '../../plugins/database/entities/enums';
+
+const mapOfUsers = {};
 
 @WebSocketGateway()
 export class ChatsGateway
@@ -16,7 +18,6 @@ export class ChatsGateway
   constructor(private chatService: ChatsService) {}
 
   @WebSocketServer() server: Server;
-  private logger: Logger = new Logger('MessageGateway');
 
   @SubscribeMessage('msgToServer')
   public handleMessage(client: Socket, payload: any) {
@@ -38,28 +39,35 @@ export class ChatsGateway
   }
 
   @SubscribeMessage('messageToServer')
-  public messageToServer(client: Socket, payload): void {
-    this.chatService.saveMessage(payload);
-    this.sendMessageToClient(payload.target, payload.messageData);
-    // client.leave(room);
-    // client.emit('leftRoom', room);
+  public async messageToServer(client: Socket, messageToServer): Promise<void> {
+    const messageToClient = await this.chatService.saveMessage(messageToServer);
+    const {
+      messageReceiverType,
+      messageReceiverRoomId,
+      messageReceiverUserId,
+    } = messageToClient;
+    if (messageReceiverType === MessageReceiverTypes.GLOBAL) {
+      this.sendMessageToClient(messageReceiverType, messageToClient);
+    } else if (messageReceiverType === MessageReceiverTypes.ROOM) {
+      this.sendMessageToClient(
+        `${messageReceiverType}-${messageReceiverRoomId}`,
+        messageToClient,
+      );
+    } else if (messageReceiverType === MessageReceiverTypes.PRIVATE) {
+      this.sendMessageToClient(
+        `${messageReceiverType}-${messageReceiverUserId}`,
+        messageToClient,
+      );
+    }
   }
-
-  public handleConnection(client: Socket): void {
-    client.emit('connected', client.id);
-    client.join('global');
-  }
-
-  public handleDisconnect(client: Socket): void {
-    client.leave('global');
-  }
-
-  public afterInit(client: Server): void {}
 
   public sendMessageToClient(room, messageData): void {
-    // this.socket.to('roomList').emit('connected', data);
-    // this.socket.client[data].emit('connected', data);
-    // console.log(this.server.sockets.adapter.rooms);
     this.server.to(room).emit('messageToClient', messageData);
   }
+
+  public handleConnection(client: Socket): void {}
+
+  public handleDisconnect(client: Socket): void {}
+
+  public afterInit(client: Server): void {}
 }

@@ -131,6 +131,7 @@ export class RoomsService {
       where: { roomId: roomJoinedId },
     });
 
+    this.roomsSocketGateway.leaveRoom(newUserData.userId);
     await this.setNewAdminOrDelete(roomJoinedId, createdRoomId, roomData);
     return newUserData;
   }
