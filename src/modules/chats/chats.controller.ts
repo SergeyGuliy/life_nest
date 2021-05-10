@@ -13,9 +13,9 @@ export class ChatsController {
     return await this.chatsService.getAllGlobalMessages();
   }
 
-  @Get('room/:roomId')
-  async getRooms(@User() user: any, @Param('roomId') roomId: string) {
-    // return await this.chatsService.getAllRoomMessages();
+  @Get('room')
+  async getRooms(@User() user: any) {
+    return await this.chatsService.getAllRoomMessages(user.roomJoinedId);
   }
 
   @Get('private')

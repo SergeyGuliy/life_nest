@@ -1,25 +1,23 @@
 import {
   SubscribeMessage,
   WebSocketGateway,
-  OnGatewayInit,
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
+import { addUser, deleteUser } from '../../plugins/helpers/socket-transformer';
 
 const mapOfUsers = {};
 
 @WebSocketGateway()
-export class SocketGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('giveUserIdToServer')
   giveUserIdToServer(client: Socket, { userId, clientId }) {
-    mapOfUsers[clientId] = userId;
+    addUser(clientId, userId);
     client.join('GLOBAL');
-    console.log(this.server.sockets.adapter.rooms);
   }
 
   public sendMessageToClient(room, messageData): void {
@@ -31,9 +29,7 @@ export class SocketGateway
   }
 
   public handleDisconnect(client: Socket): void {
-    delete mapOfUsers[client.id];
+    deleteUser(client.id);
     client.leave('GLOBAL');
   }
-
-  public afterInit(client: Server): void {}
 }

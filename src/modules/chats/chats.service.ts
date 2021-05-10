@@ -21,6 +21,7 @@ export class ChatsService {
 
   @UseInterceptors(ClassSerializerInterceptor)
   async saveMessage(messageData) {
+    console.log(messageData);
     let savedMessage = await this.messagesRepository.save(messageData);
     savedMessage = await this.messagesRepository.findOne(
       savedMessage.messageId,
@@ -66,6 +67,28 @@ export class ChatsService {
       relations: ['messageSender'],
     });
     return privateMessages.map((message) => {
+      const {
+        password,
+        refreshToken,
+        isDarkTheme,
+        ...messageSender
+      } = message.messageSender;
+      return {
+        ...message,
+        messageSender,
+      };
+    });
+  }
+
+  async getAllRoomMessages(roomJoinedId) {
+    const roomMessages = await this.messagesRepository.find({
+      where: {
+        messageReceiverType: MessageReceiverTypes.ROOM,
+        messageReceiverRoomId: roomJoinedId,
+      },
+      relations: ['messageSender'],
+    });
+    return roomMessages.map((message) => {
       const {
         password,
         refreshToken,
