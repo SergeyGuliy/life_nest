@@ -86,7 +86,7 @@ export class RoomsService {
     return newRoom;
   }
 
-  async joinRoom(userId: number, roomId: number, roomPassword: string) {
+  async userJoinRoom(userId: number, roomId: number, roomPassword: string) {
     const roomData = await this.getRoomDataById({
       where: { roomId },
     });
@@ -108,6 +108,7 @@ export class RoomsService {
       ...roomData,
       usersInRoom,
     });
+    this.roomsSocketGateway.updateUsersListInRoom(roomId, usersInRoom);
     return await this.userService.getUserByQuery({
       where: {
         userId,
@@ -115,7 +116,7 @@ export class RoomsService {
     });
   }
 
-  async leaveRoom(user) {
+  async userLeaveRoom(user) {
     const { roomJoinedId, createdRoomId, userId } = user;
 
     await this.userService.updateUser(userId, {
@@ -130,8 +131,11 @@ export class RoomsService {
     const roomData = await this.getRoomDataById({
       where: { roomId: roomJoinedId },
     });
-
-    this.roomsSocketGateway.leaveRoom(newUserData.userId);
+    const usersInRoom = await this.userService.getUsersByQuery({
+      where: { roomJoinedId: roomJoinedId },
+    });
+    this.roomsSocketGateway.updateUsersListInRoom(roomJoinedId, usersInRoom);
+    this.roomsSocketGateway.userLeaveRoom(newUserData.userId);
     await this.setNewAdminOrDelete(roomJoinedId, createdRoomId, roomData);
     return newUserData;
   }
@@ -169,11 +173,15 @@ export class RoomsService {
       usersInRoom,
     });
     if (createdRoomId === roomJoinedId) {
-      const indexOfNewAdmin =
-        usersInRoom[random(usersInRoom.length - 1)].userId;
-      await this.userService.updateUser(indexOfNewAdmin, {
+      const idOfNewAdmin = usersInRoom[random(usersInRoom.length - 1)].userId;
+      await this.userService.updateUser(idOfNewAdmin, {
         createdRoomId: roomJoinedId,
       });
+      const newAdmin = await this.userService.getUserByQuery({
+        where: { userId: idOfNewAdmin },
+      });
+      console.log(newAdmin);
+      this.roomsSocketGateway.updateRoomAdmin(roomJoinedId, newAdmin);
     }
   }
 

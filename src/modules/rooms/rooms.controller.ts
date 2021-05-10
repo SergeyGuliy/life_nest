@@ -49,17 +49,17 @@ export class RoomsController {
   }
 
   @Patch('leave')
-  async leaveRoom(@User() user: any) {
-    return await this.roomsService.leaveRoom(user);
+  async userLeaveRoom(@User() user: any) {
+    return await this.roomsService.userLeaveRoom(user);
   }
 
   @Patch('join/:roomId')
-  async joinRoom(
+  async userJoinRoom(
     @Param('roomId') roomId: number,
     @User() user: any,
     @Body() body: any,
   ) {
-    return await this.roomsService.joinRoom(
+    return await this.roomsService.userJoinRoom(
       user.userId,
       roomId,
       body.roomPassword,
