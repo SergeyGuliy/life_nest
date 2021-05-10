@@ -4,8 +4,8 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { MessageReceiverTypes } from '../../plugins/database/entities/enums';
 import { findSidByUserId } from '../../plugins/helpers/socket-transformer';
+import { getRoomName } from '../../plugins/helpers/socket-rooms-names';
 
 @WebSocketGateway()
 export class RoomsSocketGateway {
@@ -13,7 +13,7 @@ export class RoomsSocketGateway {
 
   @SubscribeMessage('userConnectsRoom')
   public userConnectsRoom(client: Socket, { roomId }) {
-    client.join(`${MessageReceiverTypes.ROOM}-${roomId}`);
+    client.join(getRoomName(roomId));
     client.emit('userJoinRoom', roomId);
   }
 
@@ -29,14 +29,12 @@ export class RoomsSocketGateway {
 
   public updateUsersListInRoom(roomId, usersInRoom): void {
     this.server
-      .to(`${MessageReceiverTypes.ROOM}-${roomId}`)
+      .to(getRoomName(roomId))
       .emit('updateUsersListInRoom', usersInRoom);
   }
 
   public updateRoomAdmin(roomId, newAdmin): void {
-    this.server
-      .to(`${MessageReceiverTypes.ROOM}-${roomId}`)
-      .emit('updateRoomAdmin', newAdmin);
+    this.server.to(getRoomName(roomId)).emit('updateRoomAdmin', newAdmin);
   }
 
   public userLeaveRoom(userId): void {
