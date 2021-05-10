@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { RoomsSocketGateway } from './rooms.gateway';
 import { UserService } from '../users/user.service';
 import { random } from 'lodash';
-import { log } from 'util';
 
 @Injectable()
 export class RoomsService {
@@ -34,11 +33,13 @@ export class RoomsService {
         rooms.map(async (room) => {
           return {
             ...room,
-            usersInRoom: await this.userService.getUsersByQuery({
-              where: {
-                roomJoinedId: room.roomId,
-              },
-            }),
+            usersInRoomLength: (
+              await this.userService.getUsersByQuery({
+                where: {
+                  roomJoinedId: room.roomId,
+                },
+              })
+            ).length,
           };
         }),
       );
@@ -56,16 +57,15 @@ export class RoomsService {
     const usersInRoom = await this.userService.getUsersByQuery({
       where: { roomJoinedId: roomId },
     });
-    const creator = await this.userService.getUserByQuery({
-      where: { createdRoomId: roomId },
-    });
     const { roomPassword, ...roomData } = await this.getRoomDataById({
       where: { roomId },
     });
     return {
       ...roomData,
       usersInRoom,
-      creator,
+      creator: usersInRoom.find(
+        (user) => user.roomJoinedId === user.createdRoomId,
+      ),
     };
   }
 
@@ -82,7 +82,10 @@ export class RoomsService {
     const usersInRoom = await this.userService.getUsersByQuery({
       where: { roomJoinedId: newRoom.roomId },
     });
-    this.roomsSocketGateway.roomInListCreated({ ...newRoom, usersInRoom });
+    this.roomsSocketGateway.roomInListCreated({
+      ...newRoom,
+      usersInRoomLength: usersInRoom.length,
+    });
     return newRoom;
   }
 
@@ -106,7 +109,7 @@ export class RoomsService {
     });
     this.roomsSocketGateway.roomInListUpdated(roomId, {
       ...roomData,
-      usersInRoom,
+      usersInRoomLength: usersInRoom.length,
     });
     this.roomsSocketGateway.updateUsersListInRoom(roomId, usersInRoom);
     return await this.userService.getUserByQuery({
@@ -170,7 +173,7 @@ export class RoomsService {
   ) {
     this.roomsSocketGateway.roomInListUpdated(roomJoinedId, {
       ...roomData,
-      usersInRoom,
+      usersInRoomLength: usersInRoom.length,
     });
     if (createdRoomId === roomJoinedId) {
       const idOfNewAdmin = usersInRoom[random(usersInRoom.length - 1)].userId;
