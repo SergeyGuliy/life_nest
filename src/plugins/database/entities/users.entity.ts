@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { UserRole } from './enums';
+import { UserGameStatus, UserOnlineStatus, UserRole } from '../enums';
 import { Messages } from './messages.entity';
 import { BaseEntity } from './base.entity';
 
-@Entity('users')
+@Entity('user')
 export class Users extends BaseEntity {
   @PrimaryGeneratedColumn()
   public userId: number;
@@ -20,9 +20,23 @@ export class Users extends BaseEntity {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.GUEST,
+    default: UserRole.CASUAL,
   })
   public role: UserRole;
+
+  @Column({
+    type: 'enum',
+    enum: UserOnlineStatus,
+    default: UserOnlineStatus.OFFLINE,
+  })
+  public userOnlineStatus: UserOnlineStatus;
+
+  @Column({
+    type: 'enum',
+    enum: UserGameStatus,
+    default: UserGameStatus.NOT_IN_GAME,
+  })
+  public userGameStatus: UserGameStatus;
 
   @Column({
     default: null,

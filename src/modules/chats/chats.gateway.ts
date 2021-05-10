@@ -5,7 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatsService } from './chats.service';
-import { MessageReceiverTypes } from '../../plugins/database/entities/enums';
+import { MessageReceiverTypes } from '../../plugins/database/enums';
 
 @WebSocketGateway()
 export class ChatsGateway {

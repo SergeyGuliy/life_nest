@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Messages } from '../../plugins/database/entities/messages.entity';
 import { ChatsGateway } from './chats.gateway';
 import { UserService } from '../users/user.service';
-import { MessageReceiverTypes } from '../../plugins/database/entities/enums';
+import { MessageReceiverTypes } from '../../plugins/database/enums';
 
 @Injectable()
 export class ChatsService {

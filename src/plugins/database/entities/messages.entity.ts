@@ -8,9 +8,9 @@ import {
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Users } from './users.entity';
-import { MessageReceiverTypes } from './enums';
+import { MessageReceiverTypes } from '../enums';
 
-@Entity('messages2')
+@Entity('messages')
 export class Messages extends BaseEntity {
   @PrimaryGeneratedColumn()
   public messageId: number;
