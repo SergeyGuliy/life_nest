@@ -6,6 +6,7 @@ import {
 import { Socket, Server } from 'socket.io';
 import { ChatsService } from './chats.service';
 import { MessageReceiverTypes } from '../../plugins/database/enums';
+import { findSidByUserId } from '../../plugins/helpers/socket-transformer';
 
 @WebSocketGateway()
 export class ChatsGateway {
@@ -17,6 +18,7 @@ export class ChatsGateway {
   public async messageToServer(client: Socket, messageToServer): Promise<void> {
     const messageToClient = await this.chatService.saveMessage(messageToServer);
     const {
+      messageSender,
       messageReceiverType,
       messageReceiverRoomId,
       messageReceiverUserId,
@@ -29,10 +31,16 @@ export class ChatsGateway {
         messageToClient,
       );
     } else if (messageReceiverType === MessageReceiverTypes.PRIVATE) {
-      this.sendMessageToClient(
-        `${messageReceiverType}-${messageReceiverUserId}`,
-        messageToClient,
-      );
+      const sids = [
+        findSidByUserId(messageSender.userId),
+        findSidByUserId(messageReceiverUserId),
+      ];
+      sids.forEach((sid) => {
+        console.log(sid);
+        if (sid) {
+          this.server.to(sid).emit('messageToClient', messageToClient);
+        }
+      });
     }
   }
 

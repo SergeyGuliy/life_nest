@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 
 import { Users } from '../../plugins/database/entities/users.entity';
 import { Rooms } from '../../plugins/database/entities/rooms.entity';
+import { Messages } from '../../plugins/database/entities/messages.entity';
 
 @Injectable()
 export class SqlHelperService {
@@ -13,6 +14,8 @@ export class SqlHelperService {
     private usersRepository: Repository<Users>,
     @InjectRepository(Rooms)
     private roomsRepository: Repository<Rooms>,
+    @InjectRepository(Messages)
+    private messagesRepository: Repository<Messages>,
   ) {}
 
   async deleteAllUser() {
@@ -20,5 +23,8 @@ export class SqlHelperService {
   }
   async deleteAllRooms() {
     return await this.roomsRepository.clear();
+  }
+  async deleteAllMessages() {
+    return await this.messagesRepository.clear();
   }
 }

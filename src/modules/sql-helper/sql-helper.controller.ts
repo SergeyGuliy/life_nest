@@ -17,4 +17,10 @@ export class SqlHelperController {
   async deleteAllRooms() {
     return await this.sqlHelperService.deleteAllRooms();
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('messages')
+  async deleteAllMessages() {
+    return await this.sqlHelperService.deleteAllMessages();
+  }
 }

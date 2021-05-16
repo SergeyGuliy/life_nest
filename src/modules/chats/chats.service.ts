@@ -60,10 +60,16 @@ export class ChatsService {
 
   async getAllPrivateMessages(userId) {
     const privateMessages = await this.messagesRepository.find({
-      where: {
-        messageReceiverType: MessageReceiverTypes.PRIVATE,
-        messageReceiverUserId: userId,
-      },
+      where: [
+        {
+          messageReceiverType: MessageReceiverTypes.PRIVATE,
+          messageSender: userId,
+        },
+        {
+          messageReceiverType: MessageReceiverTypes.PRIVATE,
+          messageReceiverUserId: userId,
+        },
+      ],
       relations: ['messageSender'],
     });
     return privateMessages.map((message) => {
