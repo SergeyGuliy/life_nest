@@ -17,6 +17,7 @@ export class ChatsGateway {
   @SubscribeMessage('messageToServer')
   public async messageToServer(client: Socket, messageToServer): Promise<void> {
     const messageToClient = await this.chatService.saveMessage(messageToServer);
+    console.log(messageToClient);
     const {
       messageSender,
       messageReceiverType,

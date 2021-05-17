@@ -8,6 +8,11 @@ export enum RoomTypes {
   PRIVATE = 'PRIVATE',
 }
 
+export enum MessageTypes {
+  TEXT = 'TEXT',
+  VOICE = 'VOICE',
+}
+
 export enum MessageReceiverTypes {
   GLOBAL = 'GLOBAL',
   ROOM = 'ROOM',

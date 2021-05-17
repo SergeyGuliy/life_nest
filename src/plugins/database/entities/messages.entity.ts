@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Users } from './users.entity';
-import { MessageReceiverTypes } from '../enums';
+import { MessageReceiverTypes, MessageTypes } from '../enums';
 
 @Entity('messages')
 export class Messages extends BaseEntity {
@@ -22,6 +22,13 @@ export class Messages extends BaseEntity {
   })
   public messageReceiverType: MessageReceiverTypes;
 
+  @Column({
+    type: 'enum',
+    enum: MessageTypes,
+    default: MessageTypes.TEXT,
+  })
+  public messageType: MessageTypes;
+
   @ManyToOne(() => Users, (user) => user.messages)
   @JoinColumn()
   public messageSender: Users;
@@ -34,4 +41,7 @@ export class Messages extends BaseEntity {
 
   @Column({ default: null })
   public messageText: string;
+
+  @Column({ default: null })
+  public messageVoice: string;
 }

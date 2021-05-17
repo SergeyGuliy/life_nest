@@ -1,6 +1,7 @@
 import {
   ClassSerializerInterceptor,
   Injectable,
+  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
@@ -9,6 +10,9 @@ import { Messages } from '../../plugins/database/entities/messages.entity';
 import { ChatsGateway } from './chats.gateway';
 import { UserService } from '../users/user.service';
 import { MessageReceiverTypes } from '../../plugins/database/enums';
+import { MessageTypes } from '../../plugins/database/enums';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { createWriteStream } from 'fs';
 
 @Injectable()
 export class ChatsService {
@@ -21,7 +25,6 @@ export class ChatsService {
 
   @UseInterceptors(ClassSerializerInterceptor)
   async saveMessage(messageData) {
-    console.log(messageData);
     let savedMessage = await this.messagesRepository.save(messageData);
     savedMessage = await this.messagesRepository.findOne(
       savedMessage.messageId,
