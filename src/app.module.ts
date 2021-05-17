@@ -11,6 +11,7 @@ import { ChatsModule } from './modules/chats/chats.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { WebSocketModule } from './modules/web-socket/web-socket.module';
+import { UploaderModule } from './modules/uploader/uploader.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { WebSocketModule } from './modules/web-socket/web-socket.module';
     UserModule,
     WebSocketModule,
     SqlHelperModule,
+    UploaderModule
   ],
   controllers: [AppController],
   providers: [AppService],
