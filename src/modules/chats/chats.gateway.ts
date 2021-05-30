@@ -17,7 +17,6 @@ export class ChatsGateway {
   @SubscribeMessage('messageToServer')
   public async messageToServer(client: Socket, messageToServer): Promise<void> {
     const messageToClient = await this.chatService.saveMessage(messageToServer);
-    console.log(messageToClient);
     const {
       messageSender,
       messageReceiverType,
@@ -37,7 +36,6 @@ export class ChatsGateway {
         findSidByUserId(messageReceiverUserId),
       ];
       sids.forEach((sid) => {
-        console.log(sid);
         if (sid) {
           this.server.to(sid).emit('messageToClient', messageToClient);
         }

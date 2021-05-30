@@ -8,6 +8,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { Users } from '../../plugins/database/entities/users.entity';
 import { generatePasswordHash } from '../../plugins/helpers/password-encoder';
+import { UserOnlineStatus } from '../../plugins/database/enums';
 
 @Injectable()
 export class UserService {
@@ -91,6 +92,18 @@ export class UserService {
 
   async updateUser(userId: number, newUserData: UpdateUserDto) {
     await this.usersRepository.update(userId, newUserData);
+  }
+
+  async userLogIn(userId: number) {
+    return await this.usersRepository.update(userId, {
+      userOnlineStatus: UserOnlineStatus.ONLINE,
+    });
+  }
+
+  async userLogOut(userId: number) {
+    await this.usersRepository.update(userId, {
+      userOnlineStatus: UserOnlineStatus.OFFLINE,
+    });
   }
 
   async changeUserTheme(userId: number, { isDarkTheme }) {

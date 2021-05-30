@@ -183,7 +183,6 @@ export class RoomsService {
       const newAdmin = await this.userService.getUserByQuery({
         where: { userId: idOfNewAdmin },
       });
-      console.log(newAdmin);
       this.roomsSocketGateway.updateRoomAdmin(roomJoinedId, newAdmin);
     }
   }

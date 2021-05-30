@@ -6,22 +6,20 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { addUser, deleteUser } from '../../plugins/helpers/socket-transformer';
 
-const mapOfUsers = {};
+import { debounce } from 'throttle-debounce';
+import { WebSocketService } from './web-socket.service';
+const DEBOUNCE_TIMEOUT = 10000;
 
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private webSocketService: WebSocketService) {}
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('giveUserIdToServer')
-  giveUserIdToServer(client: Socket, { userId, clientId }) {
-    addUser(clientId, userId);
+  async giveUserIdToServer(client: Socket, { userId, clientId }) {
     client.join('GLOBAL');
-  }
-
-  public sendMessageToClient(room, messageData): void {
-    this.server.to(room).emit('messageToClient', messageData);
+    await this.webSocketService.logInUserIntoApp(userId, clientId);
   }
 
   public handleConnection(client: Socket): void {
@@ -29,7 +27,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   public handleDisconnect(client: Socket): void {
-    deleteUser(client.id);
     client.leave('GLOBAL');
+    this.logOutUserFormApp(client.id);
   }
+
+  private logOutUserFormApp = debounce(DEBOUNCE_TIMEOUT, async (clientId) => {
+    await this.webSocketService.logOutUserFormApp(clientId);
+  });
 }
