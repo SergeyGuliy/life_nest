@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './modules/users/user.module';
-import { SqlHelperModule } from './modules/sql-helper/sql-helper.module';
+import { SqlHelperModule } from './plugins/sql-helper/sql-helper.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';

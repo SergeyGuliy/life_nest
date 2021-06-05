@@ -25,6 +25,6 @@ export function findSidByUserId(userId) {
   return Object.keys(mapOfUsers)[index];
 }
 
-setInterval(() => {
-  console.log(mapOfUsers);
-}, 3000);
+// setInterval(() => {
+//   console.log(mapOfUsers);
+// }, 3000);

@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UserService } from '../users/user.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { Users } from '../../plugins/database/entities/users.entity';
 
@@ -17,7 +16,7 @@ import { Users } from '../../plugins/database/entities/users.entity';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, LocalStrategy],
-  exports: [AuthService, UserService, LocalStrategy],
+  providers: [AuthService, LocalStrategy],
+  exports: [AuthService, LocalStrategy],
 })
 export class AuthModule {}

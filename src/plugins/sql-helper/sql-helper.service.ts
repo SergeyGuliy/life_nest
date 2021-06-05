@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Users } from '../../plugins/database/entities/users.entity';
-import { Rooms } from '../../plugins/database/entities/rooms.entity';
-import { Messages } from '../../plugins/database/entities/messages.entity';
+import { Users } from '../database/entities/users.entity';
+import { Rooms } from '../database/entities/rooms.entity';
+import { Messages } from '../database/entities/messages.entity';
 
 @Injectable()
 export class SqlHelperService {

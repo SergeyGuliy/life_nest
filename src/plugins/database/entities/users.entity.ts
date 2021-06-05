@@ -14,7 +14,9 @@ export class Users extends BaseEntity {
   @Column()
   public phone: string;
 
-  @Column()
+  @Column({
+    select: false,
+  })
   public password: string;
 
   @Column({
@@ -55,6 +57,7 @@ export class Users extends BaseEntity {
 
   @Column({
     default: null,
+    select: false,
   })
   public refreshToken?: string;
 
@@ -76,8 +79,8 @@ export class Users extends BaseEntity {
   })
   public roomJoinedId: null | number;
 
-  constructor(partial: Partial<Users>) {
-    super();
-    Object.assign(this, partial);
-  }
+  // constructor(partial: Partial<Users>) {
+  //   super();
+  //   Object.assign(this, partial);
+  // }
 }

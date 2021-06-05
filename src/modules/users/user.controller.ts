@@ -29,12 +29,6 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
-  async createUser(@Body() user) {
-    return await this.userService.createUser(user);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Put(':userId')
   async editUser(@Param('userId') userId: string, @Body() user: UpdateUserDto) {
     return await this.userService.editUser(Number(userId), user);
