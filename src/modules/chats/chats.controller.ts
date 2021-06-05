@@ -1,22 +1,7 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Post,
-  Res,
-  UploadedFile,
-  UploadedFiles,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt/auth.guard';
 import { User } from '../../plugins/helpers/decorators/user.decorator';
 import { ChatsService } from './chats.service';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-  FilesInterceptor,
-} from '@nestjs/platform-express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('chats')
@@ -37,6 +22,4 @@ export class ChatsController {
   async getRoomById(@User() user: any) {
     return await this.chatsService.getAllPrivateMessages(user.userId);
   }
-
-
 }
