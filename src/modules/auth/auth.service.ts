@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   checkPassword,
   generatePasswordHash,
-} from '../../plugins/helpers/password-encoder';
+} from './helpers/password-encoder';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../../plugins/database/entities/users.entity';
 import { Repository } from 'typeorm';

@@ -13,6 +13,8 @@ export function deleteUser(socketSid) {
 }
 
 export function addUser(socketSid, userId) {
+  const oldUserSid = findAllSidByUserId(userId);
+  console.log(oldUserSid);
   mapOfUsers[socketSid] = userId;
 }
 
@@ -25,6 +27,12 @@ export function findSidByUserId(userId) {
   return Object.keys(mapOfUsers)[index];
 }
 
-// setInterval(() => {
-//   console.log(mapOfUsers);
-// }, 3000);
+export function findAllSidByUserId(userId) {
+  const indexes = Object.keys(mapOfUsers).filter((i) => mapOfUsers[i] === userId);
+  console.log(indexes);
+  return indexes;
+}
+
+setInterval(() => {
+  console.log(mapOfUsers);
+}, 3000);

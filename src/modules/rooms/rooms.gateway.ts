@@ -5,7 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { findSidByUserId } from '../../plugins/helpers/socket-transformer';
-import { getRoomName } from '../../plugins/helpers/socket-rooms-names';
+import { getRoomName } from './helpers/socket-rooms-names';
 
 @WebSocketGateway()
 export class RoomsSocketGateway {
