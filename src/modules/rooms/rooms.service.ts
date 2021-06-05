@@ -29,7 +29,7 @@ export class RoomsService {
       const rooms = await this.roomsRepository.find({
         where,
       });
-      const roomsWIthUsers = await Promise.all(
+      const roomsWithUsers = await Promise.all(
         rooms.map(async (room) => {
           return {
             ...room,
@@ -43,7 +43,7 @@ export class RoomsService {
           };
         }),
       );
-      return roomsWIthUsers;
+      return roomsWithUsers;
     } else {
       return [];
     }

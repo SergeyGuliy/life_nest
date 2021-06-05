@@ -46,15 +46,6 @@ export class AuthService {
     }
   }
 
-  async validateUser(userId): Promise<any> {
-    const user = await this.getUserByIdWithToken(userId);
-    if (user) {
-      const { password, refreshToken, ...result } = user;
-      return result;
-    }
-    return null;
-  }
-
   async login(body): Promise<any> {
     const user = await this.getUserSecured(body);
     if (!user || !(await this.validatePassword(body.password, user.password))) {
@@ -74,11 +65,10 @@ export class AuthService {
   async refreshToken(userId, oldRefreshToken) {
     const user = await this.getUserByIdWithToken(userId);
     if (user.refreshToken === oldRefreshToken) {
-      const newUser = await this.setNewRefreshTokenToUser(user.userId);
-      const { password, refreshToken, ...userData } = newUser;
+      const userData = await this.setNewRefreshTokenToUser(user.userId);
       return {
         userData,
-        refreshToken,
+        refreshToken: userData.refreshToken,
         accessToken: this.jwtService.sign({
           userId: userData.userId,
         }),
