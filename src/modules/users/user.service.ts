@@ -25,14 +25,6 @@ export class UserService {
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
-  async getUserByQuery(query) {
-    return await this.usersRepository.findOne(query);
-  }
-
-  async getUsersByQuery(query) {
-    return await this.usersRepository.find(query);
-  }
-
   async editUser(userId: number, user: UpdateUserDto) {
     await this.usersRepository.update(userId, user);
     const updatedUser = await this.usersRepository.findOne(userId);
@@ -40,10 +32,6 @@ export class UserService {
       return updatedUser;
     }
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  }
-
-  async updateUser(userId: number, newUserData: UpdateUserDto) {
-    await this.usersRepository.update(userId, newUserData);
   }
 
   async userLogIn(userId: number) {

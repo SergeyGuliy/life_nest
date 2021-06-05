@@ -3,9 +3,6 @@ import { RoomsController } from './rooms.controller';
 import { RoomsService } from './rooms.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Rooms } from '../../plugins/database/entities/rooms.entity';
-import { LocalStrategy } from '../auth/strategies/local.strategy';
-import { AuthService } from '../auth/auth.service';
-import { UserService } from '../users/user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { Users } from '../../plugins/database/entities/users.entity';
 import { RoomsSocketGateway } from './rooms.gateway';
@@ -19,12 +16,6 @@ import { RoomsSocketGateway } from './rooms.gateway';
     }),
   ],
   controllers: [RoomsController],
-  providers: [
-    RoomsService,
-    LocalStrategy,
-    AuthService,
-    UserService,
-    RoomsSocketGateway,
-  ],
+  providers: [RoomsService, RoomsSocketGateway],
 })
 export class RoomsModule {}

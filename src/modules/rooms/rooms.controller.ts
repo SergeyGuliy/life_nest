@@ -13,16 +13,12 @@ import {
 import { RoomsService } from './rooms.service';
 import { JwtAuthGuard } from '../auth/jwt/auth.guard';
 import { CreateRoomDto } from './dto/createRoom.dto';
-import { LocalStrategy } from '../auth/strategies/local.strategy';
 import { User } from '../../plugins/helpers/decorators/user.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('rooms')
 export class RoomsController {
-  constructor(
-    private readonly roomsService: RoomsService,
-    private readonly localStrategy: LocalStrategy,
-  ) {}
+  constructor(private readonly roomsService: RoomsService) {}
 
   @Post('create')
   async createRoom(
