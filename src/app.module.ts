@@ -34,7 +34,7 @@ import { UploaderModule } from './modules/uploader/uploader.module';
     UserModule,
     WebSocketModule,
     SqlHelperModule,
-    UploaderModule
+    UploaderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
