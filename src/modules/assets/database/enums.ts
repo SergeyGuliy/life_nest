@@ -19,6 +19,12 @@ export enum MessageReceiverTypes {
   PRIVATE = 'PRIVATE',
 }
 
+export enum FriendshipStatuses {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  DECLINED = 'DECLINED',
+}
+
 export enum UserOnlineStatus {
   ONLINE = 'ONLINE',
   OFFLINE = 'OFFLINE',

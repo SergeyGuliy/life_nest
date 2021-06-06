@@ -23,4 +23,10 @@ export class SqlHelperController {
   async deleteAllMessages() {
     return await this.sqlHelperService.deleteAllMessages();
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('friendship')
+  async deleteAllFriendship() {
+    return await this.sqlHelperService.deleteAllFriendship();
+  }
 }

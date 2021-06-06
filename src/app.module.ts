@@ -11,6 +11,7 @@ import { ChatsModule } from './modules/chats/chats.module';
 import { AppController } from './app.controller';
 import { SocketModule } from './modules/assets/socket/socket.module';
 import { UploaderModule } from './modules/assets/uploader/uploader.module';
+import { FriendshipModule } from './modules/friendship/friendship.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UploaderModule } from './modules/assets/uploader/uploader.module';
     SocketModule,
     SqlHelperModule,
     UploaderModule,
+    FriendshipModule,
   ],
   controllers: [AppController],
 })
