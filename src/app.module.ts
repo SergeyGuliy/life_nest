@@ -8,7 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './modules/assets/database/typeorm-config';
 import { RoomsModule } from './modules/rooms/rooms.module';
 import { ChatsModule } from './modules/chats/chats.module';
-import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { SocketModule } from './modules/assets/socket/socket.module';
 import { UploaderModule } from './modules/assets/uploader/uploader.module';
@@ -37,6 +36,5 @@ import { UploaderModule } from './modules/assets/uploader/uploader.module';
     UploaderModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

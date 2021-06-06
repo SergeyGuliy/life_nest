@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../database/entities/users.entity';
 import { Repository } from 'typeorm';
 import { UserOnlineStatus } from '../database/enums';
-import { SocketNamespaserService } from '../socket-namespaser/socket-namespaser.service';
+import { SocketNamespaserService } from './socket-namespaser.service';
 
 @Injectable()
 export class SocketService {
