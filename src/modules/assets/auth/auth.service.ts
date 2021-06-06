@@ -7,9 +7,9 @@ import {
   generatePasswordHash,
 } from './helpers/password-encoder';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../../plugins/database/entities/users.entity';
+import { Users } from '../database/entities/users.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../users/dto/createUser.dto';
+import { CreateUserDto } from '../../users/dto/createUser.dto';
 import * as phone from 'phone';
 
 @Injectable()

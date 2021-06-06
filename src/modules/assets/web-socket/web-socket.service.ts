@@ -5,11 +5,11 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { RoomsService } from '../rooms/rooms.service';
+import { RoomsService } from '../../rooms/rooms.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../../plugins/database/entities/users.entity';
+import { Users } from '../database/entities/users.entity';
 import { Repository } from 'typeorm';
-import { UserOnlineStatus } from '../../plugins/database/enums';
+import { UserOnlineStatus } from '../database/enums';
 import { SocketNamespaserService } from '../socket-namespaser/socket-namespaser.service';
 
 @Injectable()

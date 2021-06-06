@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Messages } from '../../plugins/database/entities/messages.entity';
-import { MessageReceiverTypes } from '../../plugins/database/enums';
+import { Messages } from '../assets/database/entities/messages.entity';
+import { MessageReceiverTypes } from '../assets/database/enums';
 
 @Injectable()
 export class ChatsService {

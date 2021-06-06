@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Rooms } from '../../plugins/database/entities/rooms.entity';
+import { Rooms } from '../assets/database/entities/rooms.entity';
 import { Repository } from 'typeorm';
 import { RoomsSocketGateway } from './rooms.gateway';
 import { random } from 'lodash';
-import { Users } from '../../plugins/database/entities/users.entity';
+import { Users } from '../assets/database/entities/users.entity';
 import { UpdateUserDto } from '../users/dto/updateUser.dto';
 
 @Injectable()

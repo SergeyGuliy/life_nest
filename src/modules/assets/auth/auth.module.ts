@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
-import { Users } from '../../plugins/database/entities/users.entity';
+import { Users } from '../database/entities/users.entity';
 
 @Module({
   imports: [
