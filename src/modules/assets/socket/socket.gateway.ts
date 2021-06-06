@@ -8,12 +8,12 @@ import {
 import { Socket, Server } from 'socket.io';
 
 import { debounce } from 'throttle-debounce';
-import { WebSocketService } from './web-socket.service';
+import { SocketService } from './socket.service';
 const DEBOUNCE_TIMEOUT = 10000;
 
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private webSocketService: WebSocketService) {}
+  constructor(private webSocketService: SocketService) {}
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('giveUserIdToServer')

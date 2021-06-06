@@ -5,13 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Rooms } from '../assets/database/entities/rooms.entity';
 import { Users } from '../assets/database/entities/users.entity';
 import { RoomsSocketGateway } from './rooms.gateway';
-import { WebSocketModule } from '../assets/web-socket/web-socket.module';
+import { SocketModule } from '../assets/socket/socket.module';
 import { UserModule } from '../users/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Rooms, Users]),
-    WebSocketModule,
+    SocketModule,
     UserModule,
   ],
   controllers: [RoomsController],

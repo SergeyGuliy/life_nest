@@ -13,7 +13,7 @@ import { UserOnlineStatus } from '../database/enums';
 import { SocketNamespaserService } from '../socket-namespaser/socket-namespaser.service';
 
 @Injectable()
-export class WebSocketService {
+export class SocketService {
   constructor(
     @Inject(forwardRef(() => RoomsService))
     private roomsService: RoomsService,

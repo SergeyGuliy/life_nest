@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SocketGateway } from './web-socket.gateway';
-import { WebSocketService } from './web-socket.service';
+import { SocketGateway } from './socket.gateway';
+import { SocketService } from './socket.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Rooms } from '../database/entities/rooms.entity';
 import { Users } from '../database/entities/users.entity';
@@ -16,10 +16,10 @@ import { SocketNamespaserService } from '../socket-namespaser/socket-namespaser.
     RoomsService,
     UserService,
     SocketGateway,
-    WebSocketService,
+    SocketService,
     RoomsSocketGateway,
     SocketNamespaserService,
   ],
-  exports: [WebSocketService],
+  exports: [SocketService],
 })
-export class WebSocketModule {}
+export class SocketModule {}

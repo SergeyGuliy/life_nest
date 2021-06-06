@@ -10,7 +10,7 @@ import { RoomsModule } from './modules/rooms/rooms.module';
 import { ChatsModule } from './modules/chats/chats.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
-import { WebSocketModule } from './modules/assets/web-socket/web-socket.module';
+import { SocketModule } from './modules/assets/socket/socket.module';
 import { UploaderModule } from './modules/assets/uploader/uploader.module';
 
 @Module({
@@ -32,7 +32,7 @@ import { UploaderModule } from './modules/assets/uploader/uploader.module';
     ChatsModule,
     AuthModule,
     UserModule,
-    WebSocketModule,
+    SocketModule,
     SqlHelperModule,
     UploaderModule,
   ],
