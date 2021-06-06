@@ -28,11 +28,9 @@ export function findSidByUserId(userId) {
 }
 
 export function findAllSidByUserId(userId) {
-  const indexes = Object.keys(mapOfUsers).filter((i) => mapOfUsers[i] === userId);
-  console.log(indexes);
-  return indexes;
+  return Object.keys(mapOfUsers).filter((i) => mapOfUsers[i] === userId);
 }
 
-setInterval(() => {
-  console.log(mapOfUsers);
-}, 3000);
+// setInterval(() => {
+//   console.log(mapOfUsers);
+// }, 3000);

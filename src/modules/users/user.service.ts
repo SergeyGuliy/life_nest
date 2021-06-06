@@ -34,18 +34,6 @@ export class UserService {
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
-  async userLogIn(userId: number) {
-    return await this.usersRepository.update(userId, {
-      userOnlineStatus: UserOnlineStatus.ONLINE,
-    });
-  }
-
-  async userLogOut(userId: number) {
-    await this.usersRepository.update(userId, {
-      userOnlineStatus: UserOnlineStatus.OFFLINE,
-    });
-  }
-
   async changeUserTheme(userId: number, { isDarkTheme }) {
     await this.usersRepository.update(userId, isDarkTheme);
     const updatedUser = await this.usersRepository.findOne(userId);

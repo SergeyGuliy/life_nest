@@ -5,15 +5,17 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { findSidByUserId } from '../../plugins/helpers/socket-transformer';
-import { getRoomName } from './helpers/socket-rooms-names';
+import { MessageReceiverTypes } from '../../plugins/database/enums';
+import { WebSocketService } from '../web-socket/web-socket.service';
 
 @WebSocketGateway()
 export class RoomsSocketGateway {
+  constructor(private webSocket: WebSocketService) {}
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('userConnectsRoom')
   public userConnectsRoom(client: Socket, { roomId }) {
-    client.join(getRoomName(roomId));
+    client.join(this.getRoomName(roomId));
     client.emit('userJoinRoom', roomId);
   }
 
@@ -29,12 +31,12 @@ export class RoomsSocketGateway {
 
   public updateUsersListInRoom(roomId, usersInRoom): void {
     this.server
-      .to(getRoomName(roomId))
+      .to(this.getRoomName(roomId))
       .emit('updateUsersListInRoom', usersInRoom);
   }
 
   public updateRoomAdmin(roomId, newAdmin): void {
-    this.server.to(getRoomName(roomId)).emit('updateRoomAdmin', newAdmin);
+    this.server.to(this.getRoomName(roomId)).emit('updateRoomAdmin', newAdmin);
   }
 
   public userLeaveRoom(userId): void {
@@ -55,5 +57,9 @@ export class RoomsSocketGateway {
       roomId,
       roomData,
     });
+  }
+
+  private getRoomName(roomId: number) {
+    return `${MessageReceiverTypes.ROOM}-${roomId}`;
   }
 }
