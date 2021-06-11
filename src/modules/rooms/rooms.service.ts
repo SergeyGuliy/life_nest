@@ -142,7 +142,7 @@ export class RoomsService {
       where: { roomJoinedId: roomJoinedId },
     });
     this.roomsSocketGateway.updateUsersListInRoom(roomJoinedId, usersInRoom);
-    this.roomsSocketGateway.userLeaveRoom(newUserData.userId);
+    await this.roomsSocketGateway.userLeaveRoom(newUserData.userId);
     await this.setNewAdminOrDelete(roomJoinedId, createdRoomId, roomData);
     return newUserData;
   }

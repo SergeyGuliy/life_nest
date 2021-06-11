@@ -10,9 +10,11 @@ import { SocketNameSpacerService } from '../assets/socket/socket-namespaser.serv
 
 @WebSocketGateway()
 export class RoomsSocketGateway {
-  constructor(private webSocket: SocketService) {}
+  constructor(
+    private webSocket: SocketService,
+    private socketNameSpacerService: SocketNameSpacerService,
+  ) {}
   @WebSocketServer() server: Server;
-  private socketNameSpacerService: SocketNameSpacerService;
 
   @SubscribeMessage('userConnectsRoom')
   public userConnectsRoom(client: Socket, { roomId }) {
@@ -40,9 +42,11 @@ export class RoomsSocketGateway {
     this.server.to(this.getRoomName(roomId)).emit('updateRoomAdmin', newAdmin);
   }
 
-  public userLeaveRoom(userId): void {
-    const sid = this.socketNameSpacerService.findSidByUserId(userId);
-    this.server.to(sid).emit('userLeaveRoom');
+  public async userLeaveRoom(userId) {
+    const sid = await this.socketNameSpacerService.findSidByUserId(userId);
+    if (typeof sid === 'string') {
+      this.server.to(sid).emit('userLeaveRoom');
+    }
   }
 
   public roomInListCreated(roomData): void {

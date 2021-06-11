@@ -9,11 +9,15 @@ import { Socket, Server } from 'socket.io';
 
 import { debounce } from 'throttle-debounce';
 import { SocketService } from './socket.service';
-const DEBOUNCE_TIMEOUT = 10000;
+import { SocketNameSpacerService } from './socket-namespaser.service';
+const DEBOUNCE_TIMEOUT = 5000;
 
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private webSocketService: SocketService) {}
+  constructor(
+    private webSocketService: SocketService,
+    private socketNameSpacerService: SocketNameSpacerService,
+  ) {}
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('giveUserIdToServer')
@@ -26,12 +30,16 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.emit('callUserIdToServer', client.id);
   }
 
-  public handleDisconnect(client: Socket): void {
+  public async handleDisconnect(client: Socket) {
     client.leave('GLOBAL');
-    this.logOutUserFormApp(client.id);
+    const userId = this.socketNameSpacerService.findUserIdBySid(client.id);
+    this.socketNameSpacerService.deleteUser(client.id);
+    await this.logOutUserFormApp(userId);
   }
 
-  private logOutUserFormApp = debounce(DEBOUNCE_TIMEOUT, async (clientId) => {
-    await this.webSocketService.logOutUserFormApp(clientId);
+  private logOutUserFormApp = debounce(DEBOUNCE_TIMEOUT, async (userId) => {
+    try {
+    } catch (e) {}
+    await this.webSocketService.logOutUserFormApp(userId);
   });
 }

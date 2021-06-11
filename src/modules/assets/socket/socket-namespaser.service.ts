@@ -4,26 +4,32 @@ import { Injectable } from '@nestjs/common';
 export class SocketNameSpacerService {
   private mapOfUsers = {};
 
-  deleteUser(socketSid) {
+  public deleteUser(socketSid) {
     delete this.mapOfUsers[socketSid];
   }
 
-  addUser(socketSid, userId) {
+  public addUser(socketSid, userId) {
     const oldUserSid = this.findAllSidByUserId(userId);
-    console.log(oldUserSid);
+    oldUserSid.forEach((oldSId) => {
+      delete this.mapOfUsers[oldSId];
+    });
     this.mapOfUsers[socketSid] = userId;
   }
 
-  findUserIdBySid(socketSid) {
+  public findUserIdBySid(socketSid) {
     return this.mapOfUsers[socketSid] || false;
   }
 
-  findSidByUserId(userId) {
+  public findSidByUserId(userId) {
     const index = Object.values(this.mapOfUsers).findIndex((i) => i === userId);
-    return Object.keys(this.mapOfUsers)[index];
+    if (index >= 0) {
+      return Object.keys(this.mapOfUsers)[index] || false;
+    } else {
+      return false;
+    }
   }
 
-  findAllSidByUserId(userId) {
+  private findAllSidByUserId(userId) {
     return Object.keys(this.mapOfUsers).filter(
       (i) => this.mapOfUsers[i] === userId,
     );

@@ -39,7 +39,7 @@ export class ChatsGateway {
         this.socketNameSpacerService.findSidByUserId(messageReceiverUserId),
       ];
       sids.forEach((sid) => {
-        if (sid) {
+        if (typeof sid === 'string') {
           this.server.to(sid).emit('messageToClient', messageToClient);
         }
       });

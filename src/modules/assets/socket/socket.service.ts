@@ -22,16 +22,13 @@ export class SocketService {
     @InjectRepository(Users)
     private usersRepository: Repository<Users>, // @InjectRepository(Rooms) // private roomsRepository: Repository<Rooms>,
   ) {}
-  private mapOfUsers = {};
 
-  async logOutUserFormApp(userSid) {
-    const userId = this.socketNameSpacerService.findUserIdBySid(userSid);
-    this.socketNameSpacerService.deleteUser(userSid);
+  async logOutUserFormApp(userId) {
     const newUserSid = this.socketNameSpacerService.findSidByUserId(userId);
     if (!newUserSid) {
       await this.userLogOut(userId);
       const newUserData = await this.getUserById(userId);
-      this.roomsService.userLeaveRoom(newUserData);
+      await this.roomsService.userLeaveRoom(newUserData);
     }
   }
 
