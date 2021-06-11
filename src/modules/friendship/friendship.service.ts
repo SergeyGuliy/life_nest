@@ -16,7 +16,6 @@ export class FriendshipService {
   ) {}
 
   async getAllFriendship() {
-    console.log('getAllFriendship');
     return await this.friendshipRepository.find({
       relations: ['friendshipReceiver', 'friendshipSender'],
     });
@@ -141,7 +140,7 @@ export class FriendshipService {
     };
   }
 
-  async getBothFriendshipConnection(senderId, receiverId) {
+  async getBothFriendshipConnection(senderId: number, receiverId: number) {
     return await this.friendshipRepository.findOne({
       where: [
         {
@@ -157,7 +156,7 @@ export class FriendshipService {
     });
   }
 
-  async getYourFriends(yourId) {
+  async getYourFriends(yourId: number) {
     return await this.friendshipRepository.find({
       where: [
         {
@@ -177,7 +176,7 @@ export class FriendshipService {
     });
   }
 
-  async getYouRequests(yourId) {
+  async getYouRequests(yourId: number) {
     return await this.friendshipRepository.find({
       where: [
         {
@@ -221,7 +220,7 @@ export class FriendshipService {
     });
   }
 
-  async interceptor(senderId, receiverId) {
+  async interceptor(senderId: number, receiverId: number) {
     if (senderId === receiverId) {
       throw new HttpException(
         `You can't sent friendship request to yourself`,

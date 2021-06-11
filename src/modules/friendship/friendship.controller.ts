@@ -24,17 +24,13 @@ export class FriendshipController {
   @UseGuards(JwtAuthGuard)
   @Get('friends')
   async getYourFriends(@User() user: any) {
-    const a = await this.friendshipService.getYourFriends(+user.userId);
-    console.log(a);
-    return a;
+    return await this.friendshipService.getYourFriends(+user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('requests')
   async getYouRequests(@User() user: any) {
-    const a = await this.friendshipService.getYouRequests(+user.userId);
-    console.log(a);
-    return a;
+    return await this.friendshipService.getYouRequests(+user.userId);
   }
 
   @UseGuards(JwtAuthGuard)

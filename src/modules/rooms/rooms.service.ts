@@ -122,8 +122,10 @@ export class RoomsService {
   }
 
   async userLeaveRoom(user) {
-    const { roomJoinedId, createdRoomId, userId } = user;
-
+    const { userId } = user;
+    const { roomJoinedId, createdRoomId } = await this.usersRepository.findOne(
+      userId,
+    );
     await this.updateUser(userId, {
       createdRoomId: null,
       roomJoinedId: null,

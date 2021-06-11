@@ -9,11 +9,7 @@ import { SocketModule } from '../assets/socket/socket.module';
 import { UserModule } from '../users/user.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Rooms, Users]),
-    SocketModule,
-    UserModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Rooms, Users]), SocketModule, UserModule],
   controllers: [RoomsController],
   providers: [RoomsService, RoomsSocketGateway],
 })
