@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class SocketNamespaserService {
+export class SocketNameSpacerService {
   private mapOfUsers = {};
 
   deleteUser(socketSid) {

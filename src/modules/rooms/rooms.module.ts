@@ -7,10 +7,11 @@ import { Users } from '../assets/database/entities/users.entity';
 import { RoomsSocketGateway } from './rooms.gateway';
 import { SocketModule } from '../assets/socket/socket.module';
 import { UserModule } from '../users/user.module';
+import { SocketNameSpacerService } from '../assets/socket/socket-namespaser.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Rooms, Users]), SocketModule, UserModule],
   controllers: [RoomsController],
-  providers: [RoomsService, RoomsSocketGateway],
+  providers: [RoomsService, RoomsSocketGateway, SocketNameSpacerService],
 })
 export class RoomsModule {}

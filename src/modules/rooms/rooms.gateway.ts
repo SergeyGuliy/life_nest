@@ -4,14 +4,15 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { findSidByUserId } from '../../plugins/helpers/socket-transformer';
 import { MessageReceiverTypes } from '../assets/database/enums';
 import { SocketService } from '../assets/socket/socket.service';
+import { SocketNameSpacerService } from '../assets/socket/socket-namespaser.service';
 
 @WebSocketGateway()
 export class RoomsSocketGateway {
   constructor(private webSocket: SocketService) {}
   @WebSocketServer() server: Server;
+  private socketNameSpacerService: SocketNameSpacerService;
 
   @SubscribeMessage('userConnectsRoom')
   public userConnectsRoom(client: Socket, { roomId }) {
@@ -40,7 +41,7 @@ export class RoomsSocketGateway {
   }
 
   public userLeaveRoom(userId): void {
-    const sid = findSidByUserId(userId);
+    const sid = this.socketNameSpacerService.findSidByUserId(userId);
     this.server.to(sid).emit('userLeaveRoom');
   }
 

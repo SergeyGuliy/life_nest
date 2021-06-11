@@ -8,7 +8,7 @@ import { RoomsService } from '../../rooms/rooms.service';
 import { UserService } from '../../users/user.service';
 import { RoomsSocketGateway } from '../../rooms/rooms.gateway';
 import { Messages } from '../database/entities/messages.entity';
-import { SocketNamespaserService } from './socket-namespaser.service';
+import { SocketNameSpacerService } from './socket-namespaser.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Rooms, Users, Messages])],
@@ -18,8 +18,8 @@ import { SocketNamespaserService } from './socket-namespaser.service';
     SocketGateway,
     SocketService,
     RoomsSocketGateway,
-    SocketNamespaserService,
+    SocketNameSpacerService,
   ],
-  exports: [SocketService, SocketNamespaserService],
+  exports: [SocketService, SocketNameSpacerService],
 })
 export class SocketModule {}

@@ -6,13 +6,13 @@ import {
 import { Socket, Server } from 'socket.io';
 import { ChatsService } from './chats.service';
 import { MessageReceiverTypes } from '../assets/database/enums';
-import { SocketNamespaserService } from '../assets/socket/socket-namespaser.service';
+import { SocketNameSpacerService } from '../assets/socket/socket-namespaser.service';
 
 @WebSocketGateway()
 export class ChatsGateway {
   constructor(
     private chatService: ChatsService,
-    private socketNamespaserService: SocketNamespaserService,
+    private socketNameSpacerService: SocketNameSpacerService,
   ) {}
 
   @WebSocketServer() server: Server;
@@ -35,8 +35,8 @@ export class ChatsGateway {
       );
     } else if (messageReceiverType === MessageReceiverTypes.PRIVATE) {
       const sids = [
-        this.socketNamespaserService.findSidByUserId(messageSender.userId),
-        this.socketNamespaserService.findSidByUserId(messageReceiverUserId),
+        this.socketNameSpacerService.findSidByUserId(messageSender.userId),
+        this.socketNameSpacerService.findSidByUserId(messageReceiverUserId),
       ];
       sids.forEach((sid) => {
         if (sid) {

@@ -13,7 +13,7 @@ import {
 import { RoomsService } from './rooms.service';
 import { JwtAuthGuard } from '../assets/auth/jwt/auth.guard';
 import { CreateRoomDto } from './dto/createRoom.dto';
-import { User } from '../../plugins/helpers/decorators/user.decorator';
+import { User } from '../../plugins/decorators/user.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('rooms')
