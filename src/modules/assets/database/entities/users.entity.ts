@@ -2,6 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { UserGameStatus, UserOnlineStatus, UserRole } from '../enums';
 import { Messages } from './messages.entity';
 import { BaseEntity } from './base.entity';
+import { Friendships } from './friendships.entity';
 
 @Entity('user')
 export class Users extends BaseEntity {
@@ -78,6 +79,12 @@ export class Users extends BaseEntity {
     default: null,
   })
   public roomJoinedId: null | number;
+
+  @OneToMany(() => Friendships, (friendships) => friendships.friendshipReceiver)
+  public friendshipReceiver: Friendships[];
+
+  @OneToMany(() => Friendships, (friendships) => friendships.friendshipSender)
+  public friendshipSender: Friendships[];
 
   // constructor(partial: Partial<Users>) {
   //   super();

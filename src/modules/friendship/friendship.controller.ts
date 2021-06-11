@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -23,38 +22,42 @@ export class FriendshipController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('friends')
+  async getYourFriends(@User() user: any) {
+    const a = await this.friendshipService.getYourFriends(+user.userId);
+    console.log(a);
+    return a;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('requests')
+  async getYouRequests(@User() user: any) {
+    const a = await this.friendshipService.getYouRequests(+user.userId);
+    console.log(a);
+    return a;
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('add/:userId')
-  async userSendFriendshipRequest(
-    @Param('userId') userId: string,
-    @Body() user: { userId: string },
-  ) {
-    return await this.friendshipService.userSendFriendshipRequest(
-      Number(userId),
-      userId,
-    );
+  async sendRequest(@Param('userId') userId: string, @User() user: any) {
+    return await this.friendshipService.sendRequest(+user.userId, +userId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('accept/:userId')
-  async userAcceptFriendshipRequest(
-    @Param('userId') userId: string,
-    @Body() user: { userId: string },
-  ) {
-    return await this.friendshipService.userAcceptFriendshipRequest(
-      Number(userId),
-      userId,
-    );
+  @Put('accept/:userId')
+  async acceptRequest(@Param('userId') userId: string, @User() user: any) {
+    return await this.friendshipService.acceptRequest(+user.userId, +userId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('decline/:userId')
-  async userDeclineFriendshipRequest(
-    @Param('userId') userId: string,
-    @Body() user: { userId: string },
-  ) {
-    return await this.friendshipService.userDeclineFriendshipRequest(
-      Number(userId),
-      userId,
-    );
+  @Put('ignore/:userId')
+  async ignoreRequest(@Param('userId') userId: string, @User() user: any) {
+    return await this.friendshipService.ignoreRequest(+user.userId, +userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('delete/:userId')
+  async deleteFriendship(@Param('userId') userId: string, @User() user: any) {
+    return await this.friendshipService.deleteFriendship(+user.userId, +userId);
   }
 }

@@ -22,7 +22,7 @@ export enum MessageReceiverTypes {
 export enum FriendshipStatuses {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
-  DECLINED = 'DECLINED',
+  IGNORED = 'IGNORED',
 }
 
 export enum UserOnlineStatus {

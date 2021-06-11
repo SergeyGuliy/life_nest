@@ -22,11 +22,11 @@ export class Friendships extends BaseEntity {
   })
   public friendshipsStatus: FriendshipStatuses;
 
-  @ManyToOne(() => Users, (user) => user.messages)
+  @ManyToOne(() => Users, (user) => user.friendshipReceiver)
   @JoinColumn()
   public friendshipReceiver: Users;
 
-  @ManyToOne(() => Users, (user) => user.messages)
+  @ManyToOne(() => Users, (user) => user.friendshipSender)
   @JoinColumn()
   public friendshipSender: Users;
 }
