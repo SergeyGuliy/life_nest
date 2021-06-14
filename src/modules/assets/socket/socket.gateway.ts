@@ -15,7 +15,7 @@ const DEBOUNCE_TIMEOUT = 5000;
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
-    private webSocketService: SocketService,
+    private socketService: SocketService,
     private socketNameSpacerService: SocketNameSpacerService,
   ) {}
   @WebSocketServer() server: Server;
@@ -23,7 +23,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('giveUserIdToServer')
   async giveUserIdToServer(client: Socket, { userId, clientId }) {
     client.join('GLOBAL');
-    await this.webSocketService.logInUserIntoApp(userId, clientId);
+    await this.socketService.userLogIn(userId);
+    const sidsToDisconnect = this.socketNameSpacerService.addUser(
+      clientId,
+      userId,
+    );
+    this.forceDisconnectSidFromServer(sidsToDisconnect);
   }
 
   public handleConnection(client: Socket): void {
@@ -37,9 +42,16 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     await this.logOutUserFormApp(userId);
   }
 
+  forceDisconnectSidFromServer(sidsToDisconnect: string[]) {
+    if (sidsToDisconnect.length) {
+      sidsToDisconnect.forEach((sid) => {
+        this.server.to(sid).emit('forceDisconnect');
+        this.server.to(sid).disconnectSockets(true);
+      });
+    }
+  }
+
   private logOutUserFormApp = debounce(DEBOUNCE_TIMEOUT, async (userId) => {
-    try {
-    } catch (e) {}
-    await this.webSocketService.logOutUserFormApp(userId);
+    await this.socketService.logOutUserFormApp(userId);
   });
 }

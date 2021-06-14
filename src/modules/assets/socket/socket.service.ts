@@ -32,11 +32,6 @@ export class SocketService {
     }
   }
 
-  async logInUserIntoApp(userId, clientId) {
-    await this.userLogIn(userId);
-    this.socketNameSpacerService.addUser(clientId, userId);
-  }
-
   async userLogIn(userId: number) {
     return await this.usersRepository.update(userId, {
       userOnlineStatus: UserOnlineStatus.ONLINE,
