@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
-import { FriendshipStatuses } from '../enums';
+import { FRIENDSHIP_STATUSES } from '../enums';
 import { Users } from './users.entity';
 
 @Entity('friendships')
@@ -17,10 +17,10 @@ export class Friendships extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: FriendshipStatuses,
-    default: FriendshipStatuses.PENDING,
+    enum: FRIENDSHIP_STATUSES,
+    default: FRIENDSHIP_STATUSES.PENDING,
   })
-  public friendshipsStatus: FriendshipStatuses;
+  public friendshipsStatus: FRIENDSHIP_STATUSES;
 
   @ManyToOne(() => Users, (user) => user.friendshipReceiver)
   @JoinColumn()

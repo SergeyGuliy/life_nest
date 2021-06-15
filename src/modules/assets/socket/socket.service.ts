@@ -9,7 +9,7 @@ import { RoomsService } from '../../rooms/rooms.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../database/entities/users.entity';
 import { Repository } from 'typeorm';
-import { UserOnlineStatus } from '../database/enums';
+import { USER_ONLINE_STATUSES } from '../database/enums';
 import { SocketNameSpacerService } from './socket-namespaser.service';
 
 @Injectable()
@@ -34,13 +34,13 @@ export class SocketService {
 
   async userLogIn(userId: number) {
     return await this.usersRepository.update(userId, {
-      userOnlineStatus: UserOnlineStatus.ONLINE,
+      userOnlineStatus: USER_ONLINE_STATUSES.ONLINE,
     });
   }
 
   async userLogOut(userId: number) {
     await this.usersRepository.update(userId, {
-      userOnlineStatus: UserOnlineStatus.OFFLINE,
+      userOnlineStatus: USER_ONLINE_STATUSES.OFFLINE,
     });
   }
 

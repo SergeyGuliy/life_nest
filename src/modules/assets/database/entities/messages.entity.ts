@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Users } from './users.entity';
-import { MessageReceiverTypes, MessageTypes } from '../enums';
+import { MESSAGE_RECEIVER_TYPES, MESSAGE_TYPES } from '../enums';
 
 @Entity('messages')
 export class Messages extends BaseEntity {
@@ -17,17 +17,17 @@ export class Messages extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: MessageReceiverTypes,
-    default: MessageReceiverTypes.GLOBAL,
+    enum: MESSAGE_RECEIVER_TYPES,
+    default: MESSAGE_RECEIVER_TYPES.GLOBAL,
   })
-  public messageReceiverType: MessageReceiverTypes;
+  public messageReceiverType: MESSAGE_RECEIVER_TYPES;
 
   @Column({
     type: 'enum',
-    enum: MessageTypes,
-    default: MessageTypes.TEXT,
+    enum: MESSAGE_TYPES,
+    default: MESSAGE_TYPES.TEXT,
   })
-  public messageType: MessageTypes;
+  public messageType: MESSAGE_TYPES;
 
   @ManyToOne(() => Users, (user) => user.messages)
   @JoinColumn()

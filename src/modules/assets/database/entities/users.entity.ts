@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { UserGameStatus, UserOnlineStatus, UserRole } from '../enums';
+import { USER_GAME_STATUSES, USER_ONLINE_STATUSES, USER_ROLES } from '../enums';
 import { Messages } from './messages.entity';
 import { BaseEntity } from './base.entity';
 import { Friendships } from './friendships.entity';
@@ -22,24 +22,24 @@ export class Users extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: UserRole,
-    default: UserRole.CASUAL,
+    enum: USER_ROLES,
+    default: USER_ROLES.CASUAL,
   })
-  public role: UserRole;
+  public role: USER_ROLES;
 
   @Column({
     type: 'enum',
-    enum: UserOnlineStatus,
-    default: UserOnlineStatus.OFFLINE,
+    enum: USER_ONLINE_STATUSES,
+    default: USER_ONLINE_STATUSES.OFFLINE,
   })
-  public userOnlineStatus: UserOnlineStatus;
+  public userOnlineStatus: USER_ONLINE_STATUSES;
 
   @Column({
     type: 'enum',
-    enum: UserGameStatus,
-    default: UserGameStatus.NOT_IN_GAME,
+    enum: USER_GAME_STATUSES,
+    default: USER_GAME_STATUSES.NOT_IN_GAME,
   })
-  public userGameStatus: UserGameStatus;
+  public userGameStatus: USER_GAME_STATUSES;
 
   @Column({
     default: null,

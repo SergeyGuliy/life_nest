@@ -6,7 +6,7 @@ import {
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Messages } from '../assets/database/entities/messages.entity';
-import { MessageReceiverTypes } from '../assets/database/enums';
+import { MESSAGE_RECEIVER_TYPES } from '../assets/database/enums';
 
 @Injectable()
 export class ChatsService {
@@ -26,7 +26,7 @@ export class ChatsService {
   async getAllGlobalMessages() {
     return await this.messagesRepository.find({
       where: {
-        messageReceiverType: MessageReceiverTypes.GLOBAL,
+        messageReceiverType: MESSAGE_RECEIVER_TYPES.GLOBAL,
       },
       relations: ['messageSender'],
     });
@@ -36,11 +36,11 @@ export class ChatsService {
     return await this.messagesRepository.find({
       where: [
         {
-          messageReceiverType: MessageReceiverTypes.PRIVATE,
+          messageReceiverType: MESSAGE_RECEIVER_TYPES.PRIVATE,
           messageSender: userId,
         },
         {
-          messageReceiverType: MessageReceiverTypes.PRIVATE,
+          messageReceiverType: MESSAGE_RECEIVER_TYPES.PRIVATE,
           messageReceiverUserId: userId,
         },
       ],
@@ -51,7 +51,7 @@ export class ChatsService {
   async getAllRoomMessages(roomJoinedId) {
     return await this.messagesRepository.find({
       where: {
-        messageReceiverType: MessageReceiverTypes.ROOM,
+        messageReceiverType: MESSAGE_RECEIVER_TYPES.ROOM,
         messageReceiverRoomId: roomJoinedId,
       },
       relations: ['messageSender'],

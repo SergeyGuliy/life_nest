@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FriendshipStatuses } from '../assets/database/enums';
+import { FRIENDSHIP_STATUSES } from '../assets/database/enums';
 
 import { Friendships } from '../assets/database/entities/friendships.entity';
 import { Users } from '../assets/database/entities/users.entity';
@@ -57,7 +57,7 @@ export class FriendshipService {
         HttpStatus.NOT_FOUND,
       );
     }
-    if (friendships.friendshipsStatus === FriendshipStatuses.APPROVED) {
+    if (friendships.friendshipsStatus === FRIENDSHIP_STATUSES.APPROVED) {
       throw new HttpException(
         `User is already in your friends list`,
         HttpStatus.METHOD_NOT_ALLOWED,
@@ -65,7 +65,7 @@ export class FriendshipService {
     }
     if (yourId === +friendships.friendshipReceiver) {
       await this.friendshipRepository.update(friendships.friendshipsId, {
-        friendshipsStatus: FriendshipStatuses.APPROVED,
+        friendshipsStatus: FRIENDSHIP_STATUSES.APPROVED,
       });
       return this.friendshipRepository.findOne({
         where: {
@@ -94,7 +94,7 @@ export class FriendshipService {
         HttpStatus.NOT_FOUND,
       );
     }
-    if (friendships.friendshipsStatus === FriendshipStatuses.APPROVED) {
+    if (friendships.friendshipsStatus === FRIENDSHIP_STATUSES.APPROVED) {
       throw new HttpException(
         `User is already in your friends list`,
         HttpStatus.METHOD_NOT_ALLOWED,
@@ -102,7 +102,7 @@ export class FriendshipService {
     }
     if (yourId === +friendships.friendshipReceiver) {
       await this.friendshipRepository.update(friendships.friendshipsId, {
-        friendshipsStatus: FriendshipStatuses.IGNORED,
+        friendshipsStatus: FRIENDSHIP_STATUSES.IGNORED,
       });
       return this.friendshipRepository.findOne({
         where: {
@@ -126,7 +126,7 @@ export class FriendshipService {
     );
     if (
       !friendships ||
-      friendships.friendshipsStatus !== FriendshipStatuses.APPROVED
+      friendships.friendshipsStatus !== FRIENDSHIP_STATUSES.APPROVED
     ) {
       throw new HttpException(
         `You can't delete user if he is not in your friends list`,
@@ -163,13 +163,13 @@ export class FriendshipService {
           friendshipReceiver: {
             userId: yourId,
           },
-          friendshipsStatus: FriendshipStatuses.APPROVED,
+          friendshipsStatus: FRIENDSHIP_STATUSES.APPROVED,
         },
         {
           friendshipSender: {
             userId: yourId,
           },
-          friendshipsStatus: FriendshipStatuses.APPROVED,
+          friendshipsStatus: FRIENDSHIP_STATUSES.APPROVED,
         },
       ],
       relations: ['friendshipReceiver', 'friendshipSender'],
@@ -183,25 +183,25 @@ export class FriendshipService {
           friendshipReceiver: {
             userId: yourId,
           },
-          friendshipsStatus: FriendshipStatuses.PENDING,
+          friendshipsStatus: FRIENDSHIP_STATUSES.PENDING,
         },
         {
           friendshipSender: {
             userId: yourId,
           },
-          friendshipsStatus: FriendshipStatuses.PENDING,
+          friendshipsStatus: FRIENDSHIP_STATUSES.PENDING,
         },
         {
           friendshipReceiver: {
             userId: yourId,
           },
-          friendshipsStatus: FriendshipStatuses.IGNORED,
+          friendshipsStatus: FRIENDSHIP_STATUSES.IGNORED,
         },
         {
           friendshipSender: {
             userId: yourId,
           },
-          friendshipsStatus: FriendshipStatuses.IGNORED,
+          friendshipsStatus: FRIENDSHIP_STATUSES.IGNORED,
         },
       ],
       relations: ['friendshipReceiver', 'friendshipSender'],

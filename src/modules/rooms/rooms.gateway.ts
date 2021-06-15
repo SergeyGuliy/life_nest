@@ -4,7 +4,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { MessageReceiverTypes } from '../assets/database/enums';
+import { MESSAGE_RECEIVER_TYPES } from '../assets/database/enums';
 import { SocketService } from '../assets/socket/socket.service';
 import { SocketNameSpacerService } from '../assets/socket/socket-namespaser.service';
 
@@ -65,6 +65,6 @@ export class RoomsSocketGateway {
   }
 
   private getRoomName(roomId: number) {
-    return `${MessageReceiverTypes.ROOM}-${roomId}`;
+    return `${MESSAGE_RECEIVER_TYPES.ROOM}-${roomId}`;
   }
 }

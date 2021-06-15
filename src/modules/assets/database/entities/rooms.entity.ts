@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
 
-import { RoomTypes } from '../enums';
+import { ROOM_TYPES } from '../enums';
 import { Users } from './users.entity';
 
 @Entity('rooms')
@@ -24,9 +24,9 @@ export class Rooms extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: RoomTypes,
+    enum: ROOM_TYPES,
   })
-  public typeOfRoom: RoomTypes;
+  public typeOfRoom: ROOM_TYPES;
 
   @Column()
   public minCountOfUsers: number;

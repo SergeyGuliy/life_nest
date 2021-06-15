@@ -5,7 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatsService } from './chats.service';
-import { MessageReceiverTypes } from '../assets/database/enums';
+import { MESSAGE_RECEIVER_TYPES } from '../assets/database/enums';
 import { SocketNameSpacerService } from '../assets/socket/socket-namespaser.service';
 
 @WebSocketGateway()
@@ -26,14 +26,14 @@ export class ChatsGateway {
       messageReceiverRoomId,
       messageReceiverUserId,
     } = messageToClient;
-    if (messageReceiverType === MessageReceiverTypes.GLOBAL) {
+    if (messageReceiverType === MESSAGE_RECEIVER_TYPES.GLOBAL) {
       this.sendMessageToClient(messageReceiverType, messageToClient);
-    } else if (messageReceiverType === MessageReceiverTypes.ROOM) {
+    } else if (messageReceiverType === MESSAGE_RECEIVER_TYPES.ROOM) {
       this.sendMessageToClient(
         `${messageReceiverType}-${messageReceiverRoomId}`,
         messageToClient,
       );
-    } else if (messageReceiverType === MessageReceiverTypes.PRIVATE) {
+    } else if (messageReceiverType === MESSAGE_RECEIVER_TYPES.PRIVATE) {
       const sids = [
         this.socketNameSpacerService.findSidByUserId(messageSender.userId),
         this.socketNameSpacerService.findSidByUserId(messageReceiverUserId),

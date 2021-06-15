@@ -1,36 +1,36 @@
-export enum UserRole {
+export enum USER_ROLES {
   ADMIN = 'ADMIN',
   CASUAL = 'CASUAL',
 }
 
-export enum RoomTypes {
+export enum ROOM_TYPES {
   PUBLIC = 'PUBLIC',
   PRIVATE = 'PRIVATE',
 }
 
-export enum MessageTypes {
+export enum MESSAGE_TYPES {
   TEXT = 'TEXT',
   VOICE = 'VOICE',
 }
 
-export enum MessageReceiverTypes {
+export enum MESSAGE_RECEIVER_TYPES {
   GLOBAL = 'GLOBAL',
   ROOM = 'ROOM',
   PRIVATE = 'PRIVATE',
 }
 
-export enum FriendshipStatuses {
+export enum FRIENDSHIP_STATUSES {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   IGNORED = 'IGNORED',
 }
 
-export enum UserOnlineStatus {
+export enum USER_ONLINE_STATUSES {
   ONLINE = 'ONLINE',
   OFFLINE = 'OFFLINE',
 }
 
-export enum UserGameStatus {
+export enum USER_GAME_STATUSES {
   NOT_IN_GAME = 'NOT_IN_GAME',
   WAITING_GAME_STARTING = 'WAITING_GAME_STARTING',
   GAME_IN_PROGRESS = 'GAME_IN_PROGRESS',

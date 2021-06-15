@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { Users } from '../assets/database/entities/users.entity';
-import { UserOnlineStatus } from '../assets/database/enums';
+import { USER_ONLINE_STATUSES } from '../assets/database/enums';
 
 @Injectable()
 export class UserService {
