@@ -21,6 +21,16 @@ export class Users extends BaseEntity {
   public password: string;
 
   @Column({
+    default: '',
+  })
+  public avatarSmall: string;
+
+  @Column({
+    default: '',
+  })
+  public avatarBig: string;
+
+  @Column({
     type: 'enum',
     enum: USER_ROLES,
     default: USER_ROLES.CASUAL,
