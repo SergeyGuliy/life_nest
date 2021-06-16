@@ -88,6 +88,8 @@ export class AuthService {
         'isDarkTheme',
         'createdRoomId',
         'roomJoinedId',
+        'avatarSmall',
+        'avatarBig',
       ],
     });
   }

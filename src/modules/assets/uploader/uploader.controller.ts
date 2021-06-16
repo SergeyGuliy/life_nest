@@ -11,9 +11,12 @@ import {
 
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/jwt/auth.guard';
+import { User } from '../../../plugins/decorators/user.decorator';
+import { UploaderService } from './uploader.service';
 
 @Controller('uploader')
 export class UploaderController {
+  constructor(private uploaderService: UploaderService) {}
   @UseGuards(JwtAuthGuard)
   @Post('uploadVoice')
   @UseInterceptors(
@@ -25,8 +28,24 @@ export class UploaderController {
     return files.messageVoiceFile[0].filename;
   }
 
-  @Get('voiceMessages/:imgpath')
-  seeUploadedFile(@Param('imgpath') image, @Res() res) {
-    return res.sendFile(image, { root: './uploads/voiceMessages' });
+  @UseGuards(JwtAuthGuard)
+  @Post('images/avatars')
+  @UseInterceptors(
+    FileFieldsInterceptor([{ name: 'avatarImg', maxCount: 1 }], {
+      dest: './uploads/cache',
+    }),
+  )
+  async uploadAvatar(@UploadedFiles() files, @User() user: any) {
+    return await this.uploaderService.uploadPhoto(files, user.userId);
+  }
+
+  @Get('voiceMessages/:voice')
+  see(@Param('voice') voice, @Res() res) {
+    return res.sendFile(voice, { root: './uploads/voiceMessages' });
+  }
+
+  @Get('images/avatars/:folder/:image')
+  seeAvatar(@Param('folder') folder, @Param('image') image, @Res() res) {
+    return res.sendFile(image, { root: `./uploads/images/avatars/${folder}` });
   }
 }
