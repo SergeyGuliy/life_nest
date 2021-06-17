@@ -7,6 +7,7 @@ import { Users } from '../database/entities/users.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../../users/dto/createUser.dto';
 import * as phone from 'phone';
+import { UserSettings } from '../database/entities/users-settings.entity';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,8 @@ export class AuthService {
     private jwtService: JwtService,
     @InjectRepository(Users)
     private usersRepository: Repository<Users>,
+    @InjectRepository(UserSettings)
+    private userSettingsRepository: Repository<UserSettings>,
     private passwordEncoderService: PasswordEncoderService,
   ) {}
 
@@ -85,12 +88,12 @@ export class AuthService {
         'firstName',
         'country',
         'refreshToken',
-        'isDarkTheme',
         'createdRoomId',
         'roomJoinedId',
         'avatarSmall',
         'avatarBig',
       ],
+      relations: ['userSettings'],
     });
   }
 
@@ -108,6 +111,7 @@ export class AuthService {
     const formattedUser = {
       phoneCountryCode: '',
       country: '',
+      userSettings: undefined,
       ...user,
     };
     const formattedPhone = phone(user.phone);
@@ -116,6 +120,7 @@ export class AuthService {
     formattedUser.password = await this.passwordEncoderService.generatePasswordHash(
       user.password,
     );
+    formattedUser.userSettings = await this.userSettingsRepository.save({});
     return await this.usersRepository.save(formattedUser);
   }
 

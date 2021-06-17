@@ -35,3 +35,16 @@ export enum USER_GAME_STATUSES {
   WAITING_GAME_STARTING = 'WAITING_GAME_STARTING',
   GAME_IN_PROGRESS = 'GAME_IN_PROGRESS',
 }
+
+export enum LOCALES {
+  en = 'en',
+  ru = 'ru',
+}
+
+export enum SOUNDS {
+  SOUNDS_1 = 'SOUNDS_1',
+  SOUNDS_2 = 'SOUNDS_2',
+  SOUNDS_3 = 'SOUNDS_3',
+  SOUNDS_4 = 'SOUNDS_4',
+  SOUNDS_5 = 'SOUNDS_5',
+}

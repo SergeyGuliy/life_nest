@@ -1,10 +1,18 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { USER_GAME_STATUSES, USER_ONLINE_STATUSES, USER_ROLES } from '../enums';
 import { Messages } from './messages.entity';
 import { BaseEntity } from './base.entity';
 import { Friendships } from './friendships.entity';
+import { UserSettings } from './users-settings.entity';
 
-@Entity('user')
+@Entity('users2')
 export class Users extends BaseEntity {
   @PrimaryGeneratedColumn()
   public userId: number;
@@ -72,10 +80,10 @@ export class Users extends BaseEntity {
   })
   public refreshToken?: string;
 
-  @Column({
-    default: true,
-  })
-  public isDarkTheme?: boolean;
+  // @Column({
+  //   default: true,
+  // })
+  // public isDarkTheme?: boolean;
 
   @Column({
     default: null,
@@ -96,6 +104,9 @@ export class Users extends BaseEntity {
   @OneToMany(() => Friendships, (friendships) => friendships.friendshipSender)
   public friendshipSender: Friendships[];
 
+  @OneToOne(() => UserSettings)
+  @JoinColumn()
+  userSettings: UserSettings;
   // constructor(partial: Partial<Users>) {
   //   super();
   //   Object.assign(this, partial);

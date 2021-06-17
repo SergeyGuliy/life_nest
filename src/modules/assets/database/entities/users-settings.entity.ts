@@ -1,8 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { USER_GAME_STATUSES, USER_ONLINE_STATUSES, USER_ROLES } from '../enums';
-import { Messages } from './messages.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { LOCALES, SOUNDS } from '../enums';
 import { BaseEntity } from './base.entity';
-import { Friendships } from './friendships.entity';
 
 @Entity('userSettings')
 export class UserSettings extends BaseEntity {
@@ -11,13 +9,64 @@ export class UserSettings extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: USER_GAME_STATUSES,
-    default: USER_GAME_STATUSES.NOT_IN_GAME,
+    enum: LOCALES,
+    default: LOCALES.en,
   })
-  public userGameStatus: USER_GAME_STATUSES;
+  public locale: LOCALES;
 
   @Column({
     default: true,
   })
   public isDarkTheme?: boolean;
+
+  @Column({
+    default: false,
+  })
+  public globalIsTurnedOn?: boolean;
+
+  @Column({
+    default: false,
+  })
+  public roomIsTurnedOn?: boolean;
+
+  @Column({
+    default: false,
+  })
+  public privateIsTurnedOn?: boolean;
+
+  @Column({
+    default: false,
+  })
+  public globalAutoplay?: boolean;
+
+  @Column({
+    default: false,
+  })
+  public roomAutoplay?: boolean;
+
+  @Column({
+    default: false,
+  })
+  public privateAutoplay?: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: SOUNDS,
+    default: SOUNDS.SOUNDS_1,
+  })
+  public globalSoundSelected?: SOUNDS;
+
+  @Column({
+    type: 'enum',
+    enum: SOUNDS,
+    default: SOUNDS.SOUNDS_1,
+  })
+  public roomSoundSelected?: SOUNDS;
+
+  @Column({
+    type: 'enum',
+    enum: SOUNDS,
+    default: SOUNDS.SOUNDS_1,
+  })
+  public privateSoundSelected?: SOUNDS;
 }

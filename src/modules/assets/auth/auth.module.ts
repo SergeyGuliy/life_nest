@@ -7,10 +7,11 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { Users } from '../database/entities/users.entity';
 import { PasswordEncoderService } from './password-encoder.service';
+import { UserSettings } from '../database/entities/users-settings.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([Users, UserSettings]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_AT },
