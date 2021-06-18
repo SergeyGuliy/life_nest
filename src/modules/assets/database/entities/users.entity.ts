@@ -12,7 +12,7 @@ import { BaseEntity } from './base.entity';
 import { Friendships } from './friendships.entity';
 import { UserSettings } from './users-settings.entity';
 
-@Entity('users2')
+@Entity('users11')
 export class Users extends BaseEntity {
   @PrimaryGeneratedColumn()
   public userId: number;

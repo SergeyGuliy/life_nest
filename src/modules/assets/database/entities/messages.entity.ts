@@ -9,7 +9,7 @@ import { BaseEntity } from './base.entity';
 import { Users } from './users.entity';
 import { MESSAGE_RECEIVER_TYPES, MESSAGE_TYPES } from '../enums';
 
-@Entity('messages')
+@Entity('messages10')
 export class Messages extends BaseEntity {
   @PrimaryGeneratedColumn()
   public messageId: number;

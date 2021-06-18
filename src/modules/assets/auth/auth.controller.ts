@@ -34,4 +34,16 @@ export class AuthController {
   changePassword(@Body() { oldPassword, newPassword }, @User() userData) {
     return this.authService.changePassword(userData, oldPassword, newPassword);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-locale')
+  changeLocale(@Body() { locale }, @User() userData) {
+    return this.authService.changeLanguage(userData, locale);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-theme')
+  changeTheme(@Body() { isDarkTheme }, @User() userData) {
+    return this.authService.changeTheme(userData, isDarkTheme);
+  }
 }

@@ -61,7 +61,29 @@ export class AuthService {
     await this.usersRepository.update(userData.userId, {
       password: newPassword,
     });
-    return 'Password successfuly changed';
+    return 'Password successfully changed';
+  }
+
+  async changeLanguage(userData, locale) {
+    const { userSettings } = await this.usersRepository.findOne({
+      where: userData.userId,
+      loadRelationIds: true,
+    });
+    await this.userSettingsRepository.update(userSettings, {
+      locale: locale,
+    });
+    return 'Locale successfully changed';
+  }
+
+  async changeTheme(userData, isDarkTheme) {
+    const { userSettings } = await this.usersRepository.findOne({
+      where: userData.userId,
+      loadRelationIds: true,
+    });
+    await this.userSettingsRepository.update(userSettings, {
+      isDarkTheme: isDarkTheme,
+    });
+    return 'Theme successfully changed';
   }
 
   async setNewRefreshTokenToUser(userId: number) {
@@ -72,7 +94,6 @@ export class AuthService {
   }
 
   async getUserByEmailOrPhoneOrId({ userId, phone, email }) {
-    console.log(userId);
     return await this.usersRepository
       .createQueryBuilder('user')
       .select(['user.phone', 'user.email', 'user.password', 'user.userId'])
