@@ -45,8 +45,8 @@ export class UploaderService {
       });
       const imageSmallData = await thumbnail({
         src: `./uploads/cache/${sourceId}`,
-        width: 30,
-        height: 30,
+        width: 45,
+        height: 45,
         dst: `./uploads/images/avatars/${userId}/${sourceId}-small.jpg`,
       });
       const avatarSmall = `${userId}/${imageSmallData.name}`;
