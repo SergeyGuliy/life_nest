@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   async login(body): Promise<any> {
-    const user = await this.getUserByEmailOrPhone(body);
+    const user = await this.getUserByEmailOrPhoneOrId(body);
     if (!user) {
       throw new HttpException('User is not found', HttpStatus.NOT_FOUND);
     }
@@ -52,6 +52,18 @@ export class AuthService {
     }
   }
 
+  async changePassword(userData, oldPassword, newPassword) {
+    const securedUserData = await this.getUserByEmailOrPhoneOrId(userData);
+    await this.passwordEncoderService.validatePassword(
+      oldPassword,
+      securedUserData.password,
+    );
+    await this.usersRepository.update(userData.userId, {
+      password: newPassword,
+    });
+    return 'Password successfuly changed';
+  }
+
   async setNewRefreshTokenToUser(userId: number) {
     await this.usersRepository.update(userId, {
       refreshToken: uuidv4(),
@@ -59,12 +71,14 @@ export class AuthService {
     return this.getUserByIdWithToken(userId);
   }
 
-  async getUserByEmailOrPhone({ phone, email }) {
+  async getUserByEmailOrPhoneOrId({ userId, phone, email }) {
+    console.log(userId);
     return await this.usersRepository
       .createQueryBuilder('user')
       .select(['user.phone', 'user.email', 'user.password', 'user.userId'])
       .where('user.email = :email', { email })
       .orWhere('user.phone = :phone', { phone })
+      .orWhere('user.userId = :userId', { userId })
       .getOne();
   }
 

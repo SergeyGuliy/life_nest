@@ -39,6 +39,8 @@ export class PasswordEncoderService {
       bodyPassword,
       userPassword,
     );
+    console.log(isPasswordSame);
+    console.log(isPasswordHashedSame);
     if (!(isPasswordSame || isPasswordHashedSame)) {
       throw new HttpException('Wrong password or login', HttpStatus.NOT_FOUND);
     }
