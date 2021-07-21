@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './modules/users/user.module';
-import { SqlHelperModule } from './modules/assets/sql-helper/sql-helper.module';
+import { SqlHelperModule } from './plugins/sql-helper/sql-helper.module';
 import { AuthModule } from './modules/assets/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeormConfig } from './modules/assets/database/typeorm-config';
+import { typeormConfig } from './plugins/database/typeorm-config';
 import { RoomsModule } from './modules/rooms/rooms.module';
 import { ChatsModule } from './modules/chats/chats.module';
 import { AppController } from './app.controller';

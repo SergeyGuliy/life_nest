@@ -3,11 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import { PasswordEncoderService } from './password-encoder.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../database/entities/users.entity';
+import { Users } from '../../../plugins/database/entities/users.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../../users/dto/createUser.dto';
 import * as phone from 'phone';
-import { UserSettings } from '../database/entities/users-settings.entity';
+import { UserSettings } from '../../../plugins/database/entities/users-settings.entity';
 
 @Injectable()
 export class AuthService {

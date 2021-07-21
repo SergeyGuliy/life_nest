@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FRIENDSHIP_STATUSES } from '../assets/database/enums';
+import { FRIENDSHIP_STATUSES } from '../../plugins/database/enums';
 
-import { Friendships } from '../assets/database/entities/friendships.entity';
-import { Users } from '../assets/database/entities/users.entity';
+import { Friendships } from '../../plugins/database/entities/friendships.entity';
+import { Users } from '../../plugins/database/entities/users.entity';
 
 @Injectable()
 export class FriendshipService {

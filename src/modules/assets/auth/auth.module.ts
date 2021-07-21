@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
-import { Users } from '../database/entities/users.entity';
+import { Users } from '../../../plugins/database/entities/users.entity';
 import { PasswordEncoderService } from './password-encoder.service';
-import { UserSettings } from '../database/entities/users-settings.entity';
+import { UserSettings } from '../../../plugins/database/entities/users-settings.entity';
 
 @Module({
   imports: [
