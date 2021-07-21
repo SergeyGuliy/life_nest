@@ -46,4 +46,10 @@ export class AuthController {
   changeTheme(@Body() { isDarkTheme }, @User() userData) {
     return this.authService.changeTheme(userData, isDarkTheme);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('update-settings')
+  updateUserSettings(@Body() userSettings, @User() userData) {
+    return this.authService.updateUserSettings(userData, userSettings);
+  }
 }

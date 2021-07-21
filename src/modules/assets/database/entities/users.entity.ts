@@ -80,11 +80,6 @@ export class Users extends BaseEntity {
   })
   public refreshToken?: string;
 
-  // @Column({
-  //   default: true,
-  // })
-  // public isDarkTheme?: boolean;
-
   @Column({
     default: null,
   })
@@ -107,8 +102,4 @@ export class Users extends BaseEntity {
   @OneToOne(() => UserSettings)
   @JoinColumn()
   userSettings: UserSettings;
-  // constructor(partial: Partial<Users>) {
-  //   super();
-  //   Object.assign(this, partial);
-  // }
 }

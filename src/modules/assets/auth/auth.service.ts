@@ -64,26 +64,41 @@ export class AuthService {
     return 'Password successfully changed';
   }
 
-  async changeLanguage(userData, locale) {
-    const { userSettings } = await this.usersRepository.findOne({
-      where: userData.userId,
-      loadRelationIds: true,
-    });
-    await this.userSettingsRepository.update(userSettings, {
+  async changeLanguage({ userSettingsId }, locale) {
+    return await this.userSettingsRepository.save({
+      userSettingsId,
       locale: locale,
     });
-    return 'Locale successfully changed';
   }
 
-  async changeTheme(userData, isDarkTheme) {
-    const { userSettings } = await this.usersRepository.findOne({
-      where: userData.userId,
-      loadRelationIds: true,
-    });
-    await this.userSettingsRepository.update(userSettings, {
+  async changeTheme({ userSettingsId }, isDarkTheme) {
+    return await this.userSettingsRepository.save({
+      userSettingsId,
       isDarkTheme: isDarkTheme,
     });
-    return 'Theme successfully changed';
+  }
+
+  async updateUserSettings(
+    { userId, userSettingsId },
+    { profileSettings, userSettings },
+  ) {
+    let newProfileSettings, newUserSettings;
+    if (profileSettings) {
+      newProfileSettings = await this.usersRepository.save({
+        userId,
+        ...profileSettings,
+      });
+    }
+    if (userSettings) {
+      newUserSettings = await this.userSettingsRepository.save({
+        userSettingsId,
+        ...userSettings,
+      });
+    }
+    return {
+      profileSettings: newProfileSettings,
+      userSettings: newUserSettings,
+    };
   }
 
   async setNewRefreshTokenToUser(userId: number) {
@@ -121,6 +136,7 @@ export class AuthService {
         'userOnlineStatus',
         'userGameStatus',
         'firstName',
+        'lastName',
         'country',
         'refreshToken',
         'createdRoomId',
@@ -138,6 +154,7 @@ export class AuthService {
       refreshToken: userData.refreshToken,
       accessToken: this.jwtService.sign({
         userId: userData.userId,
+        userSettingsId: userData.userSettings.userSettingsId,
       }),
     };
   }
