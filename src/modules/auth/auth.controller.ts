@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 
-import { RegistrationDto } from './dto/registrationDto';
-import { LoginDto } from './dto/loginDto';
+import { RegistrationDto } from '../../plugins/dto/registrationDto';
+import { LoginDto } from '../../plugins/dto/loginDto';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt/auth.guard';

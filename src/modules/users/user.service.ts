@@ -1,52 +1,29 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 
-import { UpdateUserDto } from './dto/updateUser.dto';
-import { Users } from '../../plugins/database/entities/users.entity';
-import { USER_ONLINE_STATUSES } from '../../plugins/database/enums';
+import { UpdateUserDto } from '../../plugins/dto/updateUser.dto';
+import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
-  ) {}
+  constructor(private readonly userManagerService: UserManagerService) {}
 
   async getAllUsers() {
-    return await this.usersRepository.find();
+    return await this.userManagerService.getAllUsers();
   }
 
   async getUserById(userId: number) {
-    const user = await this.usersRepository.findOne(userId);
-    if (user) {
-      return user;
-    }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return await this.userManagerService.getUserById(userId);
   }
 
   async editUser(userId: number, user: UpdateUserDto) {
-    await this.usersRepository.update(userId, user);
-    const updatedUser = await this.usersRepository.findOne(userId);
-    if (updatedUser) {
-      return updatedUser;
-    }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return this.userManagerService.editUser(userId, user);
   }
 
   async changeUserTheme(userId: number, { isDarkTheme }) {
-    await this.usersRepository.update(userId, isDarkTheme);
-    const updatedUser = await this.usersRepository.findOne(userId);
-    if (updatedUser) {
-      return updatedUser;
-    }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return this.userManagerService.changeUserTheme(userId, { isDarkTheme });
   }
 
   async deleteUser(userId: number) {
-    const deleteResponse = await this.usersRepository.delete(userId);
-    if (!deleteResponse.affected) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
+    return this.userManagerService.deleteUser(userId);
   }
 }

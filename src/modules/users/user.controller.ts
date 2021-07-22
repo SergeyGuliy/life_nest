@@ -5,11 +5,10 @@ import {
   Get,
   Param,
   UseGuards,
-  Post,
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/updateUser.dto';
+import { UpdateUserDto } from '../../plugins/dto/updateUser.dto';
 import { JwtAuthGuard } from '../auth/jwt/auth.guard';
 
 @Controller('users')

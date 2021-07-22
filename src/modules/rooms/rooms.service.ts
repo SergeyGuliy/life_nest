@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { RoomsSocketGateway } from './rooms.gateway';
 import { random } from 'lodash';
 import { Users } from '../../plugins/database/entities/users.entity';
-import { UpdateUserDto } from '../users/dto/updateUser.dto';
+import { UpdateUserDto } from '../../plugins/dto/updateUser.dto';
 
 @Injectable()
 export class RoomsService {

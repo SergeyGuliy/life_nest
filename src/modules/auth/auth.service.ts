@@ -5,7 +5,7 @@ import { PasswordEncoderService } from './password-encoder.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../../plugins/database/entities/users.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../users/dto/createUser.dto';
+import { CreateUserDto } from '../../plugins/dto/createUser.dto';
 import * as phone from 'phone';
 import { UserSettings } from '../../plugins/database/entities/users-settings.entity';
 
