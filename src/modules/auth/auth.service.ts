@@ -2,34 +2,30 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import { PasswordEncoderService } from './password-encoder.service';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../../plugins/database/entities/users.entity';
-import { Repository } from 'typeorm';
 import { CreateUserDto } from '../../plugins/dto/createUser.dto';
 import * as phone from 'phone';
-import { UserSettings } from '../../plugins/database/entities/users-settings.entity';
+import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
+import { UserSettingsManagerService } from '../../assets/entitiesManagers/users/user-settings.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
-    @InjectRepository(UserSettings)
-    private userSettingsRepository: Repository<UserSettings>,
     private passwordEncoderService: PasswordEncoderService,
+    private readonly userManagerService: UserManagerService,
+    private readonly userSettingsManagerService: UserSettingsManagerService,
   ) {}
 
   async register(body) {
     await this.registerMiddleware(body);
     body.refreshToken = uuidv4();
     const { userId } = await this.createUser(body);
-    const userData = await this.getUserByIdWithToken(userId);
+    const userData = await this.userManagerService.getUserByIdWithToken(userId);
     return this.returnUserDataToClient(userData);
   }
 
   async login(body): Promise<any> {
-    const user = await this.getUserByEmailOrPhoneOrId(body);
+    const user = await this.userManagerService.getUserByEmailOrPhoneOrId(body);
     if (!user) {
       throw new HttpException('User is not found', HttpStatus.NOT_FOUND);
     }
@@ -37,12 +33,14 @@ export class AuthService {
       body.password,
       user.password,
     );
-    const userData = await this.getUserByIdWithToken(user.userId);
+    const userData = await this.userManagerService.getUserByIdWithToken(
+      user.userId,
+    );
     return this.returnUserDataToClient(userData);
   }
 
   async refreshToken(userId, oldRefreshToken) {
-    const user = await this.getUserByIdWithToken(userId);
+    const user = await this.userManagerService.getUserByIdWithToken(userId);
     if (user.refreshToken === oldRefreshToken) {
       const userData = await this.setNewRefreshTokenToUser(user.userId);
       return this.returnUserDataToClient(userData);
@@ -53,99 +51,24 @@ export class AuthService {
   }
 
   async changePassword(userData, oldPassword, newPassword) {
-    const securedUserData = await this.getUserByEmailOrPhoneOrId(userData);
+    const securedUserData = await this.userManagerService.getUserByEmailOrPhoneOrId(
+      userData,
+    );
     await this.passwordEncoderService.validatePassword(
       oldPassword,
       securedUserData.password,
     );
-    await this.usersRepository.update(userData.userId, {
+    await this.userManagerService.updateUser(userData.userId, {
       password: newPassword,
     });
     return 'Password successfully changed';
   }
 
-  async changeLanguage({ userSettingsId }, locale) {
-    return await this.userSettingsRepository.save({
-      userSettingsId,
-      locale: locale,
-    });
-  }
-
-  async changeTheme({ userSettingsId }, isDarkTheme) {
-    return await this.userSettingsRepository.save({
-      userSettingsId,
-      isDarkTheme: isDarkTheme,
-    });
-  }
-
-  async updateUserSettings(
-    { userId, userSettingsId },
-    { profileSettings, userSettings },
-  ) {
-    let newProfileSettings, newUserSettings;
-    if (profileSettings) {
-      newProfileSettings = await this.usersRepository.save({
-        userId,
-        ...profileSettings,
-      });
-    }
-    if (userSettings) {
-      newUserSettings = await this.userSettingsRepository.save({
-        userSettingsId,
-        ...userSettings,
-      });
-    }
-    return {
-      profileSettings: newProfileSettings,
-      userSettings: newUserSettings,
-    };
-  }
-
   async setNewRefreshTokenToUser(userId: number) {
-    await this.usersRepository.update(userId, {
+    await this.userManagerService.updateUser(userId, {
       refreshToken: uuidv4(),
     });
-    return this.getUserByIdWithToken(userId);
-  }
-
-  async getUserByEmailOrPhoneOrId({ userId, phone, email }) {
-    return await this.usersRepository
-      .createQueryBuilder('user')
-      .select(['user.phone', 'user.email', 'user.password', 'user.userId'])
-      .where('user.email = :email', { email })
-      .orWhere('user.phone = :phone', { phone })
-      .orWhere('user.userId = :userId', { userId })
-      .getOne();
-  }
-
-  async getUserByIdWithToken(userId: number) {
-    const user = await this.fetchSecuredUserData(userId);
-    if (user) {
-      return user;
-    }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  }
-
-  async fetchSecuredUserData(userId) {
-    return await this.usersRepository.findOne(userId, {
-      select: [
-        'userId',
-        'email',
-        'phone',
-        'role',
-        'userOnlineStatus',
-        'userGameStatus',
-        'firstName',
-        'lastName',
-        'country',
-        'refreshToken',
-        'createdRoomId',
-        'roomJoinedId',
-        'avatarSmall',
-        'avatarBig',
-      ],
-      relations: ['userSettings'],
-    });
+    return this.userManagerService.getUserByIdWithToken(userId);
   }
 
   returnUserDataToClient(userData) {
@@ -172,15 +95,17 @@ export class AuthService {
     formattedUser.password = await this.passwordEncoderService.generatePasswordHash(
       user.password,
     );
-    formattedUser.userSettings = await this.userSettingsRepository.save({});
-    return await this.usersRepository.save(formattedUser);
+    formattedUser.userSettings = await this.userSettingsManagerService.saveUserSettings(
+      {},
+    );
+    return await this.userManagerService.saveUser(formattedUser);
   }
 
   async registerMiddleware({ email, phone }) {
-    const userSearchEmail = await this.usersRepository.findOne({
+    const userSearchEmail = await this.userManagerService.findOneUser({
       where: [{ email }],
     });
-    const userSearchPhone = await this.usersRepository.findOne({
+    const userSearchPhone = await this.userManagerService.findOneUser({
       where: [{ phone }],
     });
     if (userSearchEmail && userSearchPhone) {

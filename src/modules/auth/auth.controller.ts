@@ -4,7 +4,7 @@ import { RegistrationDto } from '../../plugins/dto/registrationDto';
 import { LoginDto } from '../../plugins/dto/loginDto';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt/auth.guard';
+import { JwtAuthGuard } from '../../plugins/jwt/auth.guard';
 import { User } from '../../plugins/decorators/user.decorator';
 
 @Controller('auth')
@@ -33,23 +33,5 @@ export class AuthController {
   @Post('change-password')
   changePassword(@Body() { oldPassword, newPassword }, @User() userData) {
     return this.authService.changePassword(userData, oldPassword, newPassword);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('change-locale')
-  changeLocale(@Body() { locale }, @User() userData) {
-    return this.authService.changeLanguage(userData, locale);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('change-theme')
-  changeTheme(@Body() { isDarkTheme }, @User() userData) {
-    return this.authService.changeTheme(userData, isDarkTheme);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('update-settings')
-  updateUserSettings(@Body() userSettings, @User() userData) {
-    return this.authService.updateUserSettings(userData, userSettings);
   }
 }

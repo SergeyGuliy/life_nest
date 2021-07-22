@@ -8,6 +8,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { Users } from '../../plugins/database/entities/users.entity';
 import { PasswordEncoderService } from './password-encoder.service';
 import { UserSettings } from '../../plugins/database/entities/users-settings.entity';
+import { EntityManagerModule } from '../../assets/entitiesManagers/entitiy-manager.module';
 
 @Module({
   imports: [
@@ -16,9 +17,9 @@ import { UserSettings } from '../../plugins/database/entities/users-settings.ent
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_AT },
     }),
+    EntityManagerModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, PasswordEncoderService],
-  exports: [AuthService, LocalStrategy],
 })
 export class AuthModule {}

@@ -3,58 +3,26 @@ import {
   Injectable,
   UseInterceptors,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Messages } from '../../plugins/database/entities/messages.entity';
-import { MESSAGE_RECEIVER_TYPES } from '../../plugins/database/enums';
+import { ChatsManagerService } from '../../assets/entitiesManagers/chats/chats.service';
 
 @Injectable()
 export class ChatsService {
-  constructor(
-    @InjectRepository(Messages)
-    private readonly messagesRepository: Repository<Messages>,
-  ) {}
+  constructor(private readonly chatsManagerService: ChatsManagerService) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
   async saveMessage(messageData) {
-    const savedMessage = await this.messagesRepository.save(messageData);
-    return await this.messagesRepository.findOne(savedMessage.messageId, {
-      relations: ['messageSender'],
-    });
+    return await this.chatsManagerService.saveMessage(messageData);
   }
 
   async getAllGlobalMessages() {
-    return await this.messagesRepository.find({
-      where: {
-        messageReceiverType: MESSAGE_RECEIVER_TYPES.GLOBAL,
-      },
-      relations: ['messageSender'],
-    });
+    return await this.chatsManagerService.getAllGlobalMessages();
   }
 
   async getAllPrivateMessages(userId) {
-    return await this.messagesRepository.find({
-      where: [
-        {
-          messageReceiverType: MESSAGE_RECEIVER_TYPES.PRIVATE,
-          messageSender: userId,
-        },
-        {
-          messageReceiverType: MESSAGE_RECEIVER_TYPES.PRIVATE,
-          messageReceiverUserId: userId,
-        },
-      ],
-      relations: ['messageSender'],
-    });
+    return await this.chatsManagerService.getAllPrivateMessages(userId);
   }
 
   async getAllRoomMessages(roomJoinedId) {
-    return await this.messagesRepository.find({
-      where: {
-        messageReceiverType: MESSAGE_RECEIVER_TYPES.ROOM,
-        messageReceiverRoomId: roomJoinedId,
-      },
-      relations: ['messageSender'],
-    });
+    return await this.chatsManagerService.getAllRoomMessages(roomJoinedId);
   }
 }

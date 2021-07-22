@@ -12,6 +12,7 @@ import { AppController } from './app.controller';
 import { SocketModule } from './assets/socket/socket.module';
 import { UploaderModule } from './assets/uploader/uploader.module';
 import { FriendshipModule } from './modules/friendship/friendship.module';
+import { UserSettingsModule } from './modules/user-settings/user-settings.module';
 
 @Module({
   imports: [
@@ -29,9 +30,10 @@ import { FriendshipModule } from './modules/friendship/friendship.module';
       }),
     }),
     // RoomsModule,
-    // ChatsModule,
+    ChatsModule,
     AuthModule,
     UserModule,
+    UserSettingsModule,
     // SocketModule,
     // SqlHelperModule,
     // UploaderModule,

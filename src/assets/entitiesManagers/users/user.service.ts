@@ -47,4 +47,56 @@ export class UserManagerService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
   }
+
+  async getUserByIdWithToken(userId: number) {
+    const user = await this.fetchSecuredUserData(userId);
+    if (user) {
+      return user;
+    }
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  }
+
+  async fetchSecuredUserData(userId) {
+    return await this.usersRepository.findOne(userId, {
+      select: [
+        'userId',
+        'email',
+        'phone',
+        'role',
+        'userOnlineStatus',
+        'userGameStatus',
+        'firstName',
+        'lastName',
+        'country',
+        'refreshToken',
+        'createdRoomId',
+        'roomJoinedId',
+        'avatarSmall',
+        'avatarBig',
+      ],
+      relations: ['userSettings'],
+    });
+  }
+
+  async getUserByEmailOrPhoneOrId({ userId, phone, email }) {
+    return await this.usersRepository
+      .createQueryBuilder('user')
+      .select(['user.phone', 'user.email', 'user.password', 'user.userId'])
+      .where('user.email = :email', { email })
+      .orWhere('user.phone = :phone', { phone })
+      .orWhere('user.userId = :userId', { userId })
+      .getOne();
+  }
+
+  async updateUser(userId, newUserData) {
+    await this.usersRepository.update(userId, newUserData);
+  }
+
+  async findOneUser(condition) {
+    return await this.usersRepository.findOne(condition);
+  }
+
+  async saveUser(userData) {
+    return await this.usersRepository.save(userData);
+  }
 }

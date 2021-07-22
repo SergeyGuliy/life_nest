@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Messages } from '../../plugins/database/entities/messages.entity';
 import { ChatsController } from './chats.controller';
 import { SocketNameSpacerService } from '../../assets/socket/socket-namespaser.service';
+import { EntityManagerModule } from '../../assets/entitiesManagers/entitiy-manager.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Messages])],
+  imports: [TypeOrmModule.forFeature([Messages]), EntityManagerModule],
   controllers: [ChatsController],
   providers: [SocketNameSpacerService, ChatsService, ChatsGateway],
 })
