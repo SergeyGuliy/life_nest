@@ -4,7 +4,7 @@ import { ChatsGateway } from './chats.gateway';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Messages } from '../../plugins/database/entities/messages.entity';
 import { ChatsController } from './chats.controller';
-import { SocketNameSpacerService } from '../assets/socket/socket-namespaser.service';
+import { SocketNameSpacerService } from '../../assets/socket/socket-namespaser.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Messages])],

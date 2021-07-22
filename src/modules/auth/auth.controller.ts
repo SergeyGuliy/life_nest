@@ -5,7 +5,7 @@ import { LoginDto } from './dto/loginDto';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt/auth.guard';
-import { User } from '../../../plugins/decorators/user.decorator';
+import { User } from '../../plugins/decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {

@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Rooms } from '../../plugins/database/entities/rooms.entity';
 import { Users } from '../../plugins/database/entities/users.entity';
 import { RoomsSocketGateway } from './rooms.gateway';
-import { SocketModule } from '../assets/socket/socket.module';
+import { SocketModule } from '../../assets/socket/socket.module';
 import { UserModule } from '../users/user.module';
-import { SocketNameSpacerService } from '../assets/socket/socket-namespaser.service';
+import { SocketNameSpacerService } from '../../assets/socket/socket-namespaser.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Rooms, Users]), SocketModule, UserModule],
