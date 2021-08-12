@@ -9,7 +9,8 @@ import { Socket, Server } from 'socket.io';
 
 import { debounce } from 'throttle-debounce';
 import { SocketService } from './socket.service';
-import { SocketNameSpacerService } from './socket-namespaser.service';
+import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
+
 const DEBOUNCE_TIMEOUT = 5000;
 
 @WebSocketGateway()

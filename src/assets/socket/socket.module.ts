@@ -1,25 +1,12 @@
 import { Module } from '@nestjs/common';
 import { SocketGateway } from './socket.gateway';
 import { SocketService } from './socket.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Rooms } from '../../plugins/database/entities/rooms.entity';
-import { Users } from '../../plugins/database/entities/users.entity';
-import { RoomsService } from '../../modules/rooms/rooms.service';
-import { UserService } from '../../modules/users/user.service';
-import { RoomsSocketGateway } from '../../modules/rooms/rooms.gateway';
-import { Messages } from '../../plugins/database/entities/messages.entity';
-import { SocketNameSpacerService } from './socket-namespaser.service';
+import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
+import { EntityManagerModule } from '../entitiesManagers/entitiy-manager.module';
+import { RoomsModule } from '../../modules/rooms/rooms.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Rooms, Users, Messages])],
-  providers: [
-    RoomsService,
-    UserService,
-    SocketGateway,
-    SocketService,
-    RoomsSocketGateway,
-    SocketNameSpacerService,
-  ],
-  exports: [SocketService, SocketNameSpacerService],
+  imports: [EntityManagerModule, RoomsModule],
+  providers: [SocketService, SocketGateway, SocketNameSpacerService],
 })
 export class SocketModule {}

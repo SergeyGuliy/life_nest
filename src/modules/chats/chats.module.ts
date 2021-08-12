@@ -1,14 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import { ChatsGateway } from './chats.gateway';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Messages } from '../../plugins/database/entities/messages.entity';
 import { ChatsController } from './chats.controller';
-import { SocketNameSpacerService } from '../../assets/socket/socket-namespaser.service';
+import { SocketNameSpacerService } from '../../assets/globalServices/socket-namespaser.service';
 import { EntityManagerModule } from '../../assets/entitiesManagers/entitiy-manager.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Messages]), EntityManagerModule],
+  imports: [EntityManagerModule],
   controllers: [ChatsController],
   providers: [SocketNameSpacerService, ChatsService, ChatsGateway],
 })

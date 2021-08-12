@@ -1,20 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Rooms } from '../../plugins/database/entities/rooms.entity';
-import { Repository } from 'typeorm';
 import { RoomsSocketGateway } from './rooms.gateway';
 import { random } from 'lodash';
-import { Users } from '../../plugins/database/entities/users.entity';
 import { UpdateUserDto } from '../../plugins/dto/updateUser.dto';
+import { RoomsManagerService } from '../../assets/entitiesManagers/rooms/rooms.service';
+import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
 
 @Injectable()
 export class RoomsService {
   constructor(
-    @InjectRepository(Rooms)
-    private roomsRepository: Repository<Rooms>,
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
     private roomsSocketGateway: RoomsSocketGateway,
+    private roomsManagerService: RoomsManagerService,
+    private userManagerService: UserManagerService,
   ) {}
 
   async getRooms(query) {
@@ -28,7 +24,7 @@ export class RoomsService {
         }
         return newI;
       });
-      const rooms = await this.roomsRepository.find({
+      const rooms = await this.roomsManagerService.find({
         where,
       });
       const roomsWithUsers = await Promise.all(
@@ -36,7 +32,7 @@ export class RoomsService {
           return {
             ...room,
             usersInRoomLength: (
-              await this.getUsersByQuery({
+              await this.userManagerService.find({
                 where: {
                   roomJoinedId: room.roomId,
                 },
@@ -52,11 +48,11 @@ export class RoomsService {
   }
 
   async getRoomDataById(query) {
-    return await this.roomsRepository.findOne(query);
+    return await this.roomsManagerService.findOne(query);
   }
 
   async getRoomById(roomId) {
-    const usersInRoom = await this.getUsersByQuery({
+    const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
     const { roomPassword, ...roomData } = await this.getRoomDataById({
@@ -72,7 +68,7 @@ export class RoomsService {
   }
 
   async createRoom(creatorId, roomData) {
-    const newRoom = await this.roomsRepository.save({
+    const newRoom = await this.roomsManagerService.save({
       ...roomData,
       creatorId,
       roomJoinedId: creatorId,
@@ -81,7 +77,7 @@ export class RoomsService {
       createdRoomId: newRoom.roomId,
       roomJoinedId: newRoom.roomId,
     });
-    const usersInRoom = await this.getUsersByQuery({
+    const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: newRoom.roomId },
     });
     this.roomsSocketGateway.roomInListCreated({
@@ -97,7 +93,7 @@ export class RoomsService {
     });
     passwordValidation(roomData, roomPassword);
 
-    let usersInRoom = await this.getUsersByQuery({
+    let usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
     countOfUsersValidation(usersInRoom.length, roomData.maxCountOfUsers);
@@ -106,7 +102,7 @@ export class RoomsService {
       createdRoomId: null,
       roomJoinedId: roomId,
     });
-    usersInRoom = await this.getUsersByQuery({
+    usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
     this.roomsSocketGateway.roomInListUpdated(roomId, {
@@ -114,7 +110,7 @@ export class RoomsService {
       usersInRoomLength: usersInRoom.length,
     });
     this.roomsSocketGateway.updateUsersListInRoom(roomId, usersInRoom);
-    return await this.getUserByQuery({
+    return await this.userManagerService.findOne({
       where: {
         userId,
       },
@@ -123,14 +119,15 @@ export class RoomsService {
 
   async userLeaveRoom(user) {
     const { userId } = user;
-    const { roomJoinedId, createdRoomId } = await this.usersRepository.findOne(
-      userId,
-    );
+    const {
+      roomJoinedId,
+      createdRoomId,
+    } = await this.userManagerService.findOne(userId);
     await this.updateUser(userId, {
       createdRoomId: null,
       roomJoinedId: null,
     });
-    const newUserData = await this.getUserByQuery({
+    const newUserData = await this.userManagerService.findOne({
       where: {
         userId,
       },
@@ -138,7 +135,7 @@ export class RoomsService {
     const roomData = await this.getRoomDataById({
       where: { roomId: roomJoinedId },
     });
-    const usersInRoom = await this.getUsersByQuery({
+    const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomJoinedId },
     });
     this.roomsSocketGateway.updateUsersListInRoom(roomJoinedId, usersInRoom);
@@ -152,7 +149,7 @@ export class RoomsService {
     createdRoomId: number,
     roomData,
   ) {
-    const usersInRoom = await this.getUsersByQuery({
+    const usersInRoom = await this.userManagerService.find({
       where: {
         roomJoinedId,
       },
@@ -184,30 +181,20 @@ export class RoomsService {
       await this.updateUser(idOfNewAdmin, {
         createdRoomId: roomJoinedId,
       });
-      const newAdmin = await this.getUserByQuery({
+      const newAdmin = await this.userManagerService.findOne({
         where: { userId: idOfNewAdmin },
       });
       this.roomsSocketGateway.updateRoomAdmin(roomJoinedId, newAdmin);
     }
   }
 
-  async kickUserFromRoom() {}
-
   async deleteRoom(roomId) {
     this.roomsSocketGateway.roomInListDeleted(roomId);
-    return await this.roomsRepository.delete(roomId);
-  }
-
-  async getUserByQuery(query) {
-    return await this.usersRepository.findOne(query);
-  }
-
-  async getUsersByQuery(query) {
-    return await this.usersRepository.find(query);
+    return await this.roomsManagerService.delete(roomId);
   }
 
   async updateUser(userId: number, newUserData: UpdateUserDto) {
-    await this.usersRepository.update(userId, newUserData);
+    await this.userManagerService.update(userId, newUserData);
   }
 }
 

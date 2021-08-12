@@ -1,7 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FRIENDSHIP_STATUSES } from '../../../plugins/database/enums';
 
 import { Friendships } from '../../../plugins/database/entities/friendships.entity';
 import { Users } from '../../../plugins/database/entities/users.entity';

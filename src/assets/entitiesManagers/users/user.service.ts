@@ -15,6 +15,10 @@ export class UserManagerService {
     await this.usersRepository.update(userId, newUserData);
   }
 
+  async find(condition) {
+    return await this.usersRepository.find(condition);
+  }
+
   async findOne(condition) {
     return await this.usersRepository.findOne(condition);
   }

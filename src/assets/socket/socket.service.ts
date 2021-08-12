@@ -1,26 +1,16 @@
-import {
-  forwardRef,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RoomsService } from '../../modules/rooms/rooms.service';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../../plugins/database/entities/users.entity';
-import { Repository } from 'typeorm';
 import { USER_ONLINE_STATUSES } from '../../plugins/database/enums';
-import { SocketNameSpacerService } from './socket-namespaser.service';
+import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
+import { UserManagerService } from '../entitiesManagers/users/user.service';
 
 @Injectable()
 export class SocketService {
   constructor(
-    @Inject(forwardRef(() => RoomsService))
     private roomsService: RoomsService,
     private socketNameSpacerService: SocketNameSpacerService,
 
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>, // @InjectRepository(Rooms) // private roomsRepository: Repository<Rooms>,
+    private userManagerService: UserManagerService,
   ) {}
 
   async logOutUserFormApp(userId) {
@@ -33,19 +23,19 @@ export class SocketService {
   }
 
   async userLogIn(userId: number) {
-    return await this.usersRepository.update(userId, {
+    return await this.userManagerService.update(userId, {
       userOnlineStatus: USER_ONLINE_STATUSES.ONLINE,
     });
   }
 
   async userLogOut(userId: number) {
-    await this.usersRepository.update(userId, {
+    await this.userManagerService.update(userId, {
       userOnlineStatus: USER_ONLINE_STATUSES.OFFLINE,
     });
   }
 
   async getUserById(userId: number) {
-    const user = await this.usersRepository.findOne(userId);
+    const user = await this.userManagerService.findOne(userId);
     if (user) {
       return user;
     }
