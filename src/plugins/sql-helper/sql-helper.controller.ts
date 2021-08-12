@@ -1,6 +1,6 @@
 import { Controller, Delete, UseGuards } from '@nestjs/common';
 import { SqlHelperService } from './sql-helper.service';
-import { JwtAuthGuard } from '../jwt/auth.guard';
+import { JwtAuthGuard } from '../guards/auth.guard';
 
 @Controller('sql-controller')
 export class SqlHelperController {

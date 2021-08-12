@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 
 import { UserSettingsService } from './user-settings.service';
-import { JwtAuthGuard } from '../../plugins/jwt/auth.guard';
+import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
 import { User } from '../../plugins/decorators/user.decorator';
 
 @Controller('auth')

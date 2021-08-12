@@ -7,6 +7,8 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { PasswordEncoderService } from './password-encoder.service';
 import { EntityManagerModule } from '../../assets/entitiesManagers/entitiy-manager.module';
 
+console.log(process.env.NODE_ENV);
+
 @Module({
   imports: [
     JwtModule.register({

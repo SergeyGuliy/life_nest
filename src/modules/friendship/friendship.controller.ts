@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { FriendshipService } from './friendship.service';
-import { JwtAuthGuard } from '../../plugins/jwt/auth.guard';
+import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
 import { User } from '../../plugins/decorators/user.decorator';
 
 @Controller('friendship')

@@ -4,7 +4,7 @@ import { RegistrationDto } from '../../plugins/dto/registrationDto';
 import { LoginDto } from '../../plugins/dto/loginDto';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from '../../plugins/jwt/auth.guard';
+import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
 import { User } from '../../plugins/decorators/user.decorator';
 
 @Controller('auth')

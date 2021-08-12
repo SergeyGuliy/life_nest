@@ -11,7 +11,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
-import { JwtAuthGuard } from '../../plugins/jwt/auth.guard';
+import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
 import { CreateRoomDto } from './dto/createRoom.dto';
 import { User } from '../../plugins/decorators/user.decorator';
 
