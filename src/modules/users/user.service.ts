@@ -24,6 +24,6 @@ export class UserService {
   }
 
   async deleteUser(userId: number) {
-    return this.userManagerService.deleteUser(userId);
+    return this.userManagerService.delete(userId);
   }
 }

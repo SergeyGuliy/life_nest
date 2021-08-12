@@ -1,24 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { FRIENDSHIP_STATUSES } from '../../plugins/database/enums';
 
-import { Friendships } from '../../plugins/database/entities/friendships.entity';
-import { Users } from '../../plugins/database/entities/users.entity';
+import { FriendshipManagerService } from '../../assets/entitiesManagers/friendship/friendship.service';
+import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
 
 @Injectable()
 export class FriendshipService {
   constructor(
-    @InjectRepository(Friendships)
-    private friendshipRepository: Repository<Friendships>,
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
+    private readonly friendshipManagerService: FriendshipManagerService,
+    private readonly userManagerService: UserManagerService,
   ) {}
 
   async getAllFriendship() {
-    return await this.friendshipRepository.find({
-      relations: ['friendshipReceiver', 'friendshipSender'],
-    });
+    return await this.friendshipManagerService.getAllFriendship();
   }
 
   async sendRequest(yourId: number, receiverId: number) {
@@ -29,7 +23,7 @@ export class FriendshipService {
       receiverId,
     );
     if (!friendships) {
-      await this.friendshipRepository.save({
+      await this.friendshipManagerService.save({
         friendshipReceiver: { userId: receiverId },
         friendshipSender: { userId: yourId },
       });
@@ -64,10 +58,10 @@ export class FriendshipService {
       );
     }
     if (yourId === +friendships.friendshipReceiver) {
-      await this.friendshipRepository.update(friendships.friendshipsId, {
+      await this.friendshipManagerService.update(friendships.friendshipsId, {
         friendshipsStatus: FRIENDSHIP_STATUSES.APPROVED,
       });
-      return this.friendshipRepository.findOne({
+      return this.friendshipManagerService.findOne({
         where: {
           friendshipsId: friendships.friendshipsId,
         },
@@ -101,10 +95,10 @@ export class FriendshipService {
       );
     }
     if (yourId === +friendships.friendshipReceiver) {
-      await this.friendshipRepository.update(friendships.friendshipsId, {
+      await this.friendshipManagerService.update(friendships.friendshipsId, {
         friendshipsStatus: FRIENDSHIP_STATUSES.IGNORED,
       });
-      return this.friendshipRepository.findOne({
+      return this.friendshipManagerService.findOne({
         where: {
           friendshipsId: friendships.friendshipsId,
         },
@@ -133,7 +127,7 @@ export class FriendshipService {
         HttpStatus.METHOD_NOT_ALLOWED,
       );
     }
-    await this.friendshipRepository.delete(friendships.friendshipsId);
+    await this.friendshipManagerService.delete(friendships.friendshipsId);
     return {
       userId: targetId,
       friendshipsId: friendships.friendshipsId,
@@ -141,7 +135,7 @@ export class FriendshipService {
   }
 
   async getBothFriendshipConnection(senderId: number, receiverId: number) {
-    return await this.friendshipRepository.findOne({
+    return await this.friendshipManagerService.findOne({
       where: [
         {
           friendshipReceiver: { userId: receiverId },
@@ -157,7 +151,7 @@ export class FriendshipService {
   }
 
   async getYourFriends(yourId: number) {
-    return await this.friendshipRepository.find({
+    return await this.friendshipManagerService.find({
       where: [
         {
           friendshipReceiver: {
@@ -177,7 +171,7 @@ export class FriendshipService {
   }
 
   async getYouRequests(yourId: number) {
-    return await this.friendshipRepository.find({
+    return await this.friendshipManagerService.find({
       where: [
         {
           friendshipReceiver: {
@@ -209,7 +203,7 @@ export class FriendshipService {
   }
 
   async getYourFriendshipConnection(yourId, senderId) {
-    return await this.friendshipRepository.findOne({
+    return await this.friendshipManagerService.findOne({
       where: [
         {
           friendshipReceiver: { userId: yourId },
@@ -227,7 +221,7 @@ export class FriendshipService {
         HttpStatus.NOT_FOUND,
       );
     }
-    const user = await this.usersRepository.findOne(receiverId);
+    const user = await this.userManagerService.findOne(receiverId);
     if (!user) {
       throw new HttpException(
         `Friendship receiver with userId ${receiverId} not found`,

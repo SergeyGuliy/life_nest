@@ -58,14 +58,14 @@ export class AuthService {
       oldPassword,
       securedUserData.password,
     );
-    await this.userManagerService.updateUser(userData.userId, {
+    await this.userManagerService.update(userData.userId, {
       password: newPassword,
     });
     return 'Password successfully changed';
   }
 
   async setNewRefreshTokenToUser(userId: number) {
-    await this.userManagerService.updateUser(userId, {
+    await this.userManagerService.update(userId, {
       refreshToken: uuidv4(),
     });
     return this.userManagerService.getUserByIdWithToken(userId);
@@ -102,10 +102,10 @@ export class AuthService {
   }
 
   async registerMiddleware({ email, phone }) {
-    const userSearchEmail = await this.userManagerService.findOneUser({
+    const userSearchEmail = await this.userManagerService.findOne({
       where: [{ email }],
     });
-    const userSearchPhone = await this.userManagerService.findOneUser({
+    const userSearchPhone = await this.userManagerService.findOne({
       where: [{ phone }],
     });
     if (userSearchEmail && userSearchPhone) {

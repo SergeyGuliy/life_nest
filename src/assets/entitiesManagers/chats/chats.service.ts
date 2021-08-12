@@ -1,8 +1,4 @@
-import {
-  ClassSerializerInterceptor,
-  Injectable,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Messages } from '../../../plugins/database/entities/messages.entity';
@@ -15,7 +11,7 @@ export class ChatsManagerService {
     private readonly messagesRepository: Repository<Messages>,
   ) {}
 
-  async saveMessage(messageData) {
+  async save(messageData) {
     const savedMessage = await this.messagesRepository.save(messageData);
     return await this.messagesRepository.findOne(savedMessage.messageId, {
       relations: ['messageSender'],

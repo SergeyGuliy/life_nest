@@ -11,6 +11,25 @@ export class UserManagerService {
     private usersRepository: Repository<Users>,
   ) {}
 
+  async update(userId, newUserData) {
+    await this.usersRepository.update(userId, newUserData);
+  }
+
+  async findOne(condition) {
+    return await this.usersRepository.findOne(condition);
+  }
+
+  async saveUser(userData) {
+    return await this.usersRepository.save(userData);
+  }
+
+  async delete(userId: number) {
+    const deleteResponse = await this.usersRepository.delete(userId);
+    if (!deleteResponse.affected) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
   async getAllUsers() {
     return await this.usersRepository.find();
   }
@@ -39,13 +58,6 @@ export class UserManagerService {
       return updatedUser;
     }
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  }
-
-  async deleteUser(userId: number) {
-    const deleteResponse = await this.usersRepository.delete(userId);
-    if (!deleteResponse.affected) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
   }
 
   async getUserByIdWithToken(userId: number) {
@@ -86,17 +98,5 @@ export class UserManagerService {
       .orWhere('user.phone = :phone', { phone })
       .orWhere('user.userId = :userId', { userId })
       .getOne();
-  }
-
-  async updateUser(userId, newUserData) {
-    await this.usersRepository.update(userId, newUserData);
-  }
-
-  async findOneUser(condition) {
-    return await this.usersRepository.findOne(condition);
-  }
-
-  async saveUser(userData) {
-    return await this.usersRepository.save(userData);
   }
 }

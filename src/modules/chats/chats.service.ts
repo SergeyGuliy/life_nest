@@ -11,7 +11,7 @@ export class ChatsService {
 
   @UseInterceptors(ClassSerializerInterceptor)
   async saveMessage(messageData) {
-    return await this.chatsManagerService.saveMessage(messageData);
+    return await this.chatsManagerService.save(messageData);
   }
 
   async getAllGlobalMessages() {
