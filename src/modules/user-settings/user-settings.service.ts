@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
-import { UserSettingsManagerService } from '../../assets/entitiesManagers/users/user-settings.service';
+import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
+import { UserSettingsManagerService } from '../../sub_modules/entitiesManagers/users/user-settings.service';
 
 @Injectable()
 export class UserSettingsService {

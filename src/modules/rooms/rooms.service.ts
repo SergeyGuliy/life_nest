@@ -3,8 +3,8 @@ import { random } from 'lodash';
 
 import { RoomsSocketGateway } from './rooms.gateway';
 
-import { RoomsManagerService } from '../../assets/entitiesManagers/rooms/rooms.service';
-import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
+import { RoomsManagerService } from '../../sub_modules/entitiesManagers/rooms/rooms.service';
+import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
 
 @Injectable()
 export class RoomsService {

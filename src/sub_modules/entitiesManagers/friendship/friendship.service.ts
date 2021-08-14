@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Friendships } from '../../../plugins/database/entities/friendships.entity';
+import { Friendships } from '../../../assets/database/entities/friendships.entity';
 
 @Injectable()
 export class FriendshipManagerService {

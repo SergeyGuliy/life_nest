@@ -4,7 +4,7 @@ import { RoomsController } from './rooms.controller';
 import { RoomsService } from './rooms.service';
 import { RoomsSocketGateway } from './rooms.gateway';
 import { SocketNameSpacerService } from '../../assets/globalServices/socket-namespaser.service';
-import { EntityManagerModule } from '../../assets/entitiesManagers/entitiy-manager.module';
+import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-manager.module';
 
 @Module({
   imports: [EntityManagerModule],

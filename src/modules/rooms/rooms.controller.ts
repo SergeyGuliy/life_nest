@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 
 import { RoomsService } from './rooms.service';
-import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
-import { CreateRoomDto } from '../../plugins/dto/createRoom.dto';
-import { User } from '../../plugins/decorators/user.decorator';
+import { JwtAuthGuard } from '../../assets/guards/auth.guard';
+import { CreateRoomDto } from '../../assets/dto/createRoom.dto';
+import { User } from '../../assets/decorators/user.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('rooms')

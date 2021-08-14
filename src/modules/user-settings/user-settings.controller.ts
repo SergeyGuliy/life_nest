@@ -1,8 +1,8 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 
 import { UserSettingsService } from './user-settings.service';
-import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
-import { User } from '../../plugins/decorators/user.decorator';
+import { JwtAuthGuard } from '../../assets/guards/auth.guard';
+import { User } from '../../assets/decorators/user.decorator';
 
 @Controller('auth')
 export class UserSettingsController {

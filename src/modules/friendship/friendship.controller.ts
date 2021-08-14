@@ -8,8 +8,8 @@ import {
   Put,
 } from '@nestjs/common';
 
-import { User } from '../../plugins/decorators/user.decorator';
-import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
+import { User } from '../../assets/decorators/user.decorator';
+import { JwtAuthGuard } from '../../assets/guards/auth.guard';
 import { FriendshipService } from './friendship.service';
 
 @Controller('friendship')

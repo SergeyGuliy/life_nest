@@ -1,36 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-
-import { Users } from '../../plugins/database/entities/users.entity';
-import { Repository } from 'typeorm';
 import { thumbnail } from 'easyimage';
-
 import * as fs from 'fs';
 import * as util from 'util';
+
+import { UserManagerService } from '../entitiesManagers/users/user.service';
 
 const unlinkAsync = util.promisify(fs.unlink);
 const rmdirAsync = util.promisify(fs.rmdir);
 
 @Injectable()
 export class UploaderService {
-  constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
-  ) {}
+  constructor(private readonly userManagerService: UserManagerService) {}
 
   async setUserAvatar(userId, { avatarSmall, avatarBig }) {
-    await this.usersRepository.update(userId, {
+    await this.userManagerService.update(userId, {
       avatarSmall,
       avatarBig,
     });
-    return await this.usersRepository.findOne(userId);
+    return await this.userManagerService.findOne(userId);
   }
   async clearUserAvatar(userId) {
-    await this.usersRepository.update(userId, {
+    await this.userManagerService.update(userId, {
       avatarSmall: '',
       avatarBig: '',
     });
-    return await this.usersRepository.findOne(userId);
+    return await this.userManagerService.findOne(userId);
   }
   async uploadPhoto(files, userId) {
     if (files.avatarImg && files.avatarImg[0]) {

@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Users } from '../../../plugins/database/entities/users.entity';
+import { Users } from '../../../assets/database/entities/users.entity';
 
 @Injectable()
 export class UserManagerService {
@@ -35,11 +35,8 @@ export class UserManagerService {
   }
 
   async getUserByIdWithToken(userId: number) {
-    const user = await this.fetchSecuredUserData(userId);
-    if (user) {
-      return user;
-    }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    this.catchUserNotExists(userId);
+    return await this.fetchSecuredUserData(userId);
   }
 
   async fetchSecuredUserData(userId) {

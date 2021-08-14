@@ -5,7 +5,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { PasswordEncoderService } from './password-encoder.service';
-import { EntityManagerModule } from '../../assets/entitiesManagers/entitiy-manager.module';
+import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-manager.module';
 
 @Module({
   imports: [

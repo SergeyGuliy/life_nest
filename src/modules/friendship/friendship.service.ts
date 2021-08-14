@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-import { FRIENDSHIP_STATUSES } from '../../plugins/enums';
+import { FRIENDSHIP_STATUSES } from '../../assets/enums';
 
-import { FriendshipManagerService } from '../../assets/entitiesManagers/friendship/friendship.service';
-import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
+import { FriendshipManagerService } from '../../sub_modules/entitiesManagers/friendship/friendship.service';
+import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
 
 @Injectable()
 export class FriendshipService {

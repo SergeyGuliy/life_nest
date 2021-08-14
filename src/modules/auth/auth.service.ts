@@ -4,9 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import * as phone from 'phone';
 
 import { PasswordEncoderService } from './password-encoder.service';
-import { CreateUserDto } from '../../plugins/dto/createUser.dto';
-import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
-import { UserSettingsManagerService } from '../../assets/entitiesManagers/users/user-settings.service';
+import { CreateUserDto } from '../../assets/dto/createUser.dto';
+import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
+import { UserSettingsManagerService } from '../../sub_modules/entitiesManagers/users/user-settings.service';
 
 @Injectable()
 export class AuthService {
