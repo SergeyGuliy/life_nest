@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Rooms } from '../../../plugins/database/entities/rooms.entity';
 import { Repository } from 'typeorm';
+
+import { Rooms } from '../../../plugins/database/entities/rooms.entity';
 
 @Injectable()
 export class RoomsManagerService {

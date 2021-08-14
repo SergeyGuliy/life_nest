@@ -12,7 +12,9 @@ export class FriendshipService {
   ) {}
 
   async getAllFriendship() {
-    return await this.friendshipManagerService.getAllFriendship();
+    return await this.friendshipManagerService.find({
+      relations: ['friendshipReceiver', 'friendshipSender'],
+    });
   }
 
   async sendRequest(yourId: number, receiverId: number) {

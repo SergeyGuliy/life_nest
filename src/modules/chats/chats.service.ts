@@ -3,7 +3,9 @@ import {
   Injectable,
   UseInterceptors,
 } from '@nestjs/common';
+
 import { ChatsManagerService } from '../../assets/entitiesManagers/chats/chats.service';
+import { MESSAGE_RECEIVER_TYPES } from '../../plugins/database/enums';
 
 @Injectable()
 export class ChatsService {
@@ -11,18 +13,44 @@ export class ChatsService {
 
   @UseInterceptors(ClassSerializerInterceptor)
   async saveMessage(messageData) {
-    return await this.chatsManagerService.save(messageData);
+    const savedMessage = await this.chatsManagerService.save(messageData);
+    return await this.chatsManagerService.findOne(savedMessage.messageId, {
+      relations: ['messageSender'],
+    });
   }
 
   async getAllGlobalMessages() {
-    return await this.chatsManagerService.getAllGlobalMessages();
+    return await this.chatsManagerService.find({
+      where: {
+        messageReceiverType: MESSAGE_RECEIVER_TYPES.GLOBAL,
+      },
+      relations: ['messageSender'],
+    });
   }
 
   async getAllPrivateMessages(userId) {
-    return await this.chatsManagerService.getAllPrivateMessages(userId);
+    return await this.chatsManagerService.find({
+      where: [
+        {
+          messageReceiverType: MESSAGE_RECEIVER_TYPES.PRIVATE,
+          messageSender: userId,
+        },
+        {
+          messageReceiverType: MESSAGE_RECEIVER_TYPES.PRIVATE,
+          messageReceiverUserId: userId,
+        },
+      ],
+      relations: ['messageSender'],
+    });
   }
 
   async getAllRoomMessages(roomJoinedId) {
-    return await this.chatsManagerService.getAllRoomMessages(roomJoinedId);
+    return await this.chatsManagerService.find({
+      where: {
+        messageReceiverType: MESSAGE_RECEIVER_TYPES.ROOM,
+        messageReceiverRoomId: roomJoinedId,
+      },
+      relations: ['messageSender'],
+    });
   }
 }

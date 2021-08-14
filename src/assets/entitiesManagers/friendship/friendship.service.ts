@@ -3,22 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Friendships } from '../../../plugins/database/entities/friendships.entity';
-import { Users } from '../../../plugins/database/entities/users.entity';
 
 @Injectable()
 export class FriendshipManagerService {
   constructor(
     @InjectRepository(Friendships)
     private friendshipRepository: Repository<Friendships>,
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
   ) {}
-
-  async getAllFriendship() {
-    return await this.friendshipRepository.find({
-      relations: ['friendshipReceiver', 'friendshipSender'],
-    });
-  }
 
   async save(query) {
     return await this.friendshipRepository.save(query);

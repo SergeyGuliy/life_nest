@@ -6,13 +6,12 @@ import {
   Param,
   Body,
   Query,
-  Headers,
   UseGuards,
   Patch,
 } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
-import { CreateRoomDto } from './dto/createRoom.dto';
+import { CreateRoomDto } from '../../plugins/dto/createRoom.dto';
 import { User } from '../../plugins/decorators/user.decorator';
 
 @UseGuards(JwtAuthGuard)
@@ -21,11 +20,7 @@ export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
   @Post('create')
-  async createRoom(
-    @Body() roomData: CreateRoomDto,
-    @Headers() header: any,
-    @User() user: any,
-  ) {
+  async createRoom(@Body() roomData: CreateRoomDto, @User() user: any) {
     return await this.roomsService.createRoom(user.userId, roomData);
   }
 

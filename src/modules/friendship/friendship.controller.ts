@@ -7,9 +7,10 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { FriendshipService } from './friendship.service';
-import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
+
 import { User } from '../../plugins/decorators/user.decorator';
+import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
+import { FriendshipService } from './friendship.service';
 
 @Controller('friendship')
 export class FriendshipController {
@@ -17,7 +18,7 @@ export class FriendshipController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAllUsers() {
+  async getAllFriendship() {
     return await this.friendshipService.getAllFriendship();
   }
 

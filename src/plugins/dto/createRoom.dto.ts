@@ -9,7 +9,7 @@ import {
   Max,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { ROOM_TYPES } from '../../../plugins/database/enums';
+import { ROOM_TYPES } from '../database/enums';
 
 const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z]).{8,16}$/;
 

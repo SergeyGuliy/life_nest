@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const bcrypt = require('bcrypt');
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class PasswordEncoderService {

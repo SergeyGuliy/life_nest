@@ -15,7 +15,7 @@ export class UserManagerService {
     await this.usersRepository.update(userId, newUserData);
   }
 
-  async find(condition) {
+  async find(condition = null) {
     return await this.usersRepository.find(condition);
   }
 
@@ -32,36 +32,6 @@ export class UserManagerService {
     if (!deleteResponse.affected) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-  }
-
-  async getAllUsers() {
-    return await this.usersRepository.find();
-  }
-
-  async getUserById(userId: number) {
-    const user = await this.usersRepository.findOne(userId);
-    if (user) {
-      return user;
-    }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  }
-
-  async editUser(userId: number, user) {
-    await this.usersRepository.update(userId, user);
-    const updatedUser = await this.usersRepository.findOne(userId);
-    if (updatedUser) {
-      return updatedUser;
-    }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  }
-
-  async changeUserTheme(userId: number, { isDarkTheme }) {
-    await this.usersRepository.update(userId, isDarkTheme);
-    const updatedUser = await this.usersRepository.findOne(userId);
-    if (updatedUser) {
-      return updatedUser;
-    }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
   async getUserByIdWithToken(userId: number) {
@@ -102,5 +72,10 @@ export class UserManagerService {
       .orWhere('user.phone = :phone', { phone })
       .orWhere('user.userId = :userId', { userId })
       .getOne();
+  }
+
+  async catchUserNotExists(userId) {
+    const user = await this.usersRepository.findOne(userId);
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 }

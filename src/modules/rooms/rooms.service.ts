@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { RoomsSocketGateway } from './rooms.gateway';
 import { random } from 'lodash';
-import { UpdateUserDto } from '../../plugins/dto/updateUser.dto';
+
+import { RoomsSocketGateway } from './rooms.gateway';
+
 import { RoomsManagerService } from '../../assets/entitiesManagers/rooms/rooms.service';
 import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
 
@@ -27,7 +28,7 @@ export class RoomsService {
       const rooms = await this.roomsManagerService.find({
         where,
       });
-      const roomsWithUsers = await Promise.all(
+      return await Promise.all(
         rooms.map(async (room) => {
           return {
             ...room,
@@ -41,7 +42,6 @@ export class RoomsService {
           };
         }),
       );
-      return roomsWithUsers;
     } else {
       return [];
     }
@@ -73,7 +73,7 @@ export class RoomsService {
       creatorId,
       roomJoinedId: creatorId,
     });
-    await this.updateUser(creatorId, {
+    await this.userManagerService.update(creatorId, {
       createdRoomId: newRoom.roomId,
       roomJoinedId: newRoom.roomId,
     });
@@ -98,7 +98,7 @@ export class RoomsService {
     });
     countOfUsersValidation(usersInRoom.length, roomData.maxCountOfUsers);
 
-    await this.updateUser(userId, {
+    await this.userManagerService.update(userId, {
       createdRoomId: null,
       roomJoinedId: roomId,
     });
@@ -123,7 +123,7 @@ export class RoomsService {
       roomJoinedId,
       createdRoomId,
     } = await this.userManagerService.findOne(userId);
-    await this.updateUser(userId, {
+    await this.userManagerService.update(userId, {
       createdRoomId: null,
       roomJoinedId: null,
     });
@@ -178,7 +178,7 @@ export class RoomsService {
     });
     if (createdRoomId === roomJoinedId) {
       const idOfNewAdmin = usersInRoom[random(usersInRoom.length - 1)].userId;
-      await this.updateUser(idOfNewAdmin, {
+      await this.userManagerService.update(idOfNewAdmin, {
         createdRoomId: roomJoinedId,
       });
       const newAdmin = await this.userManagerService.findOne({
@@ -191,10 +191,6 @@ export class RoomsService {
   async deleteRoom(roomId) {
     this.roomsSocketGateway.roomInListDeleted(roomId);
     return await this.roomsManagerService.delete(roomId);
-  }
-
-  async updateUser(userId: number, newUserData: UpdateUserDto) {
-    await this.userManagerService.update(userId, newUserData);
   }
 }
 

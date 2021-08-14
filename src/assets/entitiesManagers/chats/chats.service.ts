@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { Messages } from '../../../plugins/database/entities/messages.entity';
-import { MESSAGE_RECEIVER_TYPES } from '../../../plugins/database/enums';
 
 @Injectable()
 export class ChatsManagerService {
@@ -12,44 +12,14 @@ export class ChatsManagerService {
   ) {}
 
   async save(messageData) {
-    const savedMessage = await this.messagesRepository.save(messageData);
-    return await this.messagesRepository.findOne(savedMessage.messageId, {
-      relations: ['messageSender'],
-    });
+    return await this.messagesRepository.save(messageData);
   }
 
-  async getAllGlobalMessages() {
-    return await this.messagesRepository.find({
-      where: {
-        messageReceiverType: MESSAGE_RECEIVER_TYPES.GLOBAL,
-      },
-      relations: ['messageSender'],
-    });
+  async findOne(messageId, query) {
+    return await this.messagesRepository.findOne(messageId, query);
   }
 
-  async getAllPrivateMessages(userId) {
-    return await this.messagesRepository.find({
-      where: [
-        {
-          messageReceiverType: MESSAGE_RECEIVER_TYPES.PRIVATE,
-          messageSender: userId,
-        },
-        {
-          messageReceiverType: MESSAGE_RECEIVER_TYPES.PRIVATE,
-          messageReceiverUserId: userId,
-        },
-      ],
-      relations: ['messageSender'],
-    });
-  }
-
-  async getAllRoomMessages(roomJoinedId) {
-    return await this.messagesRepository.find({
-      where: {
-        messageReceiverType: MESSAGE_RECEIVER_TYPES.ROOM,
-        messageReceiverRoomId: roomJoinedId,
-      },
-      relations: ['messageSender'],
-    });
+  async find(query) {
+    return await this.messagesRepository.find(query);
   }
 }
