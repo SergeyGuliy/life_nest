@@ -399,3 +399,4 @@ docker.env
 dist
 /docker.env
 !/jwt.env
+/uploads/

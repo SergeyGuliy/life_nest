@@ -1,9 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
+import * as phone from 'phone';
+
 import { PasswordEncoderService } from './password-encoder.service';
 import { CreateUserDto } from '../../plugins/dto/createUser.dto';
-import * as phone from 'phone';
 import { UserManagerService } from '../../assets/entitiesManagers/users/user.service';
 import { UserSettingsManagerService } from '../../assets/entitiesManagers/users/user-settings.service';
 

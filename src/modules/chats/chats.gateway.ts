@@ -6,7 +6,7 @@ import {
 import { Socket, Server } from 'socket.io';
 
 import { ChatsService } from './chats.service';
-import { MESSAGE_RECEIVER_TYPES } from '../../plugins/database/enums';
+import { MESSAGE_RECEIVER_TYPES } from '../../plugins/enums';
 import { SocketNameSpacerService } from '../../assets/globalServices/socket-namespaser.service';
 
 @WebSocketGateway()

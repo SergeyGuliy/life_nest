@@ -9,6 +9,7 @@ import {
   UseGuards,
   Patch,
 } from '@nestjs/common';
+
 import { RoomsService } from './rooms.service';
 import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
 import { CreateRoomDto } from '../../plugins/dto/createRoom.dto';

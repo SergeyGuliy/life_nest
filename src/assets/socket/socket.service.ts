@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-import { USER_ONLINE_STATUSES } from '../../plugins/database/enums';
+import { USER_ONLINE_STATUSES } from '../../plugins/enums';
 
 import { RoomsService } from '../../modules/rooms/rooms.service';
+
 import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
 import { UserManagerService } from '../entitiesManagers/users/user.service';
 

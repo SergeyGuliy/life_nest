@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 
 import { ChatsManagerService } from '../../assets/entitiesManagers/chats/chats.service';
-import { MESSAGE_RECEIVER_TYPES } from '../../plugins/database/enums';
+import { MESSAGE_RECEIVER_TYPES } from '../../plugins/enums';
 
 @Injectable()
 export class ChatsService {

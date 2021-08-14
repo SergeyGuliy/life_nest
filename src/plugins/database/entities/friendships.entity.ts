@@ -3,11 +3,10 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
-import { FRIENDSHIP_STATUSES } from '../enums';
+import { FRIENDSHIP_STATUSES } from '../../enums';
 import { Users } from './users.entity';
 
 @Entity('friendships')

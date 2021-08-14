@@ -5,7 +5,7 @@ import {
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
 
-import { ROOM_TYPES } from '../enums';
+import { ROOM_TYPES } from '../../enums';
 import { Users } from './users.entity';
 
 @Entity('rooms')

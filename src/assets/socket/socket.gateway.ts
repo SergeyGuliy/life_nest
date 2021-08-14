@@ -8,10 +8,11 @@ import {
 import { Socket, Server } from 'socket.io';
 
 import { debounce } from 'throttle-debounce';
+
+import { LOGOUT_TIMEOUT } from '../../plugins/constants';
+
 import { SocketService } from './socket.service';
 import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
-
-const DEBOUNCE_TIMEOUT = 5000;
 
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -52,7 +53,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  private logOutUserFormApp = debounce(DEBOUNCE_TIMEOUT, async (userId) => {
+  private logOutUserFormApp = debounce(LOGOUT_TIMEOUT, async (userId) => {
     await this.socketService.logOutUserFormApp(userId);
   });
 }

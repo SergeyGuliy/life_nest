@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { UploaderController } from './uploader.controller';
 import { UploaderService } from './uploader.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from '../../plugins/database/entities/users.entity';
 
 @Module({

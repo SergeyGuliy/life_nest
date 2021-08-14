@@ -8,8 +8,8 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+
 import { JwtAuthGuard } from '../../plugins/guards/auth.guard';
 import { User } from '../../plugins/decorators/user.decorator';
 import { UploaderService } from './uploader.service';
