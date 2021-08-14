@@ -1,14 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-
 import * as bcrypt from 'bcrypt';
+
+import { SALT_ROUND_CRYPT } from '../../assets/constants';
 
 @Injectable()
 export class PasswordEncoderService {
-  private saltRounds = 2;
+  private SALT_ROUND_CRYPT = SALT_ROUND_CRYPT;
 
   generatePasswordHash(password: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      bcrypt.genSalt(this.saltRounds, function (err1, salt) {
+      bcrypt.genSalt(this.SALT_ROUND_CRYPT, function (err1, salt) {
         bcrypt.hash(password, salt, function (err2, hash) {
           if (err1) {
             reject(err1);
