@@ -30,7 +30,7 @@ export class UserSettingsService {
   ) {
     let newProfileSettings, newUserSettings;
     if (profileSettings) {
-      newProfileSettings = await this.userManagerService.saveUser({
+      newProfileSettings = await this.userManagerService.save({
         userId,
         ...profileSettings,
       });

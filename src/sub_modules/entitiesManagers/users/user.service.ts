@@ -23,7 +23,7 @@ export class UserManagerService {
     return await this.usersRepository.findOne(condition);
   }
 
-  async saveUser(userData) {
+  async save(userData) {
     return await this.usersRepository.save(userData);
   }
 

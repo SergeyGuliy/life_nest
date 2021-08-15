@@ -11,27 +11,28 @@ import { UserSettingsManagerService } from '../../sub_modules/entitiesManagers/u
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
-    private passwordEncoderService: PasswordEncoderService,
+    private readonly jwtService: JwtService,
+    private readonly passwordEncoderService: PasswordEncoderService,
     private readonly userManagerService: UserManagerService,
     private readonly userSettingsManagerService: UserSettingsManagerService,
   ) {}
 
-  async register(body) {
-    await this.registerMiddleware(body);
-    body.refreshToken = uuidv4();
-    const { userId } = await this.createUser(body);
+  async register(newUserData): Promise<any> {
+    await this.registerMiddleware(newUserData);
+    const { userId } = await this.createUser({
+      ...newUserData,
+      refreshToken: uuidv4(),
+    });
     const userData = await this.userManagerService.getUserByIdWithToken(userId);
     return this.returnUserDataToClient(userData);
   }
 
-  async login(body): Promise<any> {
-    const user = await this.userManagerService.getUserByEmailOrPhoneOrId(body);
-    if (!user) {
-      throw new HttpException('User is not found', HttpStatus.NOT_FOUND);
-    }
+  async login(authData): Promise<any> {
+    const user = await this.userManagerService.getUserByEmailOrPhoneOrId(
+      authData,
+    );
     await this.passwordEncoderService.validatePassword(
-      body.password,
+      authData.password,
       user.password,
     );
     const userData = await this.userManagerService.getUserByIdWithToken(
@@ -40,7 +41,7 @@ export class AuthService {
     return this.returnUserDataToClient(userData);
   }
 
-  async refreshToken(userId, oldRefreshToken) {
+  async refreshToken(userId, oldRefreshToken): Promise<any> {
     const user = await this.userManagerService.getUserByIdWithToken(userId);
     if (user.refreshToken === oldRefreshToken) {
       const userData = await this.setNewRefreshTokenToUser(user.userId);
@@ -51,21 +52,21 @@ export class AuthService {
     }
   }
 
-  async changePassword(userData, oldPassword, newPassword) {
+  async changePassword(authData, oldPassword, newPassword): Promise<any> {
     const securedUserData = await this.userManagerService.getUserByEmailOrPhoneOrId(
-      userData,
+      authData,
     );
     await this.passwordEncoderService.validatePassword(
       oldPassword,
       securedUserData.password,
     );
-    await this.userManagerService.update(userData.userId, {
+    await this.userManagerService.update(authData.userId, {
       password: newPassword,
     });
     return 'Password successfully changed';
   }
 
-  async setNewRefreshTokenToUser(userId: number) {
+  async setNewRefreshTokenToUser(userId: number): Promise<any> {
     await this.userManagerService.update(userId, {
       refreshToken: uuidv4(),
     });
@@ -83,26 +84,22 @@ export class AuthService {
     };
   }
 
-  async createUser(user: CreateUserDto) {
-    const formattedUser = {
-      phoneCountryCode: '',
-      country: '',
-      userSettings: undefined,
-      ...user,
-    };
+  async createUser(user: CreateUserDto): Promise<any> {
     const formattedPhone = phone(user.phone);
-    formattedUser.phoneCountryCode = formattedPhone[0];
-    formattedUser.country = formattedPhone[1];
-    formattedUser.password = await this.passwordEncoderService.generatePasswordHash(
-      user.password,
-    );
-    formattedUser.userSettings = await this.userSettingsManagerService.saveUserSettings(
-      {},
-    );
-    return await this.userManagerService.saveUser(formattedUser);
+
+    const formattedUser = {
+      ...user,
+      phoneCountryCode: formattedPhone[0],
+      country: formattedPhone[1],
+      password: await this.passwordEncoderService.generatePasswordHash(
+        user.password,
+      ),
+      userSettings: await this.userSettingsManagerService.saveUserSettings({}),
+    };
+    return await this.userManagerService.save(formattedUser);
   }
 
-  async registerMiddleware({ email, phone }) {
+  async registerMiddleware({ email, phone }): Promise<any> {
     const userSearchEmail = await this.userManagerService.findOne({
       where: [{ email }],
     });
