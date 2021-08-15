@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import * as phone from 'phone';
@@ -7,12 +7,14 @@ import { PasswordEncoderService } from './password-encoder.service';
 import { CreateUserDto } from '../../assets/dto/createUser.dto';
 import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
 import { UserSettingsManagerService } from '../../sub_modules/entitiesManagers/users/user-settings.service';
-import { MyLogger } from '../../assets/globalServices/my-logger.service';
+import { MyLogger } from '../../sub_modules/globalServices/my-logger.service';
+import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
+    private readonly errorHandlerService: ErrorHandlerService,
     private readonly passwordEncoderService: PasswordEncoderService,
     private readonly userManagerService: UserManagerService,
     private readonly userSettingsManagerService: UserSettingsManagerService,
@@ -51,7 +53,7 @@ export class AuthService {
       return this.returnUserDataToClient(userData);
     } else {
       await this.setNewRefreshTokenToUser(user.userId);
-      throw new HttpException('Invalid refreshToken', HttpStatus.BAD_REQUEST);
+      this.errorHandlerService.error('invalidRefreshToken', 'en');
     }
   }
 
@@ -110,14 +112,11 @@ export class AuthService {
       where: [{ phone }],
     });
     if (userSearchEmail && userSearchPhone) {
-      throw new HttpException(
-        'Email and phone already in use',
-        HttpStatus.BAD_REQUEST,
-      );
+      this.errorHandlerService.error('phoneAndEmailAlreadyInUse', 'en');
     } else if (userSearchEmail) {
-      throw new HttpException('Email already in use', HttpStatus.BAD_REQUEST);
+      this.errorHandlerService.error('emailAlreadyInUse', 'en');
     } else if (userSearchPhone) {
-      throw new HttpException('Phone already in use', HttpStatus.BAD_REQUEST);
+      this.errorHandlerService.error('phoneAlreadyInUse', 'en');
     }
   }
 }

@@ -3,12 +3,12 @@ import { Module } from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import { ChatsGateway } from './chats.gateway';
 import { ChatsController } from './chats.controller';
-import { SocketNameSpacerService } from '../../assets/globalServices/socket-namespaser.service';
 import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-manager.module';
+import { GlobalServicesModule } from '../../sub_modules/globalServices/global-services.module';
 
 @Module({
-  imports: [EntityManagerModule],
+  imports: [EntityManagerModule, GlobalServicesModule],
   controllers: [ChatsController],
-  providers: [SocketNameSpacerService, ChatsService, ChatsGateway],
+  providers: [ChatsService, ChatsGateway],
 })
 export class ChatsModule {}

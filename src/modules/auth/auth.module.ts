@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { PasswordEncoderService } from './password-encoder.service';
 import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-manager.module';
-import { MyLogger } from '../../assets/globalServices/my-logger.service';
+import { GlobalServicesModule } from '../../sub_modules/globalServices/global-services.module';
 
 @Module({
   imports: [
@@ -15,8 +15,9 @@ import { MyLogger } from '../../assets/globalServices/my-logger.service';
       signOptions: { expiresIn: process.env.JWT_EXPIRES_AT },
     }),
     EntityManagerModule,
+    GlobalServicesModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, PasswordEncoderService, MyLogger],
+  providers: [AuthService, LocalStrategy, PasswordEncoderService],
 })
 export class AuthModule {}

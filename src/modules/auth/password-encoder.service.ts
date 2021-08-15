@@ -1,10 +1,12 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { SALT_ROUND_CRYPT } from '../../assets/constants';
+import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
 
 @Injectable()
 export class PasswordEncoderService {
+  constructor(private readonly errorHandlerService: ErrorHandlerService) {}
   private SALT_ROUND_CRYPT = SALT_ROUND_CRYPT;
 
   generatePasswordHash(password: string): Promise<string> {
@@ -41,7 +43,7 @@ export class PasswordEncoderService {
       userPassword,
     );
     if (!(isPasswordSame || isPasswordHashedSame)) {
-      throw new HttpException('Wrong password or login', HttpStatus.NOT_FOUND);
+      this.errorHandlerService.error('wrongPasswordOrLogin', 'en');
     }
   }
 }

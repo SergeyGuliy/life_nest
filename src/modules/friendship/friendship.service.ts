@@ -1,13 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { FRIENDSHIP_STATUSES } from '../../assets/enums';
 
 import { FriendshipManagerService } from '../../sub_modules/entitiesManagers/friendship/friendship.service';
 import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
+import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
 
 @Injectable()
 export class FriendshipService {
   constructor(
+    private readonly errorHandlerService: ErrorHandlerService,
     private readonly friendshipManagerService: FriendshipManagerService,
     private readonly userManagerService: UserManagerService,
   ) {}
@@ -32,12 +34,11 @@ export class FriendshipService {
       });
       return await this.getBothFriendshipConnection(yourId, receiverId);
     }
-    throw new HttpException(
-      {
-        message: `Friendship connection is in status ${friendships.friendshipsStatus}`,
-        friendships,
-      },
-      HttpStatus.METHOD_NOT_ALLOWED,
+    this.errorHandlerService.error(
+      'friendshipsInStatus',
+      'en',
+      [friendships.friendshipsStatus],
+      friendships,
     );
   }
 
@@ -49,16 +50,10 @@ export class FriendshipService {
       senderId,
     );
     if (!friendships) {
-      throw new HttpException(
-        `You don't have request from user with ID: ${senderId}`,
-        HttpStatus.NOT_FOUND,
-      );
+      this.errorHandlerService.error('youDontHaveRequest', 'en', [senderId]);
     }
     if (friendships.friendshipsStatus === FRIENDSHIP_STATUSES.APPROVED) {
-      throw new HttpException(
-        `User is already in your friends list`,
-        HttpStatus.METHOD_NOT_ALLOWED,
-      );
+      this.errorHandlerService.error('userAlreadyInFriends', 'en');
     }
     if (yourId === +friendships.friendshipReceiver) {
       await this.friendshipManagerService.update(friendships.friendshipsId, {
@@ -71,10 +66,7 @@ export class FriendshipService {
         relations: ['friendshipReceiver', 'friendshipSender'],
       });
     } else {
-      throw new HttpException(
-        `Accept friendship connection can only receiver`,
-        HttpStatus.METHOD_NOT_ALLOWED,
-      );
+      this.errorHandlerService.error('acceptFriendshipCanOnlyReceiver', 'en');
     }
   }
 
@@ -86,16 +78,10 @@ export class FriendshipService {
       receiverId,
     );
     if (!friendships) {
-      throw new HttpException(
-        `You don't have request from user with ID: ${receiverId}`,
-        HttpStatus.NOT_FOUND,
-      );
+      this.errorHandlerService.error('youDontHaveRequest', 'en', [receiverId]);
     }
     if (friendships.friendshipsStatus === FRIENDSHIP_STATUSES.APPROVED) {
-      throw new HttpException(
-        `User is already in your friends list`,
-        HttpStatus.METHOD_NOT_ALLOWED,
-      );
+      this.errorHandlerService.error('userAlreadyInFriends', 'en');
     }
     if (yourId === +friendships.friendshipReceiver) {
       await this.friendshipManagerService.update(friendships.friendshipsId, {
@@ -108,10 +94,7 @@ export class FriendshipService {
         relations: ['friendshipReceiver', 'friendshipSender'],
       });
     } else {
-      throw new HttpException(
-        `Ignore friendship connection can only receiver`,
-        HttpStatus.METHOD_NOT_ALLOWED,
-      );
+      this.errorHandlerService.error('ignoreCanOnlyReceiver', 'en');
     }
   }
 
@@ -125,10 +108,7 @@ export class FriendshipService {
       !friendships ||
       friendships.friendshipsStatus !== FRIENDSHIP_STATUSES.APPROVED
     ) {
-      throw new HttpException(
-        `You can't delete user if he is not in your friends list`,
-        HttpStatus.METHOD_NOT_ALLOWED,
-      );
+      this.errorHandlerService.error('cantDeleteIfUserNotInFriendList', 'en');
     }
     await this.friendshipManagerService.delete(friendships.friendshipsId);
     return {
@@ -219,17 +199,13 @@ export class FriendshipService {
 
   async interceptor(senderId: number, receiverId: number) {
     if (senderId === receiverId) {
-      throw new HttpException(
-        `You can't sent friendship request to yourself`,
-        HttpStatus.NOT_FOUND,
-      );
+      this.errorHandlerService.error('cantSendRequestToYourself', 'en');
     }
     const user = await this.userManagerService.findOne(receiverId);
     if (!user) {
-      throw new HttpException(
-        `Friendship receiver with userId ${receiverId} not found`,
-        HttpStatus.NOT_FOUND,
-      );
+      this.errorHandlerService.error('friendshipReceiverNotFound', 'en', [
+        receiverId,
+      ]);
     }
   }
 }

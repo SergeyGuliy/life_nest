@@ -6,7 +6,7 @@ import {
 
 import { Socket, Server } from 'socket.io';
 import { MESSAGE_RECEIVER_TYPES } from '../../assets/enums';
-import { SocketNameSpacerService } from '../../assets/globalServices/socket-namespaser.service';
+import { SocketNameSpacerService } from '../../sub_modules/globalServices/socket-namespaser.service';
 
 @WebSocketGateway()
 export class RoomsSocketGateway {

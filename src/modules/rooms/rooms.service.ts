@@ -1,17 +1,19 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { random } from 'lodash';
 
 import { RoomsSocketGateway } from './rooms.gateway';
 
 import { RoomsManagerService } from '../../sub_modules/entitiesManagers/rooms/rooms.service';
 import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
+import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
 
 @Injectable()
 export class RoomsService {
   constructor(
-    private roomsSocketGateway: RoomsSocketGateway,
-    private roomsManagerService: RoomsManagerService,
-    private userManagerService: UserManagerService,
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly roomsSocketGateway: RoomsSocketGateway,
+    private readonly roomsManagerService: RoomsManagerService,
+    private readonly userManagerService: UserManagerService,
   ) {}
 
   async getRooms(query) {
@@ -199,12 +201,12 @@ function passwordValidation(roomData, roomPassword) {
     roomData.typeOfRoom === 'PRIVATE' &&
     roomData.roomPassword !== roomPassword
   ) {
-    throw new HttpException('Wrong room password', HttpStatus.BAD_REQUEST);
+    this.errorHandlerService.error('wrongRoomPassword', 'en');
   }
 }
 
 function countOfUsersValidation(usersInRoomLength, maxCountOfUsers) {
   if (usersInRoomLength > maxCountOfUsers) {
-    throw new HttpException('Room already full', HttpStatus.BAD_REQUEST);
+    this.errorHandlerService.error('roomAlreadyFull', 'en');
   }
 }

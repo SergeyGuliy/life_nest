@@ -1,15 +1,17 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { USER_ONLINE_STATUSES } from '../../assets/enums';
 
 import { RoomsService } from '../../modules/rooms/rooms.service';
 
-import { SocketNameSpacerService } from '../../assets/globalServices/socket-namespaser.service';
+import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
 import { UserManagerService } from '../entitiesManagers/users/user.service';
+import { ErrorHandlerService } from '../globalServices/error-handler.service';
 
 @Injectable()
 export class SocketService {
   constructor(
+    private readonly errorHandlerService: ErrorHandlerService,
     private roomsService: RoomsService,
     private socketNameSpacerService: SocketNameSpacerService,
 
@@ -42,6 +44,6 @@ export class SocketService {
     if (user) {
       return user;
     }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    this.errorHandlerService.error('userNotFound', 'en');
   }
 }

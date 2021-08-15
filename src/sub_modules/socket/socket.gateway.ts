@@ -11,7 +11,7 @@ import { debounce } from 'throttle-debounce';
 import { LOGOUT_TIMEOUT } from '../../assets/constants';
 
 import { SocketService } from './socket.service';
-import { SocketNameSpacerService } from '../../assets/globalServices/socket-namespaser.service';
+import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
 
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {

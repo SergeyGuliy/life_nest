@@ -12,6 +12,7 @@ import { UserSettingsManagerService } from './users/user-settings.service';
 import { ChatsManagerService } from './chats/chats.service';
 import { FriendshipManagerService } from './friendship/friendship.service';
 import { RoomsManagerService } from './rooms/rooms.service';
+import { GlobalServicesModule } from '../globalServices/global-services.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { RoomsManagerService } from './rooms/rooms.service';
       Friendships,
       Rooms,
     ]),
+    GlobalServicesModule,
   ],
   providers: [
     UserManagerService,

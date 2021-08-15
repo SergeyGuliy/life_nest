@@ -4,9 +4,10 @@ import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-
 
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { GlobalServicesModule } from '../../sub_modules/globalServices/global-services.module';
 
 @Module({
-  imports: [EntityManagerModule],
+  imports: [GlobalServicesModule, EntityManagerModule],
   controllers: [UserController],
   providers: [UserService],
 })

@@ -1,12 +1,14 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Users } from '../../../assets/database/entities/users.entity';
+import { ErrorHandlerService } from '../../globalServices/error-handler.service';
 
 @Injectable()
 export class UserManagerService {
   constructor(
+    private readonly errorHandlerService: ErrorHandlerService,
     @InjectRepository(Users)
     private usersRepository: Repository<Users>,
   ) {}
@@ -30,7 +32,7 @@ export class UserManagerService {
   async delete(userId: number) {
     const deleteResponse = await this.usersRepository.delete(userId);
     if (!deleteResponse.affected) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      this.errorHandlerService.error('userNotFound', 'en');
     }
   }
 
@@ -73,6 +75,6 @@ export class UserManagerService {
 
   async catchUserNotExists(userId) {
     const user = await this.usersRepository.findOne(userId);
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (!user) this.errorHandlerService.error('userNotFound', 'en');
   }
 }
