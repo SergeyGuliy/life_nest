@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { PasswordEncoderService } from './password-encoder.service';
 import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-manager.module';
+import { MyLogger } from '../../assets/globalServices/my-logger.service';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-
     EntityManagerModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, PasswordEncoderService],
+  providers: [AuthService, LocalStrategy, PasswordEncoderService, MyLogger],
 })
 export class AuthModule {}

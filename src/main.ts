@@ -7,7 +7,7 @@ import { SocketIoAdapter } from './assets/adapters/ws.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['warn', 'error'],
+    logger: process.env.NODE_ENV === 'dev' ? ['warn', 'error'] : ['error'],
   });
   app.useWebSocketAdapter(new SocketIoAdapter(app));
   app.useGlobalPipes(new ValidationPipe());

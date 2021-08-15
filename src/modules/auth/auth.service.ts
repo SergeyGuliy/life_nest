@@ -7,6 +7,7 @@ import { PasswordEncoderService } from './password-encoder.service';
 import { CreateUserDto } from '../../assets/dto/createUser.dto';
 import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
 import { UserSettingsManagerService } from '../../sub_modules/entitiesManagers/users/user-settings.service';
+import { MyLogger } from '../../assets/globalServices/my-logger.service';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,7 @@ export class AuthService {
     private readonly passwordEncoderService: PasswordEncoderService,
     private readonly userManagerService: UserManagerService,
     private readonly userSettingsManagerService: UserSettingsManagerService,
+    private readonly myLogger: MyLogger,
   ) {}
 
   async register(newUserData): Promise<any> {
@@ -42,6 +44,7 @@ export class AuthService {
   }
 
   async refreshToken(userId, oldRefreshToken): Promise<any> {
+    this.myLogger.warn(AuthService.name, 'hello world');
     const user = await this.userManagerService.getUserByIdWithToken(userId);
     if (user.refreshToken === oldRefreshToken) {
       const userData = await this.setNewRefreshTokenToUser(user.userId);

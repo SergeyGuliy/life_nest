@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from '@hapi/joi';
+// import { SentryModule } from '@ntegral/nestjs-sentry';
+// import { LogLevel } from '@sentry/types';
 
 import { typeormConfig } from './assets/database/typeorm-config';
 import { SqlHelperModule } from './sub_modules/sql-helper/sql-helper.module';
@@ -33,7 +35,6 @@ if (process.env.NODE_ENV === 'dev') defaultModules.push(SqlHelperModule);
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(typeormConfig),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -46,6 +47,14 @@ if (process.env.NODE_ENV === 'dev') defaultModules.push(SqlHelperModule);
         PORT: Joi.number(),
       }),
     }),
+    TypeOrmModule.forRoot(typeormConfig),
+    // SentryModule.forRoot({
+    //   dsn: 'http://00aa0a3b572f46878e7b9aa54f9932af@localhost:9001/3',
+    //   debug: true,
+    //   environment: process.env.NODE_ENV,
+    //   release: 'some_release',
+    //   logLevel: LogLevel.Debug,
+    // }),
     ...defaultModules,
   ],
 })
