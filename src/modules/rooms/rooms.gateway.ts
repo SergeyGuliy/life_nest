@@ -12,9 +12,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 @WebSocketGateway()
 export class RoomsSocketGateway {
-  constructor(
-    private socketNameSpacerService: SocketNameSpacerService,
-  ) {}
+  constructor(private socketNameSpacerService: SocketNameSpacerService) {}
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('userConnectsRoom')
