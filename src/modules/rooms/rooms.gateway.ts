@@ -7,10 +7,14 @@ import {
 import { Socket, Server } from 'socket.io';
 import { MESSAGE_RECEIVER_TYPES } from '../../assets/enums';
 import { SocketNameSpacerService } from '../../sub_modules/globalServices/socket-namespaser.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 @WebSocketGateway()
 export class RoomsSocketGateway {
-  constructor(private socketNameSpacerService: SocketNameSpacerService) {}
+  constructor(
+    private socketNameSpacerService: SocketNameSpacerService,
+  ) {}
   @WebSocketServer() server: Server;
 
   @SubscribeMessage('userConnectsRoom')
@@ -27,6 +31,18 @@ export class RoomsSocketGateway {
   @SubscribeMessage('unSubscribeRoomsUpdate')
   public unSubscribeRoomsUpdate(client: Socket): void {
     client.leave('RoomsUpdater');
+  }
+
+  @SubscribeMessage('kickUserFromRoom')
+  public kickUserFromRoom(client: Socket, { userId }): void {
+    console.log('kickUserFromRoom');
+    console.log(userId);
+  }
+
+  @SubscribeMessage('setNewAdminInRoom')
+  public setNewAdminInRoom(client: Socket, { userId }): void {
+    console.log('setNewAdminInRoom');
+    console.log(userId);
   }
 
   public updateUsersListInRoom(roomId, usersInRoom): void {

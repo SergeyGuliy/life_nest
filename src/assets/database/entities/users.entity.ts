@@ -83,7 +83,7 @@ export class Users extends BaseEntity {
   @Column({
     default: null,
   })
-  public createdRoomId: null | number;
+  public roomCreatedId: null | number;
 
   @OneToMany(() => Messages, (message) => message.messageSender)
   public messages: Messages[];

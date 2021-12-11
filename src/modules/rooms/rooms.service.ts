@@ -64,7 +64,7 @@ export class RoomsService {
       ...roomData,
       usersInRoom,
       creator: usersInRoom.find(
-        (user) => user.roomJoinedId === user.createdRoomId,
+        (user) => user.roomJoinedId === user.roomCreatedId,
       ),
     };
   }
@@ -76,7 +76,7 @@ export class RoomsService {
       roomJoinedId: creatorId,
     });
     await this.userManagerService.update(creatorId, {
-      createdRoomId: newRoom.roomId,
+      roomCreatedId: newRoom.roomId,
       roomJoinedId: newRoom.roomId,
     });
     const usersInRoom = await this.userManagerService.find({
@@ -101,7 +101,7 @@ export class RoomsService {
     countOfUsersValidation(usersInRoom.length, roomData.maxCountOfUsers);
 
     await this.userManagerService.update(userId, {
-      createdRoomId: null,
+      roomCreatedId: null,
       roomJoinedId: roomId,
     });
     usersInRoom = await this.userManagerService.find({
@@ -123,10 +123,10 @@ export class RoomsService {
     const { userId } = user;
     const {
       roomJoinedId,
-      createdRoomId,
+      roomCreatedId,
     } = await this.userManagerService.findOne(userId);
     await this.userManagerService.update(userId, {
-      createdRoomId: null,
+      roomCreatedId: null,
       roomJoinedId: null,
     });
     const newUserData = await this.userManagerService.findOne({
@@ -142,13 +142,13 @@ export class RoomsService {
     });
     this.roomsSocketGateway.updateUsersListInRoom(roomJoinedId, usersInRoom);
     await this.roomsSocketGateway.userLeaveRoom(newUserData.userId);
-    await this.setNewAdminOrDelete(roomJoinedId, createdRoomId, roomData);
+    await this.setNewAdminOrDelete(roomJoinedId, roomCreatedId, roomData);
     return newUserData;
   }
 
   async setNewAdminOrDelete(
     roomJoinedId: number,
-    createdRoomId: number,
+    roomCreatedId: number,
     roomData,
   ) {
     const usersInRoom = await this.userManagerService.find({
@@ -160,7 +160,7 @@ export class RoomsService {
       await this.deleteRoom(roomJoinedId);
     } else {
       await this.setNewAdmin(
-        createdRoomId,
+        roomCreatedId,
         roomJoinedId,
         usersInRoom,
         roomData,
@@ -169,7 +169,7 @@ export class RoomsService {
   }
 
   async setNewAdmin(
-    createdRoomId: number,
+    roomCreatedId: number,
     roomJoinedId: number,
     usersInRoom,
     roomData,
@@ -178,10 +178,10 @@ export class RoomsService {
       ...roomData,
       usersInRoomLength: usersInRoom.length,
     });
-    if (createdRoomId === roomJoinedId) {
+    if (roomCreatedId === roomJoinedId) {
       const idOfNewAdmin = usersInRoom[random(usersInRoom.length - 1)].userId;
       await this.userManagerService.update(idOfNewAdmin, {
-        createdRoomId: roomJoinedId,
+        roomCreatedId: roomJoinedId,
       });
       const newAdmin = await this.userManagerService.findOne({
         where: { userId: idOfNewAdmin },

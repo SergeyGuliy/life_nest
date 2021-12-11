@@ -54,7 +54,7 @@ export class UserManagerService {
         'lastName',
         'country',
         'refreshToken',
-        'createdRoomId',
+        'roomCreatedId',
         'roomJoinedId',
         'avatarSmall',
         'avatarBig',
