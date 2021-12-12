@@ -27,6 +27,7 @@ export class RoomsController {
 
   @Get()
   async getRooms(@Query() query) {
+    console.log(query);
     return await this.roomsService.getRooms(query);
   }
 
