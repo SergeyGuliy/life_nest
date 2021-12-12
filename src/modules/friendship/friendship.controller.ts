@@ -35,25 +35,25 @@ export class FriendshipController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('add/:userId')
+  @Post(':userId/add')
   async sendRequest(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.sendRequest(+user.userId, +userId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('accept/:userId')
+  @Put(':userId/accept')
   async acceptRequest(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.acceptRequest(+user.userId, +userId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('ignore/:userId')
+  @Put(':userId/ignore')
   async ignoreRequest(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.ignoreRequest(+user.userId, +userId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('delete/:userId')
+  @Delete(':userId/delete')
   async deleteFriendship(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.deleteFriendship(+user.userId, +userId);
   }
