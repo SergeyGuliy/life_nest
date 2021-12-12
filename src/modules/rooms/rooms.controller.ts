@@ -45,7 +45,7 @@ export class RoomsController {
     return await this.roomsService.userLeaveRoom(user);
   }
 
-  @Patch('join/:roomId')
+  @Patch(':roomId/join')
   async userJoinRoom(
     @Param('roomId') roomId: number,
     @User() user: any,
@@ -55,6 +55,28 @@ export class RoomsController {
       user.userId,
       roomId,
       body.roomPassword,
+    );
+  }
+
+  @Patch(':roomId/kick-user')
+  async kickUserFromRoom(
+    @Param('roomId') roomId: number,
+    @User() { userId },
+    @Body() { kickUserId },
+  ) {
+    return await this.roomsService.kickUserFromRoom(userId, roomId, kickUserId);
+  }
+
+  @Patch(':roomId/set-new-admin')
+  async setNewRoomAdmin(
+    @Param('roomId') roomId: number,
+    @User() { userId },
+    @Body() { newAdminId },
+  ) {
+    return await this.roomsService.setNewRoomAdmin(
+      +userId,
+      +roomId,
+      +newAdminId,
     );
   }
 }

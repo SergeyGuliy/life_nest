@@ -194,6 +194,40 @@ export class RoomsService {
     this.roomsSocketGateway.roomInListDeleted(roomId);
     return await this.roomsManagerService.delete(roomId);
   }
+
+  async kickUserFromRoom(senderUserId, roomId, kickUserId) {
+    const isAdmin = await this.isRoomAdmin(senderUserId, roomId);
+    return;
+    // if (isAdmin) {
+    // await this.userManagerService.update(idOfNewAdmin, {
+    //   roomCreatedId: roomJoinedId,
+    // });
+    // }
+  }
+
+  async setNewRoomAdmin(senderUserId, roomId, newAdminId) {
+    const isAdmin = await this.isRoomAdmin(senderUserId, roomId);
+    if (isAdmin) {
+      await this.userManagerService.update(senderUserId, {
+        roomCreatedId: null,
+      });
+      await this.userManagerService.update(newAdminId, {
+        roomCreatedId: roomId,
+      });
+      const newAdmin = await this.userManagerService.findOne({
+        where: { userId: newAdminId },
+      });
+      this.roomsSocketGateway.updateRoomAdmin(roomId, newAdmin);
+      return;
+    }
+  }
+
+  async isRoomAdmin(userId, roomId) {
+    const { roomCreatedId } = await this.userManagerService.findOne({
+      where: { userId },
+    });
+    return +roomCreatedId === +roomId;
+  }
 }
 
 function passwordValidation(roomData, roomPassword) {
