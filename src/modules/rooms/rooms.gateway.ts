@@ -63,6 +63,12 @@ export class RoomsSocketGateway {
     }
   }
 
+  public async updateToggleLockRoom(roomId, lockState) {
+    this.server
+      .to(this.getRoomName(roomId))
+      .emit('updateToggleLockRoom', lockState);
+  }
+
   public roomInListCreated(roomData): void {
     this.server.to('RoomsUpdater').emit('roomInListCreated', roomData);
   }

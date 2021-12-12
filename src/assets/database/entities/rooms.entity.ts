@@ -1,8 +1,4 @@
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from './base.entity';
 
 import { ROOM_TYPES } from '../../enums';
@@ -30,6 +26,11 @@ export class Rooms extends BaseEntity {
 
   @Column()
   public maxCountOfUsers: number;
+
+  @Column({
+    default: false,
+  })
+  public isBlocked: boolean;
 
   @Column({
     default: null,

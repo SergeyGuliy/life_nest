@@ -15,6 +15,10 @@ export class RoomsManagerService {
     return await this.roomsRepository.find(query);
   }
 
+  async update(roomId, newRoomData) {
+    await this.roomsRepository.update(roomId, newRoomData);
+  }
+
   async findOne(query) {
     return await this.roomsRepository.findOne(query);
   }

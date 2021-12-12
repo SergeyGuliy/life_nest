@@ -60,7 +60,11 @@ export class RoomsController {
     @User() { userId },
     @Body() { kickUserId },
   ) {
-    return await this.roomsService.kickUserFromRoom(userId, roomId, kickUserId);
+    return await this.roomsService.kickUserFromRoomRequest(
+      userId,
+      roomId,
+      kickUserId,
+    );
   }
 
   @Patch(':roomId/set-new-admin')
@@ -76,9 +80,13 @@ export class RoomsController {
     );
   }
 
-  @Patch(':roomId/block-room')
-  async blockRoom(@Param('roomId') roomId: number, @User() { userId }) {
-    return await this.roomsService.blockRoom(+userId, +roomId);
+  @Patch(':roomId/toggle-lock-room')
+  async toggleLockRoom(
+    @Param('roomId') roomId: number,
+    @User() { userId },
+    @Body() { lockState },
+  ) {
+    return await this.roomsService.toggleLockRoom(+userId, +roomId, lockState);
   }
 
   @Delete(':roomId/delete-room')

@@ -90,6 +90,8 @@ export class RoomsService {
     const roomData = await this.getRoomDataById({
       where: { roomId },
     });
+
+    blockingValidation(roomData);
     passwordValidation(roomData, roomPassword);
 
     let usersInRoom = await this.userManagerService.find({
@@ -190,26 +192,39 @@ export class RoomsService {
     }
   }
 
+  async toggleLockRoom(userId, roomId, lockState) {
+    await this.checkIsRoomAdmin(userId, roomId);
+    await this.roomsManagerService.update(roomId, {
+      isBlocked: lockState,
+    });
+    await this.roomsSocketGateway.updateToggleLockRoom(roomId, lockState);
+    return;
+  }
+
+  async deleteRoomRequest(userId, roomId) {
+    await this.checkIsRoomAdmin(userId, roomId);
+
+    const usersInRoom = await this.userManagerService.find({
+      where: { roomJoinedId: roomId },
+    });
+
+    for await (const { userId } of usersInRoom) {
+      await this.kickUserFromRoom(roomId, userId);
+    }
+    await this.deleteRoom(roomId);
+  }
+
+  async kickUserFromRoomRequest(senderUserId, roomId, kickUserId) {
+    await this.checkIsRoomAdmin(senderUserId, roomId);
+    await this.kickUserFromRoom(roomId, kickUserId);
+  }
+
   async deleteRoom(roomId) {
     this.roomsSocketGateway.roomInListDeleted(roomId);
     return await this.roomsManagerService.delete(roomId);
   }
 
-  async deleteRoomRequest(userId, roomId) {
-    await this.CheckIsRoomAdmin(userId, roomId);
-    await this.deleteRoom(roomId);
-  }
-
-  async blockRoom(userId, roomId) {
-    await this.CheckIsRoomAdmin(userId, roomId);
-
-    this.roomsSocketGateway.roomInListDeleted(roomId);
-    return await this.roomsManagerService.delete(roomId);
-  }
-
-  async kickUserFromRoom(senderUserId, roomId, kickUserId) {
-    await this.CheckIsRoomAdmin(senderUserId, roomId);
-
+  async kickUserFromRoom(roomId, kickUserId) {
     await this.userManagerService.update(kickUserId, {
       roomJoinedId: null,
     });
@@ -217,7 +232,7 @@ export class RoomsService {
   }
 
   async setNewRoomAdmin(senderUserId, roomId, newAdminId) {
-    await this.CheckIsRoomAdmin(senderUserId, roomId);
+    await this.checkIsRoomAdmin(senderUserId, roomId);
 
     await this.userManagerService.update(senderUserId, {
       roomCreatedId: null,
@@ -232,7 +247,7 @@ export class RoomsService {
     return;
   }
 
-  async CheckIsRoomAdmin(userId, roomId) {
+  async checkIsRoomAdmin(userId, roomId) {
     const { roomCreatedId } = await this.userManagerService.findOne({
       where: { userId },
     });
@@ -253,5 +268,11 @@ function passwordValidation(roomData, roomPassword) {
 function countOfUsersValidation(usersInRoomLength, maxCountOfUsers) {
   if (usersInRoomLength > maxCountOfUsers) {
     this.errorHandlerService.error('roomAlreadyFull', 'en');
+  }
+}
+
+function blockingValidation(roomData) {
+  if (roomData.isBlocked) {
+    this.errorHandlerService.error('isNotRoomAdmin', 'en');
   }
 }
