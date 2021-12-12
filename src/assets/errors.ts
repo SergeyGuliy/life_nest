@@ -67,6 +67,12 @@ export const errors = {
       en: 'Wrong room password',
     },
   },
+  isNotRoomAdmin: {
+    status: HttpStatus.BAD_REQUEST,
+    locales: {
+      en: 'You are not room admin',
+    },
+  },
   wrongPasswordOrLogin: {
     status: HttpStatus.BAD_REQUEST,
     locales: {

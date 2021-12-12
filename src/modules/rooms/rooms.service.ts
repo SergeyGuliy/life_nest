@@ -63,9 +63,6 @@ export class RoomsService {
     return {
       ...roomData,
       usersInRoom,
-      creator: usersInRoom.find(
-        (user) => user.roomJoinedId === user.roomCreatedId,
-      ),
     };
   }
 
@@ -141,7 +138,10 @@ export class RoomsService {
       where: { roomJoinedId: roomJoinedId },
     });
     this.roomsSocketGateway.updateUsersListInRoom(roomJoinedId, usersInRoom);
-    await this.roomsSocketGateway.userLeaveRoom(newUserData.userId);
+    await this.roomsSocketGateway.userLeaveRoom(
+      roomJoinedId,
+      newUserData.userId,
+    );
     await this.setNewAdminOrDelete(roomJoinedId, roomCreatedId, roomData);
     return newUserData;
   }
@@ -197,12 +197,14 @@ export class RoomsService {
 
   async kickUserFromRoom(senderUserId, roomId, kickUserId) {
     const isAdmin = await this.isRoomAdmin(senderUserId, roomId);
-    return;
-    // if (isAdmin) {
-    // await this.userManagerService.update(idOfNewAdmin, {
-    //   roomCreatedId: roomJoinedId,
-    // });
-    // }
+    if (isAdmin) {
+      await this.userManagerService.update(kickUserId, {
+        roomJoinedId: null,
+      });
+      await this.roomsSocketGateway.userLeaveRoom(roomId, kickUserId);
+    } else {
+      this.errorHandlerService.error('isNotRoomAdmin', 'en');
+    }
   }
 
   async setNewRoomAdmin(senderUserId, roomId, newAdminId) {
@@ -219,6 +221,8 @@ export class RoomsService {
       });
       this.roomsSocketGateway.updateRoomAdmin(roomId, newAdmin);
       return;
+    } else {
+      this.errorHandlerService.error('isNotRoomAdmin', 'en');
     }
   }
 

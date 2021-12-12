@@ -53,10 +53,13 @@ export class RoomsSocketGateway {
     this.server.to(this.getRoomName(roomId)).emit('updateRoomAdmin', newAdmin);
   }
 
-  public async userLeaveRoom(userId) {
+  public async userLeaveRoom(roomId, userId) {
     const sid = await this.socketNameSpacerService.findSidByUserId(userId);
     if (typeof sid === 'string') {
       this.server.to(sid).emit('userLeaveRoom');
+      this.server
+        .to(this.getRoomName(roomId))
+        .emit('userKickedFromRoom', userId);
     }
   }
 
