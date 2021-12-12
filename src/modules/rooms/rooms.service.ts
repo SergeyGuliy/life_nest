@@ -195,42 +195,49 @@ export class RoomsService {
     return await this.roomsManagerService.delete(roomId);
   }
 
+  async deleteRoomRequest(userId, roomId) {
+    await this.CheckIsRoomAdmin(userId, roomId);
+    await this.deleteRoom(roomId);
+  }
+
+  async blockRoom(userId, roomId) {
+    await this.CheckIsRoomAdmin(userId, roomId);
+
+    this.roomsSocketGateway.roomInListDeleted(roomId);
+    return await this.roomsManagerService.delete(roomId);
+  }
+
   async kickUserFromRoom(senderUserId, roomId, kickUserId) {
-    const isAdmin = await this.isRoomAdmin(senderUserId, roomId);
-    if (isAdmin) {
-      await this.userManagerService.update(kickUserId, {
-        roomJoinedId: null,
-      });
-      await this.roomsSocketGateway.userLeaveRoom(roomId, kickUserId);
-    } else {
-      this.errorHandlerService.error('isNotRoomAdmin', 'en');
-    }
+    await this.CheckIsRoomAdmin(senderUserId, roomId);
+
+    await this.userManagerService.update(kickUserId, {
+      roomJoinedId: null,
+    });
+    await this.roomsSocketGateway.userLeaveRoom(roomId, kickUserId);
   }
 
   async setNewRoomAdmin(senderUserId, roomId, newAdminId) {
-    const isAdmin = await this.isRoomAdmin(senderUserId, roomId);
-    if (isAdmin) {
-      await this.userManagerService.update(senderUserId, {
-        roomCreatedId: null,
-      });
-      await this.userManagerService.update(newAdminId, {
-        roomCreatedId: roomId,
-      });
-      const newAdmin = await this.userManagerService.findOne({
-        where: { userId: newAdminId },
-      });
-      this.roomsSocketGateway.updateRoomAdmin(roomId, newAdmin);
-      return;
-    } else {
-      this.errorHandlerService.error('isNotRoomAdmin', 'en');
-    }
+    await this.CheckIsRoomAdmin(senderUserId, roomId);
+
+    await this.userManagerService.update(senderUserId, {
+      roomCreatedId: null,
+    });
+    await this.userManagerService.update(newAdminId, {
+      roomCreatedId: roomId,
+    });
+    const newAdmin = await this.userManagerService.findOne({
+      where: { userId: newAdminId },
+    });
+    this.roomsSocketGateway.updateRoomAdmin(roomId, newAdmin);
+    return;
   }
 
-  async isRoomAdmin(userId, roomId) {
+  async CheckIsRoomAdmin(userId, roomId) {
     const { roomCreatedId } = await this.userManagerService.findOne({
       where: { userId },
     });
-    return +roomCreatedId === +roomId;
+    if (+roomCreatedId === +roomId) return;
+    this.errorHandlerService.error('isNotRoomAdmin', 'en');
   }
 }
 

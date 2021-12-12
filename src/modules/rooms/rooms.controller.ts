@@ -35,11 +35,6 @@ export class RoomsController {
     return await this.roomsService.getRoomById(roomId);
   }
 
-  @Delete(':roomId')
-  async deleteRoom(@Param('roomId') roomId: string) {
-    return await this.roomsService.deleteRoom(roomId);
-  }
-
   @Patch('leave')
   async userLeaveRoom(@User() user: any) {
     return await this.roomsService.userLeaveRoom(user);
@@ -78,5 +73,15 @@ export class RoomsController {
       +roomId,
       +newAdminId,
     );
+  }
+
+  @Patch(':roomId/block-room')
+  async blockRoom(@Param('roomId') roomId: number, @User() { userId }) {
+    return await this.roomsService.blockRoom(+userId, +roomId);
+  }
+
+  @Delete(':roomId/delete-room')
+  async deleteRoom(@Param('roomId') roomId: number, @User() { userId }) {
+    return await this.roomsService.deleteRoomRequest(+userId, +roomId);
   }
 }
