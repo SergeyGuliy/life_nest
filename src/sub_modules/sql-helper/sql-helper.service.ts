@@ -37,6 +37,3 @@ export class SqlHelperService {
     return await this.messagesFriendships.clear();
   }
 }
-
-
-

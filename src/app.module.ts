@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
+
 import * as Joi from '@hapi/joi';
 // import { SentryModule } from '@ntegral/nestjs-sentry';
 // import { LogLevel } from '@sentry/types';
@@ -36,6 +38,7 @@ if (process.env.NODE_ENV === 'dev') defaultModules.push(SqlHelperModule);
 
 @Module({
   imports: [
+    MongooseModule.forRoot('mongodb://localhost/nest'),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
