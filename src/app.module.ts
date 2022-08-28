@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MongooseModule } from '@nestjs/mongoose';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { MongooseModule } = require('@nestjs/mongoose');
+console.log(MongooseModule);
 
 import * as Joi from '@hapi/joi';
+
 // import { SentryModule } from '@ntegral/nestjs-sentry';
 // import { LogLevel } from '@sentry/types';
 
@@ -38,7 +42,8 @@ if (process.env.NODE_ENV === 'dev') defaultModules.push(SqlHelperModule);
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/nest'),
+    MongooseModule.forRoot('mongodb://root:example@mongo:27017/'),
+
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -51,6 +56,7 @@ if (process.env.NODE_ENV === 'dev') defaultModules.push(SqlHelperModule);
         PORT: Joi.number(),
       }),
     }),
+
     TypeOrmModule.forRoot(typeormConfig),
     // SentryModule.forRoot({
     //   dsn: 'http://00aa0a3b572f46878e7b9aa54f9932af@localhost:9001/3',

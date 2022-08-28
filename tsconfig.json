@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -11,5 +12,11 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "./node_modules",
+    "./node_modules/*",
+  ],
 }
