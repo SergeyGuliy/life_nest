@@ -65,7 +65,6 @@ export class RoomsService {
       breed: 'breed',
     });
     const game = await createdGame.save();
-    console.log(game)
     const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
