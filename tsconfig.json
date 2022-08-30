@@ -11,6 +11,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "moduleResolution": "node",
     "incremental": true
   },
   "include": ["src/**/*"],
@@ -20,7 +21,7 @@
     "./node_modules/*",
   ],
   "paths": {
-    "@constants": ["node_modules/life_shared/constants"],
-    "@enums": ["node_modules/life_shared/enums"]
+    "@constants/*": ["node_modules/life_shared/constants"],
+    "@enums/*": ["node_modules/life_shared/enums"]
   }
 }

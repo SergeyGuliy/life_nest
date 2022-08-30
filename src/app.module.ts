@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { MongooseModule } = require('@nestjs/mongoose');
-console.log(MongooseModule);
 
 import * as Joi from '@hapi/joi';
 
