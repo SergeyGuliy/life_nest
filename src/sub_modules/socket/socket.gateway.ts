@@ -12,7 +12,7 @@ import { LOGOUT_TIMEOUT } from '@constants/index.js';
 
 import { SocketService } from './socket.service';
 import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
-
+import { socketSetup_giveUserIdToServer, socketSetup_callUserIdToServer,socketSetup_forceDisconnect } from '@constants//ws/socketSetup.js'
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
@@ -21,7 +21,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {}
   @WebSocketServer() server: Server;
 
-  @SubscribeMessage('giveUserIdToServer')
+  @SubscribeMessage(socketSetup_giveUserIdToServer)
   async giveUserIdToServer(client: Socket, { userId, clientId }) {
     client.join('GLOBAL');
     await this.socketService.userLogIn(userId);
@@ -33,7 +33,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   public handleConnection(client: Socket): void {
-    client.emit('callUserIdToServer', client.id);
+    client.emit(socketSetup_callUserIdToServer, client.id);
   }
 
   public async handleDisconnect(client: Socket) {
@@ -46,7 +46,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   forceDisconnectSidFromServer(sidsToDisconnect: string[]) {
     if (sidsToDisconnect.length) {
       sidsToDisconnect.forEach((sid) => {
-        this.server.to(sid).emit('forceDisconnect');
+        this.server.to(sid).emit(socketSetup_forceDisconnect);
         this.server.to(sid).disconnectSockets(true);
       });
     }
