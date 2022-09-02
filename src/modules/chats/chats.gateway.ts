@@ -11,7 +11,7 @@ import { SocketNameSpacerService } from '../../sub_modules/globalServices/socket
 import {
   chat_messageToServer,
   chat_messageToClient,
-} from '@constants/pusher/chats.js';
+} from '@constants/ws/chats.js';
 
 @WebSocketGateway()
 export class ChatsGateway {

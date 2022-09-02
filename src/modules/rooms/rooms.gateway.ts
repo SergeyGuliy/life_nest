@@ -23,7 +23,7 @@ import {
   rooms_roomInListUpdated,
   rooms_userJoinRoom,
   rooms_RoomsUpdater,
-} from '@constants/pusher/rooms.js';
+} from '@constants/ws/rooms.js';
 
 @Injectable()
 @WebSocketGateway()
