@@ -8,6 +8,10 @@ import { Socket, Server } from 'socket.io';
 import { ChatsService } from './chats.service';
 import { MESSAGE_RECEIVER_TYPES } from '../../assets/enums';
 import { SocketNameSpacerService } from '../../sub_modules/globalServices/socket-namespaser.service';
+import {
+  chat_messageToServer,
+  chat_messageToClient,
+} from '@constants/pusher/chats.js';
 
 @WebSocketGateway()
 export class ChatsGateway {
@@ -18,7 +22,7 @@ export class ChatsGateway {
 
   @WebSocketServer() server: Server;
 
-  @SubscribeMessage('messageToServer')
+  @SubscribeMessage(chat_messageToServer)
   public async messageToServer(client: Socket, messageToServer): Promise<void> {
     const messageToClient = await this.chatService.saveMessage(messageToServer);
     const {
@@ -41,7 +45,7 @@ export class ChatsGateway {
       ];
       sids.forEach((sid) => {
         if (typeof sid === 'string') {
-          this.server.to(sid).emit('messageToClient', messageToClient);
+          this.server.to(sid).emit(chat_messageToClient, messageToClient);
         }
       });
     }
