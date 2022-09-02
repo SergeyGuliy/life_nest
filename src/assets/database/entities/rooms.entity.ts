@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from './base.entity';
 
-import { ROOM_TYPES } from '../../enums';
+import { ROOM_TYPES } from '@enums/index.js';
 import { Users } from './users.entity';
 
 @Entity('rooms')

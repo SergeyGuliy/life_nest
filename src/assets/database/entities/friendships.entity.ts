@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
-import { FRIENDSHIP_STATUSES } from '../../enums';
+import { FRIENDSHIP_STATUSES } from '@enums/index.js';
 import { Users } from './users.entity';
 
 @Entity('friendships')

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { FRIENDSHIP_STATUSES } from '../../assets/enums';
+import { FRIENDSHIP_STATUSES } from '@enums/index.js';
 
 import { FriendshipManagerService } from '../../sub_modules/entitiesManagers/friendship/friendship.service';
 import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';

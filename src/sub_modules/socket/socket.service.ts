@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { USER_ONLINE_STATUSES } from '../../assets/enums';
+import { USER_ONLINE_STATUSES } from '@enums/index.js';
 
 import { RoomsService } from '../../modules/rooms/rooms.service';
 

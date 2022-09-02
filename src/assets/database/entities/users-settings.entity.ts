@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { LOCALES, SOUNDS } from '../../enums';
+import { LOCALES, SOUNDS } from '@enums/index.js';
 import { BaseEntity } from './base.entity';
 
 @Entity('userSettings')

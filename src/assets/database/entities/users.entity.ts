@@ -7,10 +7,10 @@ import {
   JoinColumn,
 } from 'typeorm';
 import {
+  USER_ROLES,
   USER_GAME_STATUSES,
   USER_ONLINE_STATUSES,
-  USER_ROLES,
-} from '../../enums';
+} from '@enums/index.js';
 import { Messages } from './messages.entity';
 import { BaseEntity } from './base.entity';
 import { Friendships } from './friendships.entity';
