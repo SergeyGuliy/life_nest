@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
-import { SALT_ROUND_CRYPT } from 'node_modules/life_shared/constants/index.js';
+import { SALT_ROUND_CRYPT } from '@constants/index.js';
 import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
 
 @Injectable()

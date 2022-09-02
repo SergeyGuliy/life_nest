@@ -12,7 +12,11 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "moduleResolution": "node",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@constants/*": ["node_modules/life_shared/constants"],
+      "@enums/*": ["node_modules/life_shared/enums"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": [

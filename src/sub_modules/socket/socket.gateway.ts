@@ -8,7 +8,7 @@ import {
 import { Socket, Server } from 'socket.io';
 import { debounce } from 'throttle-debounce';
 
-import { LOGOUT_TIMEOUT } from 'node_modules/life_shared/constants/index.js';
+import { LOGOUT_TIMEOUT } from '@constants/index.js';
 
 import { SocketService } from './socket.service';
 import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
