@@ -49,7 +49,6 @@ export class RoomsSocketGateway {
 
   @SubscribeMessage(rooms_kickUserFromRoom)
   public kickUserFromRoom(client: Socket, { userId }): void {
-    console.log(rooms_kickUserFromRoom);
     console.log(userId);
   }
 

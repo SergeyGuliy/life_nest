@@ -13,11 +13,7 @@ import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class GameService {
   constructor(
-    @InjectModel(Game.name) private gameModel: Model<GameDocument>,
-    // private readonly errorHandlerService: ErrorHandlerService,
-    // private readonly roomsSocketGateway: RoomsSocketGateway,
-    // private readonly roomsManagerService: RoomsManagerService,
-    // private readonly userManagerService: UserManagerService,
+    @InjectModel(Game.name) private gameModel: Model<GameDocument>, // private readonly errorHandlerService: ErrorHandlerService, // private readonly roomsSocketGateway: RoomsSocketGateway, // private readonly roomsManagerService: RoomsManagerService, // private readonly userManagerService: UserManagerService,
   ) {}
 
   getGameById(gameData) {
@@ -25,9 +21,18 @@ export class GameService {
     console.log(gameData);
   }
 
-  async createGame(roomId, gameData) {
+  async startGame(roomId, gameData) {
     console.log('createGame');
     console.log(roomId);
     console.log(gameData);
+
+    const createdGame = new this.gameModel({
+      name: 'name',
+      age: 11,
+      breed: 'breed',
+    });
+    return {
+      game: await createdGame.save(),
+    };
   }
 }

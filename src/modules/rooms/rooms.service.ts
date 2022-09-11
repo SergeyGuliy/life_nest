@@ -7,14 +7,9 @@ import { RoomsManagerService } from '../../sub_modules/entitiesManagers/rooms/ro
 import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
 import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
 
-import { Game, GameDocument } from './game.schema';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-
 @Injectable()
 export class RoomsService {
   constructor(
-    @InjectModel(Game.name) private gameModel: Model<GameDocument>,
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly roomsSocketGateway: RoomsSocketGateway,
     private readonly roomsManagerService: RoomsManagerService,
@@ -59,22 +54,16 @@ export class RoomsService {
   }
 
   async getRoomById(roomId) {
-    const createdGame = new this.gameModel({
-      name: 'name',
-      age: 11,
-      breed: 'breed',
-    });
-    const game = await createdGame.save();
     const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
-    const { roomPassword, ...roomData } = await this.getRoomDataById({
+    const roomData = await this.getRoomDataById({
       where: { roomId },
     });
+    console.log(roomData);
     return {
       ...roomData,
       usersInRoom,
-      game,
     };
   }
 

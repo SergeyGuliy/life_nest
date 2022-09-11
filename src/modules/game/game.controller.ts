@@ -14,13 +14,13 @@ import { GameService } from './game.service';
 import { JwtAuthGuard } from '../../assets/guards/auth.guard';
 
 @UseGuards(JwtAuthGuard)
-@Controller('game')
+@Controller('games')
 export class GameController {
   constructor(private readonly gameService: GameService) {}
 
   @Post('create')
-  async createGame(@Body() gameData: any, @Body() roomId: any) {
-    return this.gameService.createGame(roomId, gameData);
+  async startGame(@Body() gameData: any, @Body() roomId: any) {
+    return this.gameService.startGame(roomId, gameData);
   }
 
   @Get(':roomId')
