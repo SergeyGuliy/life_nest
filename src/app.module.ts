@@ -21,6 +21,8 @@ import { SocketModule } from './sub_modules/socket/socket.module';
 import { UploaderModule } from './sub_modules/uploader/uploader.module';
 import { FriendshipModule } from './modules/friendship/friendship.module';
 import { UserSettingsModule } from './modules/user-settings/user-settings.module';
+import { GameModule } from './modules/game/game.module';
+
 import { MyLogger } from './sub_modules/globalServices/my-logger.service';
 
 console.log(`Started in ${process.env.NODE_ENV} mode.`);
@@ -34,6 +36,7 @@ const defaultModules = [
   SocketModule,
   UploaderModule,
   FriendshipModule,
+  GameModule,
 ];
 
 // Adding SqlHelperModule module only if mode is dev
