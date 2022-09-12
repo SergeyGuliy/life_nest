@@ -46,7 +46,6 @@ export class AuthService {
   }
 
   async refreshToken(userId, oldRefreshToken): Promise<any> {
-    this.myLogger.warn(AuthService.name, 'hello world');
     const user = await this.userManagerService.getUserByIdWithToken(userId);
     if (user.refreshToken === oldRefreshToken) {
       const userData = await this.setNewRefreshTokenToUser(user.userId);

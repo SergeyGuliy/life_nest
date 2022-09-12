@@ -12,7 +12,11 @@ import { LOGOUT_TIMEOUT } from '@constants/index.js';
 
 import { SocketService } from './socket.service';
 import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
-import { socketSetup_giveUserIdToServer, socketSetup_callUserIdToServer,socketSetup_forceDisconnect } from '@constants//ws/socketSetup.js'
+import {
+  socketSetup_giveUserIdToServer,
+  socketSetup_callUserIdToServer,
+  socketSetup_forceDisconnect,
+} from '@constants/ws/socketSetup.js';
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
@@ -33,6 +37,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   public handleConnection(client: Socket): void {
+    console.log('handleConnection');
+    console.log(client.id);
     client.emit(socketSetup_callUserIdToServer, client.id);
   }
 

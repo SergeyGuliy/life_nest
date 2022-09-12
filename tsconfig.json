@@ -14,8 +14,8 @@
     "moduleResolution": "node",
     "incremental": true,
     "paths": {
-      "@constants/*": ["node_modules/life_shared/constants"],
-      "@enums/*": ["node_modules/life_shared/enums"]
+      "@constants/*": ["node_modules/life_shared/constants/*"],
+      "@enums/*": ["node_modules/life_shared/enums/*"]
     }
   },
   "include": ["src/**/*"],
@@ -25,7 +25,7 @@
     "./node_modules/*",
   ],
   "paths": {
-    "@constants/*": ["node_modules/life_shared/constants"],
-    "@enums/*": ["node_modules/life_shared/enums"]
+    "@constants/*": ["node_modules/life_shared/constants/*"],
+    "@enums/*": ["node_modules/life_shared/enums/*"]
   }
 }
