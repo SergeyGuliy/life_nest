@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { random } from 'lodash';
 
-import { RoomsSocketGateway } from './rooms.gateway';
+import {RoomsWsEmitter} from "./rooms.ws-emmiter";
 
 import { RoomsManagerService } from '../../sub_modules/entitiesManagers/rooms/rooms.service';
 import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
@@ -11,7 +11,7 @@ import { ErrorHandlerService } from '../../sub_modules/globalServices/error-hand
 export class RoomsService {
   constructor(
     private readonly errorHandlerService: ErrorHandlerService,
-    private readonly roomsSocketGateway: RoomsSocketGateway,
+    private readonly roomsWsEmitter: RoomsWsEmitter,
     private readonly roomsManagerService: RoomsManagerService,
     private readonly userManagerService: UserManagerService,
   ) {}
@@ -79,7 +79,7 @@ export class RoomsService {
     const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: newRoom.roomId },
     });
-    this.roomsSocketGateway.roomInListCreated({
+    this.roomsWsEmitter.roomInListCreated({
       ...newRoom,
       usersInRoomLength: usersInRoom.length,
     });
@@ -106,11 +106,11 @@ export class RoomsService {
     usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
-    this.roomsSocketGateway.roomInListUpdated(roomId, {
+    this.roomsWsEmitter.roomInListUpdated(roomId, {
       ...roomData,
       usersInRoomLength: usersInRoom.length,
     });
-    this.roomsSocketGateway.updateUsersListInRoom(roomId, usersInRoom);
+    this.roomsWsEmitter.updateUsersListInRoom(roomId, usersInRoom);
     return await this.userManagerService.findOne({
       where: {
         userId,
@@ -139,8 +139,8 @@ export class RoomsService {
     const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomJoinedId },
     });
-    this.roomsSocketGateway.updateUsersListInRoom(roomJoinedId, usersInRoom);
-    await this.roomsSocketGateway.userLeaveRoom(
+    this.roomsWsEmitter.updateUsersListInRoom(roomJoinedId, usersInRoom);
+    await this.roomsWsEmitter.userLeaveRoom(
       roomJoinedId,
       newUserData.userId,
     );
@@ -176,7 +176,7 @@ export class RoomsService {
     usersInRoom,
     roomData,
   ) {
-    this.roomsSocketGateway.roomInListUpdated(roomJoinedId, {
+    this.roomsWsEmitter.roomInListUpdated(roomJoinedId, {
       ...roomData,
       usersInRoomLength: usersInRoom.length,
     });
@@ -188,7 +188,7 @@ export class RoomsService {
       const newAdmin = await this.userManagerService.findOne({
         where: { userId: idOfNewAdmin },
       });
-      this.roomsSocketGateway.updateRoomAdmin(roomJoinedId, newAdmin);
+      this.roomsWsEmitter.updateRoomAdmin(roomJoinedId, newAdmin);
     }
   }
 
@@ -197,7 +197,7 @@ export class RoomsService {
     await this.roomsManagerService.update(roomId, {
       isBlocked: lockState,
     });
-    await this.roomsSocketGateway.updateToggleLockRoom(roomId, lockState);
+    await this.roomsWsEmitter.updateToggleLockRoom(roomId, lockState);
     return;
   }
 
@@ -220,7 +220,7 @@ export class RoomsService {
   }
 
   async deleteRoom(roomId) {
-    this.roomsSocketGateway.roomInListDeleted(roomId);
+    this.roomsWsEmitter.roomInListDeleted(roomId);
     return await this.roomsManagerService.delete(roomId);
   }
 
@@ -228,7 +228,7 @@ export class RoomsService {
     await this.userManagerService.update(kickUserId, {
       roomJoinedId: null,
     });
-    await this.roomsSocketGateway.userLeaveRoom(roomId, kickUserId);
+    await this.roomsWsEmitter.userLeaveRoom(roomId, kickUserId);
   }
 
   async setNewRoomAdmin(senderUserId, roomId, newAdminId) {
@@ -243,7 +243,7 @@ export class RoomsService {
     const newAdmin = await this.userManagerService.findOne({
       where: { userId: newAdminId },
     });
-    this.roomsSocketGateway.updateRoomAdmin(roomId, newAdmin);
+    this.roomsWsEmitter.updateRoomAdmin(roomId, newAdmin);
     return;
   }
 

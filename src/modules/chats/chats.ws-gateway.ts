@@ -14,7 +14,7 @@ import {
 } from '@constants/ws/chats.js';
 
 @WebSocketGateway()
-export class ChatsGateway {
+export class ChatsWsGateway {
   constructor(
     private chatService: ChatsService,
     private socketNameSpacerService: SocketNameSpacerService,
