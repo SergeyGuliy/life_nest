@@ -1,7 +1,7 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 
 import { Server } from 'socket.io';
-import { SocketNameSpacerService } from '../../sub_modules/globalServices/socket-namespaser.service';
+import { SocketNameSpacerService } from '../../../sub_modules/globalServices/socket-namespaser.service';
 import { Injectable } from '@nestjs/common';
 import {
   rooms_updateUsersListInRoom,
@@ -13,7 +13,7 @@ import {
   rooms_roomInListDeleted,
   rooms_roomInListUpdated,
   rooms_RoomsUpdater,
-} from '@constants/ws/rooms.js';
+} from '../../../../../life_shared/constants/ws/rooms.js';
 
 @Injectable()
 @WebSocketGateway()

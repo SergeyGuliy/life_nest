@@ -6,8 +6,9 @@ import {
 import { Socket, Server } from 'socket.io';
 
 import { ChatsService } from './chats.service';
-import { MESSAGE_RECEIVER_TYPES } from '@enums/index.js';
 import { SocketNameSpacerService } from '../../sub_modules/globalServices/socket-namespaser.service';
+
+import { MESSAGE_RECEIVER_TYPES } from '@enums/index.js';
 import {
   chat_messageToServer,
   chat_messageToClient,

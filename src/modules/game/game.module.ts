@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { GameController } from './game.controller';
 import { GameService } from './game.service';
-import { RoomsSocketGateway } from './game.gateway';
+import { RoomsSocketGateway } from './ws/game.gateway';
 import { SocketNameSpacerService } from '../../sub_modules/globalServices/socket-namespaser.service';
 import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-manager.module';
 import { GlobalServicesModule } from '../../sub_modules/globalServices/global-services.module';
