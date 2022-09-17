@@ -57,11 +57,9 @@ export class RoomsService {
     const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
-    console.log(roomId)
     const roomData = await this.getRoomDataById({
       where: { roomId },
     });
-    console.log(roomData);
     return {
       ...roomData,
       usersInRoom,
@@ -222,7 +220,6 @@ export class RoomsService {
   }
 
   async deleteRoom(roomId) {
-    console.log('deleteRoom')
     this.roomsSocketGateway.roomInListDeleted(roomId);
     return await this.roomsManagerService.delete(roomId);
   }

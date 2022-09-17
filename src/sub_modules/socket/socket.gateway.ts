@@ -37,8 +37,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   public handleConnection(client: Socket): void {
-    console.log('handleConnection');
-    console.log(client.id);
     client.emit(socketSetup_callUserIdToServer, client.id);
   }
 

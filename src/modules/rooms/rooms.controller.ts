@@ -90,7 +90,6 @@ export class RoomsController {
 
   @Delete(':roomId/delete-room')
   async deleteRoom(@Param('roomId') roomId: number, @User() { userId }) {
-    console.log('roomId/delete-room');
     return await this.roomsService.deleteRoomRequest(+userId, +roomId);
   }
 }
