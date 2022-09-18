@@ -1,0 +1,6 @@
+{
+  "hooks": {
+    "pre-commit": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "post-commit": "git push"
+  }
+}
