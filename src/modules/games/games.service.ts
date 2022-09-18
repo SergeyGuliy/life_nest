@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
-// import { RoomsSocketGateway } from './game.gateway';
+// import { RoomsSocketGateway } from './games.gateway';
 //
 // import { RoomsManagerService } from '../../sub_modules/entitiesManagers/rooms/rooms.service';
 // import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
 // import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
 
-import { Game, GameDocument } from './game.schema';
+import { Game, GameDocument } from '../../sub_modules/entitiesManagers/games/games.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class GameService {
+export class GamesService {
   constructor(
     @InjectModel(Game.name) private gameModel: Model<GameDocument>, // private readonly errorHandlerService: ErrorHandlerService, // private readonly roomsSocketGateway: RoomsSocketGateway, // private readonly roomsManagerService: RoomsManagerService, // private readonly userManagerService: UserManagerService,
   ) {}

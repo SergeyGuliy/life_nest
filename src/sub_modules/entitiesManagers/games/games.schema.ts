@@ -15,4 +15,4 @@ export class Game {
   breed: string;
 }
 
-export const GameSchema = SchemaFactory.createForClass(Game);
+export const GamesSchema = SchemaFactory.createForClass(Game);

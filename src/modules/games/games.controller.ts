@@ -10,13 +10,13 @@ import {
   // Patch,
 } from '@nestjs/common';
 
-import { GameService } from './game.service';
+import { GamesService } from './games.service';
 import { JwtAuthGuard } from '../../assets/guards/auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('games')
-export class GameController {
-  constructor(private readonly gameService: GameService) {}
+export class GamesController {
+  constructor(private readonly gameService: GamesService) {}
 
   @Post('create')
   async startGame(@Body() gameData: any, @Body() roomId: any) {

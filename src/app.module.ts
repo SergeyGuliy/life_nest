@@ -21,7 +21,7 @@ import { SocketModule } from './sub_modules/socket/socket.module';
 import { UploaderModule } from './sub_modules/uploader/uploader.module';
 import { FriendshipModule } from './modules/friendship/friendship.module';
 import { UserSettingsModule } from './modules/user-settings/user-settings.module';
-import { GameModule } from './modules/game/game.module';
+import { GamesModule } from './modules/games/games.module';
 
 import { MyLogger } from './sub_modules/globalServices/my-logger.service';
 
@@ -36,7 +36,7 @@ const defaultModules = [
   SocketModule,
   UploaderModule,
   FriendshipModule,
-  GameModule,
+  GamesModule,
 ];
 
 // Adding SqlHelperModule module only if mode is dev
