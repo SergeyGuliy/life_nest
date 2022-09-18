@@ -101,7 +101,6 @@
       "pre-commit": "echo \"[Husky] applypatch-msg\""
     }
   },
-
   "jest": {
     "moduleFileExtensions": [
       "js",
