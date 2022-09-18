@@ -95,7 +95,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint",
+      "pre-commit": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
       "post-commit": "git push"
     }
   },
