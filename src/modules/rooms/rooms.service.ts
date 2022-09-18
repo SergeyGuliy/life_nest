@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { random } from 'lodash';
 
-import {RoomsWsEmitter} from "./ws/rooms.ws-emitter";
+import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
 
 import { RoomsManagerService } from '../../sub_modules/entitiesManagers/rooms/rooms.service';
 import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
@@ -140,10 +140,7 @@ export class RoomsService {
       where: { roomJoinedId: roomJoinedId },
     });
     this.roomsWsEmitter.updateUsersListInRoom(roomJoinedId, usersInRoom);
-    await this.roomsWsEmitter.userLeaveRoom(
-      roomJoinedId,
-      newUserData.userId,
-    );
+    await this.roomsWsEmitter.userLeaveRoom(roomJoinedId, newUserData.userId);
     await this.setNewAdminOrDelete(roomJoinedId, roomCreatedId, roomData);
     return newUserData;
   }

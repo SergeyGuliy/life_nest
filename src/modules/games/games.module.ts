@@ -8,7 +8,10 @@ import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-
 import { GlobalServicesModule } from '../../sub_modules/globalServices/global-services.module';
 
 import { MongooseModule } from '@nestjs/mongoose';
-import { Game, GamesSchema } from '../../sub_modules/entitiesManagers/games/games.schema';
+import {
+  Game,
+  GamesSchema,
+} from '../../sub_modules/entitiesManagers/games/games.schema';
 
 @Module({
   imports: [

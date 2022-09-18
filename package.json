@@ -66,6 +66,7 @@
     "ws": "latest"
   },
   "devDependencies": {
+    "lint-staged": "^13.0.3",
     "@nestjs/cli": "^7.5.1",
     "@nestjs/schematics": "^7.1.3",
     "@nestjs/testing": "^7.5.1",
@@ -91,6 +92,10 @@
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.8.2"
+  },
+  "gitHooks": {
+    "pre-commit": "lint",
+    "post-commit": "git push"
   },
   "jest": {
     "moduleFileExtensions": [

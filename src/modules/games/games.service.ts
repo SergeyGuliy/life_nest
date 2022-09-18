@@ -6,7 +6,10 @@ import { Injectable } from '@nestjs/common';
 // import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
 // import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
 
-import { Game, GameDocument } from '../../sub_modules/entitiesManagers/games/games.schema';
+import {
+  Game,
+  GameDocument,
+} from '../../sub_modules/entitiesManagers/games/games.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
