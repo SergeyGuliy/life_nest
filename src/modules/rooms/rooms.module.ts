@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { RoomsController } from './rooms.controller';
 import { RoomsService } from './rooms.service';
 import { RoomsWsListener } from './ws/rooms.ws-listener';
-import { RoomsWsEmitter } from './ws/rooms.ws-emmiter';
+import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
 import { SocketNameSpacerService } from '../../sub_modules/globalServices/socket-namespaser.service';
 import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-manager.module';
 import { GlobalServicesModule } from '../../sub_modules/globalServices/global-services.module';

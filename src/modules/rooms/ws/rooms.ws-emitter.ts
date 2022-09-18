@@ -13,7 +13,7 @@ import {
   rooms_roomInListDeleted,
   rooms_roomInListUpdated,
   rooms_RoomsUpdater,
-} from '../../../../../life_shared/constants/ws/rooms.js';
+} from '@constants/ws/rooms.js';
 
 @Injectable()
 @WebSocketGateway()

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { random } from 'lodash';
 
-import {RoomsWsEmitter} from "./ws/rooms.ws-emmiter";
+import {RoomsWsEmitter} from "./ws/rooms.ws-emitter";
 
 import { RoomsManagerService } from '../../sub_modules/entitiesManagers/rooms/rooms.service';
 import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';

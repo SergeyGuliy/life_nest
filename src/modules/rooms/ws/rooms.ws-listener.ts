@@ -11,9 +11,9 @@ import {
   rooms_setNewAdminInRoom,
   rooms_userJoinRoom,
   rooms_RoomsUpdater,
-} from '../../../../../life_shared/constants/ws/rooms.js';
+} from '@constants/ws/rooms.js';
 
-import { RoomsWsEmitter } from './rooms.ws-emmiter';
+import { RoomsWsEmitter } from './rooms.ws-emitter';
 
 @Injectable()
 @WebSocketGateway()

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { debounce } from 'throttle-debounce';
 
 import { USER_ONLINE_STATUSES } from '@enums/index.js';
 
@@ -7,6 +8,7 @@ import { RoomsService } from '../../modules/rooms/rooms.service';
 import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
 import { UserManagerService } from '../entitiesManagers/users/user.service';
 import { ErrorHandlerService } from '../globalServices/error-handler.service';
+import { LOGOUT_TIMEOUT } from '@constants/index.js';
 
 @Injectable()
 export class SocketService {
@@ -18,7 +20,7 @@ export class SocketService {
     private userManagerService: UserManagerService,
   ) {}
 
-  async logOutUserFormApp(userId) {
+  private async logOutUserFormApp(userId) {
     const newUserSid = this.socketNameSpacerService.findSidByUserId(userId);
     if (!newUserSid) {
       await this.userLogOut(userId);
@@ -27,23 +29,26 @@ export class SocketService {
     }
   }
 
-  async userLogIn(userId: number) {
-    return await this.userManagerService.update(userId, {
-      userOnlineStatus: USER_ONLINE_STATUSES.ONLINE,
-    });
-  }
-
-  async userLogOut(userId: number) {
+  private async userLogOut(userId: number) {
     await this.userManagerService.update(userId, {
       userOnlineStatus: USER_ONLINE_STATUSES.OFFLINE,
     });
   }
 
-  async getUserById(userId: number) {
+  private async getUserById(userId: number) {
     const user = await this.userManagerService.findOne(userId);
     if (user) {
       return user;
     }
     this.errorHandlerService.error('userNotFound', 'en');
   }
+
+  public async userLogIn(userId: number) {
+    return await this.userManagerService.update(userId, {
+      userOnlineStatus: USER_ONLINE_STATUSES.ONLINE,
+    });
+  }
+  public logOutUserFormAppTimeout = debounce(LOGOUT_TIMEOUT, async (userId) => {
+    await this.logOutUserFormApp(userId);
+  });
 }

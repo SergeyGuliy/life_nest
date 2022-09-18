@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { SocketGateway } from './socket.gateway';
+import { SocketWsEmitter } from './ws/socket.ws-emitter';
+import { SocketWsListener } from './ws/socket.ws-listener';
 import { SocketService } from './socket.service';
 
 import { EntityManagerModule } from '../entitiesManagers/entitiy-manager.module';
@@ -9,6 +10,6 @@ import { GlobalServicesModule } from '../globalServices/global-services.module';
 
 @Module({
   imports: [GlobalServicesModule, EntityManagerModule, RoomsModule],
-  providers: [SocketService, SocketGateway],
+  providers: [SocketService, SocketWsEmitter, SocketWsListener],
 })
 export class SocketModule {}
