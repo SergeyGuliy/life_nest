@@ -86,24 +86,16 @@ export class RoomsService {
     return newRoom;
   }
 
-  async userJoinRoom(userId: number, roomId: number, roomPassword: string) {
+  async userJoinRoom(userId: number, roomId: number) {
     const roomData = await this.getRoomDataById({
       where: { roomId },
     });
-
-    blockingValidation(roomData);
-    passwordValidation(roomData, roomPassword);
-
-    let usersInRoom = await this.userManagerService.find({
-      where: { roomJoinedId: roomId },
-    });
-    countOfUsersValidation(usersInRoom.length, roomData.maxCountOfUsers);
 
     await this.userManagerService.update(userId, {
       roomCreatedId: null,
       roomJoinedId: roomId,
     });
-    usersInRoom = await this.userManagerService.find({
+    const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
     this.roomsWsEmitter.roomInListUpdated(roomId, {
@@ -236,26 +228,5 @@ export class RoomsService {
     });
     this.roomsWsEmitter.updateRoomAdmin(roomId, newAdmin);
     return;
-  }
-}
-
-function passwordValidation(roomData, roomPassword) {
-  if (
-    roomData.typeOfRoom === 'PRIVATE' &&
-    roomData.roomPassword !== roomPassword
-  ) {
-    this.errorHandlerService.error('wrongRoomPassword', 'en');
-  }
-}
-
-function countOfUsersValidation(usersInRoomLength, maxCountOfUsers) {
-  if (usersInRoomLength > maxCountOfUsers) {
-    this.errorHandlerService.error('roomAlreadyFull', 'en');
-  }
-}
-
-function blockingValidation(roomData) {
-  if (roomData.isBlocked) {
-    this.errorHandlerService.error('isNotRoomAdmin', 'en');
   }
 }

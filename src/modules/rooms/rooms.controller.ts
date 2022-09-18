@@ -14,7 +14,10 @@ import { RoomsService } from './rooms.service';
 import { JwtAuthGuard } from '../../assets/guards/auth.guard';
 import { CreateRoomDto } from '../../assets/dto/createRoom.dto';
 import { User } from '../../assets/decorators/user.decorator';
-import { IsRoomAdminGuard } from '../../assets/guards/is-room-admin.guard';
+import { IsRoomAdminGuard } from '../../assets/guards/rooms/is-room-admin.guard';
+import { IsRoomBlockedGuard } from '../../assets/guards/rooms/is-room-blocked.guard';
+import { PasswordValidationGuard } from '../../assets/guards/rooms/password-validation.guard';
+import { CountOfUsersValidationGuard } from '../../assets/guards/rooms/count-of-users-validation.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('rooms')
@@ -41,17 +44,12 @@ export class RoomsController {
     return await this.roomsService.userLeaveRoom(user);
   }
 
+  @UseGuards(IsRoomBlockedGuard)
+  @UseGuards(PasswordValidationGuard)
+  @UseGuards(CountOfUsersValidationGuard)
   @Patch(':roomId/join')
-  async userJoinRoom(
-    @Param('roomId') roomId: number,
-    @User() user: any,
-    @Body() body: any,
-  ) {
-    return await this.roomsService.userJoinRoom(
-      user.userId,
-      roomId,
-      body.roomPassword,
-    );
+  async userJoinRoom(@Param('roomId') roomId: number, @User() user: any) {
+    return await this.roomsService.userJoinRoom(user.userId, roomId);
   }
 
   @UseGuards(IsRoomAdminGuard)

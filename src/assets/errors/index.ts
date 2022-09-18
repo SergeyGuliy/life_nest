@@ -73,6 +73,12 @@ export const errors = {
       en: 'You are not room admin',
     },
   },
+  roomIsBLocked: {
+    status: HttpStatus.BAD_REQUEST,
+    locales: {
+      en: 'Room is blocked',
+    },
+  },
   wrongPasswordOrLogin: {
     status: HttpStatus.BAD_REQUEST,
     locales: {

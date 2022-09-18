@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
-import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
+import { UserManagerService } from '../../../sub_modules/entitiesManagers/users/user.service';
+import { ErrorHandlerService } from '../../../sub_modules/globalServices/error-handler.service';
 
 @Injectable()
 export class IsRoomAdminGuard implements CanActivate {
