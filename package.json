@@ -94,7 +94,7 @@
     "typescript": "^4.8.2"
   },
   "gitHooks": {
-    "pre-commit": "npm run lint",
+    "pre-commit": "lint",
     "post-commit": "git push"
   },
   "jest": {
