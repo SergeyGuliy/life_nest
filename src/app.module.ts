@@ -1,65 +1,18 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { MongooseModule } = require('@nestjs/mongoose');
-
-import * as Joi from '@hapi/joi';
-
-import { typeormConfig } from './assets/database/typeorm-config';
-import { SqlHelperModule } from './sub_modules/sql-helper/sql-helper.module';
-
-import { UserModule } from './modules/users/user.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { RoomsModule } from './modules/rooms/rooms.module';
-import { ChatsModule } from './modules/chats/chats.module';
-import { SocketModule } from './sub_modules/socket/socket.module';
-import { UploaderModule } from './sub_modules/uploader/uploader.module';
-import { FriendshipModule } from './modules/friendship/friendship.module';
-import { UserSettingsModule } from './modules/user-settings/user-settings.module';
-import { GamesModule } from './modules/games/games.module';
-
-import { MyLogger } from './sub_modules/globalServices/my-logger.service';
-
-const defaultModules = [
-  SocketModule,
-  UploaderModule,
-
-  AuthModule,
-
-  UserModule,
-  UserSettingsModule,
-
-  RoomsModule,
-  ChatsModule,
-  FriendshipModule,
-  GamesModule,
-];
-
-// Adding SqlHelperModule module only if mode is dev
-if (process.env.NODE_ENV === 'dev') defaultModules.push(SqlHelperModule);
+import {
+  setupConfigModule,
+  setupDefaultModules,
+  setupMongoose,
+  setupTypeOrm,
+} from './setup';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://root:example@mongo:27017/'),
-
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-      isGlobal: true,
-      validationSchema: Joi.object({
-        POSTGRES_HOST: Joi.string().required(),
-        POSTGRES_PORT: Joi.number().required(),
-        POSTGRES_USER: Joi.string().required(),
-        POSTGRES_PASSWORD: Joi.string().required(),
-        POSTGRES_DB: Joi.string().required(),
-        PORT: Joi.number(),
-      }),
-    }),
-
-    TypeOrmModule.forRoot(typeormConfig),
-
-    ...defaultModules,
+    setupMongoose(),
+    setupConfigModule(),
+    setupTypeOrm(),
+    ...setupDefaultModules(),
   ],
 })
 export class AppModule {}
