@@ -99,7 +99,7 @@
       "pre-applypatch": "echo \"[Husky] applypatch-msg\"",
       "post-applypatch": "echo \"[Husky] applypatch-msg\"",
       "pre-commit": "echo \"[Husky] applypatch-msg\""
-  }
+    }
   },
 
   "jest": {
