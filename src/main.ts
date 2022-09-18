@@ -17,4 +17,7 @@ async function bootstrap() {
   app.enableCors();
   await app.listen(3000);
 }
+
+console.log(`Started in ${process.env.NODE_ENV} mode.`);
+
 bootstrap();
