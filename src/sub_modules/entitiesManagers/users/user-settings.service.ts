@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { UserSettings } from '../../../assets/database/entities/users-settings.entity';
+import { UserSettings } from '../../../assets/database/entities-postgres/users-settings.entity';
 
 @Injectable()
 export class UserSettingsManagerService {

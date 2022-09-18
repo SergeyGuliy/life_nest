@@ -7,7 +7,7 @@ export const typeormConfig: TypeOrmModuleOptions = {
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: [__dirname + '/entities/**/*.js'],
+  entities: [__dirname + '/entities-postgres/**/*.js'],
   // logging: true,
   migrations: ['src/common/database/migration/*{.ts,.js}'],
   cli: {

@@ -10,14 +10,14 @@ import { GlobalServicesModule } from '../../sub_modules/globalServices/global-se
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   Game,
-  GamesSchema,
-} from '../../sub_modules/entitiesManagers/games/games.schema';
+  GamesEntity,
+} from '../../assets/database/entities-mongo/games.entity';
 
 @Module({
   imports: [
     GlobalServicesModule,
     EntityManagerModule,
-    MongooseModule.forFeature([{ name: Game.name, schema: GamesSchema }]),
+    MongooseModule.forFeature([{ name: Game.name, schema: GamesEntity }]),
   ],
   controllers: [GamesController],
   providers: [GamesService, RoomsSocketGateway, SocketNameSpacerService],

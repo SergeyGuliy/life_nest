@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Users } from '../../assets/database/entities/users.entity';
-import { UserSettings } from '../../assets/database/entities/users-settings.entity';
-import { Messages } from '../../assets/database/entities/messages.entity';
-import { Friendships } from '../../assets/database/entities/friendships.entity';
-import { Rooms } from '../../assets/database/entities/rooms.entity';
+import { Users } from '../../assets/database/entities-postgres/users.entity';
+import { UserSettings } from '../../assets/database/entities-postgres/users-settings.entity';
+import { Messages } from '../../assets/database/entities-postgres/messages.entity';
+import { Friendships } from '../../assets/database/entities-postgres/friendships.entity';
+import { Rooms } from '../../assets/database/entities-postgres/rooms.entity';
 
 import { UserManagerService } from './users/user.service';
 import { UserSettingsManagerService } from './users/user-settings.service';

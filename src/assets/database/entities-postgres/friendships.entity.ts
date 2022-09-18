@@ -1,7 +1,9 @@
 import {
   Column,
   Entity,
-  JoinColumn, ManyToOne, PrimaryGeneratedColumn,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { FRIENDSHIP_STATUSES } from '@enums/index.js';

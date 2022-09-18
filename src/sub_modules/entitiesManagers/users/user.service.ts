@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Users } from '../../../assets/database/entities/users.entity';
+import { Users } from '../../../assets/database/entities-postgres/users.entity';
 import { ErrorHandlerService } from '../../globalServices/error-handler.service';
 
 @Injectable()

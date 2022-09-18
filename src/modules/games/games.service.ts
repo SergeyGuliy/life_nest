@@ -9,7 +9,7 @@ import { Injectable } from '@nestjs/common';
 import {
   Game,
   GameDocument,
-} from '../../sub_modules/entitiesManagers/games/games.schema';
+} from '../../assets/database/entities-mongo/games.entity';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
