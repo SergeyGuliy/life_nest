@@ -5,20 +5,19 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
-import { ChatsService } from './chats.service';
-import { SocketNameSpacerService } from '../../sub_modules/globalServices/socket-namespaser.service';
+import { ChatsService } from '../chats.service';
+import { SocketNameSpacerService } from '../../../sub_modules/globalServices/socket-namespaser.service';
 
 import { MESSAGE_RECEIVER_TYPES } from '@enums/index.js';
-import {
-  chat_messageToServer,
-  chat_messageToClient,
-} from '@constants/ws/chats.js';
+import { chat_messageToServer } from '@constants/ws/chats.js';
+import { ChatsWsEmitter } from './chats.ws-emitter';
 
 @WebSocketGateway()
-export class ChatsWsGateway {
+export class ChatsWsListener {
   constructor(
     private chatService: ChatsService,
     private socketNameSpacerService: SocketNameSpacerService,
+    private chatsWsEmitter: ChatsWsEmitter,
   ) {}
 
   @WebSocketServer() server: Server;
@@ -33,9 +32,12 @@ export class ChatsWsGateway {
       messageReceiverUserId,
     } = messageToClient;
     if (messageReceiverType === MESSAGE_RECEIVER_TYPES.GLOBAL) {
-      this.sendMessageToClient(messageReceiverType, messageToClient);
+      this.chatsWsEmitter.sendMessageToClient(
+        messageReceiverType,
+        messageToClient,
+      );
     } else if (messageReceiverType === MESSAGE_RECEIVER_TYPES.ROOM) {
-      this.sendMessageToClient(
+      this.chatsWsEmitter.sendMessageToClient(
         `${messageReceiverType}-${messageReceiverRoomId}`,
         messageToClient,
       );
@@ -46,13 +48,9 @@ export class ChatsWsGateway {
       ];
       sids.forEach((sid) => {
         if (typeof sid === 'string') {
-          this.server.to(sid).emit(chat_messageToClient, messageToClient);
+          this.chatsWsEmitter.sendMessageToClient(sid, messageToClient);
         }
       });
     }
-  }
-
-  public sendMessageToClient(room, messageData): void {
-    this.server.to(room).emit('messageToClient', messageData);
   }
 }
