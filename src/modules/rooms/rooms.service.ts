@@ -190,7 +190,6 @@ export class RoomsService {
   }
 
   async toggleLockRoom(userId, roomId, lockState) {
-    await this.checkIsRoomAdmin(userId, roomId);
     await this.roomsManagerService.update(roomId, {
       isBlocked: lockState,
     });
@@ -199,8 +198,6 @@ export class RoomsService {
   }
 
   async deleteRoomRequest(userId, roomId) {
-    await this.checkIsRoomAdmin(userId, roomId);
-
     const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
@@ -212,7 +209,6 @@ export class RoomsService {
   }
 
   async kickUserFromRoomRequest(senderUserId, roomId, kickUserId) {
-    await this.checkIsRoomAdmin(senderUserId, roomId);
     await this.kickUserFromRoom(roomId, kickUserId);
   }
 
@@ -229,8 +225,6 @@ export class RoomsService {
   }
 
   async setNewRoomAdmin(senderUserId, roomId, newAdminId) {
-    await this.checkIsRoomAdmin(senderUserId, roomId);
-
     await this.userManagerService.update(senderUserId, {
       roomCreatedId: null,
     });
@@ -242,14 +236,6 @@ export class RoomsService {
     });
     this.roomsWsEmitter.updateRoomAdmin(roomId, newAdmin);
     return;
-  }
-
-  async checkIsRoomAdmin(userId, roomId) {
-    const { roomCreatedId } = await this.userManagerService.findOne({
-      where: { userId },
-    });
-    if (+roomCreatedId === +roomId) return;
-    this.errorHandlerService.error('isNotRoomAdmin', 'en');
   }
 }
 

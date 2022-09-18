@@ -14,6 +14,7 @@ import { RoomsService } from './rooms.service';
 import { JwtAuthGuard } from '../../assets/guards/auth.guard';
 import { CreateRoomDto } from '../../assets/dto/createRoom.dto';
 import { User } from '../../assets/decorators/user.decorator';
+import { IsRoomAdminGuard } from '../../assets/guards/is-room-admin.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('rooms')
@@ -53,6 +54,7 @@ export class RoomsController {
     );
   }
 
+  @UseGuards(IsRoomAdminGuard)
   @Patch(':roomId/kick-user')
   async kickUserFromRoom(
     @Param('roomId') roomId: number,
@@ -66,6 +68,7 @@ export class RoomsController {
     );
   }
 
+  @UseGuards(IsRoomAdminGuard)
   @Patch(':roomId/set-new-admin')
   async setNewRoomAdmin(
     @Param('roomId') roomId: number,
@@ -79,6 +82,7 @@ export class RoomsController {
     );
   }
 
+  @UseGuards(IsRoomAdminGuard)
   @Patch(':roomId/toggle-lock-room')
   async toggleLockRoom(
     @Param('roomId') roomId: number,
@@ -88,6 +92,7 @@ export class RoomsController {
     return await this.roomsService.toggleLockRoom(+userId, +roomId, lockState);
   }
 
+  @UseGuards(IsRoomAdminGuard)
   @Delete(':roomId/delete-room')
   async deleteRoom(@Param('roomId') roomId: number, @User() { userId }) {
     return await this.roomsService.deleteRoomRequest(+userId, +roomId);
