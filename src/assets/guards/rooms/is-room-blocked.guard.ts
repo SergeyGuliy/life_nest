@@ -3,7 +3,7 @@ import { ErrorHandlerService } from '@modules-helpers/global-services/error-hand
 import { RoomsManagerService } from '@modules-helpers/entities-services/rooms/rooms.service';
 
 @Injectable()
-export class IsRoomBlockedGuard implements CanActivate {
+export class RoomBlockedGuard implements CanActivate {
   constructor(
     private readonly roomsManagerService: RoomsManagerService,
     private readonly errorHandlerService: ErrorHandlerService,

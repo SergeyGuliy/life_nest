@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Game, GameDocument } from '@modules-helpers/entities-services/games/games.entity';
+import {
+  Game,
+  GameDocument,
+} from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 

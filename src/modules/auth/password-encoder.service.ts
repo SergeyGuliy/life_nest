@@ -9,7 +9,16 @@ export class PasswordEncoderService {
   constructor(private readonly errorHandlerService: ErrorHandlerService) {}
   private SALT_ROUND_CRYPT = SALT_ROUND_CRYPT;
 
-  generatePasswordHash(password: string): Promise<string> {
+  private checkPassword(password: string, hash: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, hash, function (err, result) {
+        if (err) reject(err);
+        resolve(result);
+      });
+    });
+  }
+
+  public generatePasswordHash(password: string): Promise<string> {
     return new Promise((resolve, reject) => {
       bcrypt.genSalt(this.SALT_ROUND_CRYPT, function (err1, salt) {
         bcrypt.hash(password, salt, function (err2, hash) {
@@ -24,26 +33,16 @@ export class PasswordEncoderService {
       });
     });
   }
-  checkPassword(password: string, hash: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      bcrypt.compare(password, hash, function (err, result) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
-  }
 
-  async validatePassword(bodyPassword, userPassword) {
+  public async validatePassword({ bodyPassword, userPassword }, callback) {
     const isPasswordSame = bodyPassword === userPassword;
     const isPasswordHashedSame = await this.checkPassword(
       bodyPassword,
       userPassword,
     );
     if (!(isPasswordSame || isPasswordHashedSame)) {
-      this.errorHandlerService.error('wrongPasswordOrLogin', 'en');
+      callback();
     }
   }
 }
+

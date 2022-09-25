@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
-import { JwtAuthGuard } from '@assets/guards/auth.guard';
+import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { User } from '@assets/decorators/user.decorator';
 import { UploaderService } from './uploader.service';
 

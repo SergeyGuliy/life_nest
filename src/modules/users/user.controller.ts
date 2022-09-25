@@ -10,7 +10,7 @@ import {
 
 import { UserService } from './user.service';
 import { UpdateUserDto } from '@assets/dto/updateUser.dto';
-import { JwtAuthGuard } from '@assets/guards/auth.guard';
+import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 
 @Controller('users')
 export class UserController {

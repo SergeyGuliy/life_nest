@@ -5,7 +5,7 @@ import { RoomsManagerService } from '@modules-helpers/entities-services/rooms/ro
 import { ROOM_TYPES } from '@enums/index.js';
 
 @Injectable()
-export class PasswordValidationGuard implements CanActivate {
+export class PasswordGuard implements CanActivate {
   constructor(
     private readonly roomsManagerService: RoomsManagerService,
     private readonly errorHandlerService: ErrorHandlerService,

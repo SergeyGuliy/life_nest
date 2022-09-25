@@ -11,12 +11,13 @@ import {
 } from '@nestjs/common';
 
 import { RoomsService } from './rooms.service';
-import { JwtAuthGuard } from '@assets/guards/auth.guard';
+import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { CreateRoomDto } from '@assets/dto/createRoom.dto';
 import { User } from '@assets/decorators/user.decorator';
+
 import { IsRoomAdminGuard } from '@assets/guards/rooms/is-room-admin.guard';
-import { IsRoomBlockedGuard } from '@assets/guards/rooms/is-room-blocked.guard';
-import { PasswordValidationGuard } from '@assets/guards/rooms/password-validation.guard';
+import { RoomBlockedGuard } from '@assets/guards/rooms/is-room-blocked.guard';
+import { PasswordGuard } from '@assets/guards/rooms/password-validation.guard';
 import { CountOfUsersValidationGuard } from '@assets/guards/rooms/count-of-users-validation.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -44,16 +45,14 @@ export class RoomsController {
     return await this.roomsService.userLeaveRoom(user);
   }
 
-  @UseGuards(IsRoomBlockedGuard)
-  @UseGuards(PasswordValidationGuard)
-  @UseGuards(CountOfUsersValidationGuard)
   @Patch(':roomId/join')
+  @UseGuards(RoomBlockedGuard, PasswordGuard, CountOfUsersValidationGuard)
   async userJoinRoom(@Param('roomId') roomId: number, @User() user: any) {
     return await this.roomsService.userJoinRoom(user.userId, roomId);
   }
 
-  @UseGuards(IsRoomAdminGuard)
   @Patch(':roomId/kick-user')
+  @UseGuards(IsRoomAdminGuard)
   async kickUserFromRoom(
     @Param('roomId') roomId: number,
     @User() { userId },
@@ -66,8 +65,8 @@ export class RoomsController {
     );
   }
 
-  @UseGuards(IsRoomAdminGuard)
   @Patch(':roomId/set-new-admin')
+  @UseGuards(IsRoomAdminGuard)
   async setNewRoomAdmin(
     @Param('roomId') roomId: number,
     @User() { userId },
@@ -80,8 +79,8 @@ export class RoomsController {
     );
   }
 
-  @UseGuards(IsRoomAdminGuard)
   @Patch(':roomId/toggle-lock-room')
+  @UseGuards(IsRoomAdminGuard)
   async toggleLockRoom(
     @Param('roomId') roomId: number,
     @User() { userId },
@@ -90,8 +89,8 @@ export class RoomsController {
     return await this.roomsService.toggleLockRoom(+userId, +roomId, lockState);
   }
 
-  @UseGuards(IsRoomAdminGuard)
   @Delete(':roomId/delete-room')
+  @UseGuards(IsRoomAdminGuard)
   async deleteRoom(@Param('roomId') roomId: number, @User() { userId }) {
     return await this.roomsService.deleteRoomRequest(+userId, +roomId);
   }

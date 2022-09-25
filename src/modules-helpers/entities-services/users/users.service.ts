@@ -63,7 +63,7 @@ export class UsersManagerService {
     });
   }
 
-  async getUserByEmailOrPhoneOrId({ userId, phone, email }) {
+  async getUserByEmailOrPhoneOrId({ userId = 0, phone = '', email = '' }) {
     return await this.usersRepository
       .createQueryBuilder('user')
       .select(['user.phone', 'user.email', 'user.password', 'user.userId'])

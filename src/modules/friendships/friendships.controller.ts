@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 
 import { User } from '@assets/decorators/user.decorator';
-import { JwtAuthGuard } from '@assets/guards/auth.guard';
+import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { FriendshipsService } from './friendships.service';
 
 @Controller('friendships')
