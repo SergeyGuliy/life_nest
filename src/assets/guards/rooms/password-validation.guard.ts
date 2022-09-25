@@ -18,11 +18,6 @@ export class PasswordValidationGuard implements CanActivate {
 
     const roomData = await this.roomsManagerService.findOne(roomId);
 
-    console.log('PasswordValidationGuard');
-    console.log(roomData.typeOfRoom);
-    console.log(roomData.roomPassword);
-    console.log(roomPassword);
-
     if (
       roomData.typeOfRoom === ROOM_TYPES.PRIVATE &&
       roomData.roomPassword !== roomPassword

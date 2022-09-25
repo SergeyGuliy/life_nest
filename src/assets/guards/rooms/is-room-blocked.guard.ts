@@ -15,9 +15,6 @@ export class IsRoomBlockedGuard implements CanActivate {
 
     const { isBlocked } = await this.roomsManagerService.findOne(roomId);
 
-    console.log('IsRoomBlockedGuard');
-    console.log(isBlocked);
-
     if (isBlocked) {
       this.errorHandlerService.error('roomIsBLocked', 'en');
     }
