@@ -12,14 +12,14 @@ export class ChatsService {
   constructor(private readonly chatsManagerService: ChatsManagerService) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
-  async saveMessage(messageData) {
+  public async saveMessage(messageData) {
     const savedMessage = await this.chatsManagerService.save(messageData);
     return await this.chatsManagerService.findOne(savedMessage.messageId, {
       relations: ['messageSender'],
     });
   }
 
-  async getAllGlobalMessages() {
+  public async getAllGlobalMessages() {
     return await this.chatsManagerService.find({
       where: {
         messageReceiverType: MESSAGE_RECEIVER_TYPES.GLOBAL,
@@ -28,7 +28,7 @@ export class ChatsService {
     });
   }
 
-  async getAllPrivateMessages(userId) {
+  public async getAllPrivateMessages(userId) {
     return await this.chatsManagerService.find({
       where: [
         {
@@ -44,7 +44,7 @@ export class ChatsService {
     });
   }
 
-  async getAllRoomMessages(roomJoinedId) {
+  public async getAllRoomMessages(roomJoinedId) {
     return await this.chatsManagerService.find({
       where: {
         messageReceiverType: MESSAGE_RECEIVER_TYPES.ROOM,

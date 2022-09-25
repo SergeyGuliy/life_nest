@@ -11,15 +11,15 @@ export class ChatsManagerService {
     private readonly messagesRepository: Repository<Messages>,
   ) {}
 
-  async save(messageData) {
+  public async save(messageData) {
     return await this.messagesRepository.save(messageData);
   }
 
-  async findOne(messageId, query) {
+  public async findOne(messageId, query) {
     return await this.messagesRepository.findOne(messageId, query);
   }
 
-  async find(query) {
+  public async find(query) {
     return await this.messagesRepository.find(query);
   }
 }
