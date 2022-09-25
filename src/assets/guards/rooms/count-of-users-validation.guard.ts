@@ -23,10 +23,6 @@ export class CountOfUsersValidationGuard implements CanActivate {
       where: { roomJoinedId: roomId },
     });
 
-    console.log('CountOfUsersValidationGuard')
-    console.log(usersInRoom.length)
-    console.log(maxCountOfUsers)
-
     if (usersInRoom.length > maxCountOfUsers) {
       this.errorHandlerService.error('roomAlreadyFull', 'en');
     }
