@@ -4,8 +4,8 @@ import { User } from '@assets/decorators/user.decorator';
 import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { ChatsService } from './chats.service';
 
-@UseGuards(JwtAuthGuard)
 @Controller('chats')
+@UseGuards(JwtAuthGuard)
 export class ChatsController {
   constructor(private readonly chatsService: ChatsService) {}
 
