@@ -8,13 +8,13 @@ import {
   Put,
 } from '@nestjs/common';
 
-import { User } from '../../assets/decorators/user.decorator';
-import { JwtAuthGuard } from '../../assets/guards/auth.guard';
-import { FriendshipService } from './friendship.service';
+import { User } from '@assets/decorators/user.decorator';
+import { JwtAuthGuard } from '@assets/guards/auth.guard';
+import { FriendshipsService } from './friendships.service';
 
-@Controller('friendship')
-export class FriendshipController {
-  constructor(private readonly friendshipService: FriendshipService) {}
+@Controller('friendships')
+export class FriendshipsController {
+  constructor(private readonly friendshipService: FriendshipsService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()

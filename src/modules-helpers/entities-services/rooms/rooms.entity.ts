@@ -1,8 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseEntity } from './base.entity';
+import { BaseEntity } from '@assets/base.entity';
 
 import { ROOM_TYPES } from '@enums/index.js';
-import { Users } from './users.entity';
+import { Users } from '../users/users.entity';
 
 @Entity('rooms')
 export class Rooms extends BaseEntity {

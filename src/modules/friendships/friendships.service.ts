@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 import { FRIENDSHIP_STATUSES } from '@enums/index.js';
 
-import { FriendshipManagerService } from '../../modules-helpers/entities-services/friendship/friendship.service';
-import { UsersManagerService } from '../../modules-helpers/entities-services/users/users.service';
-import { ErrorHandlerService } from '../../modules-helpers/global-services/error-handler.service';
+import { FriendshipManagerService } from '@modules-helpers/entities-services/friendships/friendships.service';
+import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
+import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
-export class FriendshipService {
+export class FriendshipsService {
   constructor(
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly friendshipManagerService: FriendshipManagerService,

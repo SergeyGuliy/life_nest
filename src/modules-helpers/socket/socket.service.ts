@@ -3,7 +3,7 @@ import { debounce } from 'throttle-debounce';
 
 import { USER_ONLINE_STATUSES } from '@enums/index.js';
 
-import { RoomsService } from '../../modules/rooms/rooms.service';
+import { RoomsService } from '@modules/rooms/rooms.service';
 
 import { SocketNameSpacerService } from '../global-services/socket-namespaser.service';
 import { UsersManagerService } from '../entities-services/users/users.service';

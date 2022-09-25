@@ -1,15 +1,5 @@
 import { Injectable } from '@nestjs/common';
-
-// import { RoomsSocketGateway } from './games.gateway';
-//
-// import { RoomsManagerService } from '../../modules-helpers/entities-services/rooms/rooms.service';
-// import { UserManagerService } from '../../modules-helpers/entities-services/users/user.service';
-// import { ErrorHandlerService } from '../../modules-helpers/global-services/error-handler.service';
-
-import {
-  Game,
-  GameDocument,
-} from '../../assets/database/entities-mongo/games.entity';
+import { Game, GameDocument } from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 

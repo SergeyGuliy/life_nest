@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, UseGuards } from '@nestjs/common';
 
 import { SqlHelperService } from './sql-helper.service';
-import { JwtAuthGuard } from '../../assets/guards/auth.guard';
+import { JwtAuthGuard } from '@assets/guards/auth.guard';
 
 @Controller('sql-controller')
 export class SqlHelperController {
@@ -31,7 +31,7 @@ export class SqlHelperController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('friendship')
+  @Delete('friendships')
   async deleteAllFriendship() {
     return await this.sqlHelperService.deleteAllFriendship();
   }

@@ -4,10 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqlHelperController } from './sql-helper.controller';
 import { SqlHelperService } from './sql-helper.service';
 
-import { Users } from '../../assets/database/entities-postgres/users.entity';
-import { Rooms } from '../../assets/database/entities-postgres/rooms.entity';
-import { Messages } from '../../assets/database/entities-postgres/messages.entity';
-import { Friendships } from '../../assets/database/entities-postgres/friendships.entity';
+import { Users } from '../entities-services/users/users.entity';
+import { Rooms } from '../entities-services/rooms/rooms.entity';
+import { Messages } from '../entities-services/chats/messages.entity';
+import { Friendships } from '../entities-services/friendships/friendships.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Users, Rooms, Messages, Friendships])],

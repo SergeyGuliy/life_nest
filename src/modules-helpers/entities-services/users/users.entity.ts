@@ -11,10 +11,10 @@ import {
   USER_GAME_STATUSES,
   USER_ONLINE_STATUSES,
 } from '@enums/index.js';
-import { Messages } from './messages.entity';
-import { BaseEntity } from './base.entity';
-import { Friendships } from './friendships.entity';
-import { UserSettings } from './users-settings.entity';
+import { Messages } from '../chats/messages.entity';
+import { BaseEntity } from '@assets/base.entity';
+import { Friendships } from '../friendships/friendships.entity';
+import { UserSettings } from '../users-settings/users-settings.entity';
 
 @Entity('users11')
 export class Users extends BaseEntity {

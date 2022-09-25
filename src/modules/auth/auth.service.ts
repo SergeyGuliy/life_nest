@@ -4,11 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 import * as phone from 'phone';
 
 import { PasswordEncoderService } from './password-encoder.service';
-import { CreateUserDto } from '../../assets/dto/createUser.dto';
-import { UsersManagerService } from '../../modules-helpers/entities-services/users/users.service';
-import { UsersSettingsManagerService } from '../../modules-helpers/entities-services/users-settings/users-settings.service';
-import { MyLogger } from '../../modules-helpers/global-services/my-logger.service';
-import { ErrorHandlerService } from '../../modules-helpers/global-services/error-handler.service';
+import { CreateUserDto } from '@assets/dto/createUser.dto';
+import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
+import { UsersSettingsManagerService } from '@modules-helpers/entities-services/users-settings/users-settings.service';
+import { MyLogger } from '@modules-helpers/global-services/my-logger.service';
+import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class AuthService {

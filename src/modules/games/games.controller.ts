@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 
 import { GamesService } from './games.service';
-import { JwtAuthGuard } from '../../assets/guards/auth.guard';
+import { JwtAuthGuard } from '@assets/guards/auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('games')

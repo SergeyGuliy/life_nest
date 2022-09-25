@@ -34,19 +34,19 @@ export const errors = {
   ignoreCanOnlyReceiver: {
     status: HttpStatus.METHOD_NOT_ALLOWED,
     locales: {
-      en: 'Ignore friendship connection can only receiver',
+      en: 'Ignore friendships connection can only receiver',
     },
   },
   cantSendRequestToYourself: {
     status: HttpStatus.NOT_FOUND,
     locales: {
-      en: "You can't sent friendship request to yourself",
+      en: "You can't sent friendships request to yourself",
     },
   },
   acceptFriendshipCanOnlyReceiver: {
     status: HttpStatus.METHOD_NOT_ALLOWED,
     locales: {
-      en: 'Accept friendship connection can only receiver',
+      en: 'Accept friendships connection can only receiver',
     },
   },
   userAlreadyInFriends: {

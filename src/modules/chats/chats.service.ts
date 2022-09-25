@@ -4,7 +4,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 
-import { ChatsManagerService } from '../../modules-helpers/entities-services/chats/chats.service';
+import { ChatsManagerService } from '@modules-helpers/entities-services/chats/chats.service';
 import { MESSAGE_RECEIVER_TYPES } from '@enums/index.js';
 
 @Injectable()

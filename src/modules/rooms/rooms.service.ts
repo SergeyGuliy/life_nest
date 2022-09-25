@@ -3,9 +3,9 @@ import { random } from 'lodash';
 
 import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
 
-import { RoomsManagerService } from '../../modules-helpers/entities-services/rooms/rooms.service';
-import { UsersManagerService } from '../../modules-helpers/entities-services/users/users.service';
-import { ErrorHandlerService } from '../../modules-helpers/global-services/error-handler.service';
+import { RoomsManagerService } from '@modules-helpers/entities-services/rooms/rooms.service';
+import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
+import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class RoomsService {

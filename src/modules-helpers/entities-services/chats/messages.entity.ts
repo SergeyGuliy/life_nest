@@ -5,8 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BaseEntity } from './base.entity';
-import { Users } from './users.entity';
+import { BaseEntity } from '@assets/base.entity';
+import { Users } from '../users/users.entity';
 import { MESSAGE_RECEIVER_TYPES, MESSAGE_TYPES } from '@enums/index.js';
 
 @Entity('messages10')

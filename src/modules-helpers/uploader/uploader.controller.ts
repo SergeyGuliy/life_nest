@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
-import { JwtAuthGuard } from '../../assets/guards/auth.guard';
-import { User } from '../../assets/decorators/user.decorator';
+import { JwtAuthGuard } from '@assets/guards/auth.guard';
+import { User } from '@assets/decorators/user.decorator';
 import { UploaderService } from './uploader.service';
 
 @Controller('uploader')

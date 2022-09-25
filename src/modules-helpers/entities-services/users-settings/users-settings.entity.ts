@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { LOCALES, SOUNDS } from '@enums/index.js';
-import { BaseEntity } from './base.entity';
+import { BaseEntity } from '@assets/base.entity';
 
 @Entity('userSettings')
 export class UserSettings extends BaseEntity {

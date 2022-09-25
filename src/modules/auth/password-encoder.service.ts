@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { SALT_ROUND_CRYPT } from '@constants/index.js';
-import { ErrorHandlerService } from '../../modules-helpers/global-services/error-handler.service';
+import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class PasswordEncoderService {

@@ -1,8 +1,8 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { ErrorHandlerService } from '../../../modules-helpers/global-services/error-handler.service';
-import { RoomsManagerService } from '../../../modules-helpers/entities-services/rooms/rooms.service';
+import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { RoomsManagerService } from '@modules-helpers/entities-services/rooms/rooms.service';
 
-import { UsersManagerService } from '../../../modules-helpers/entities-services/users/users.service';
+import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
 
 @Injectable()
 export class CountOfUsersValidationGuard implements CanActivate {

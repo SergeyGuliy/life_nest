@@ -35,6 +35,6 @@ export class SocketNameSpacerService {
   }
 }
 
-setInterval(() => {
-  console.log(mapOfUsers);
-}, 5000);
+// setInterval(() => {
+//   console.log(mapOfUsers);
+// }, 5000);

@@ -3,10 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Users } from '../../assets/database/entities-postgres/users.entity';
-import { Rooms } from '../../assets/database/entities-postgres/rooms.entity';
-import { Messages } from '../../assets/database/entities-postgres/messages.entity';
-import { Friendships } from '../../assets/database/entities-postgres/friendships.entity';
+import { Users } from '../entities-services/users/users.entity';
+import { Rooms } from '../entities-services/rooms/rooms.entity';
+import { Messages } from '../entities-services/chats/messages.entity';
+import { Friendships } from '../entities-services/friendships/friendships.entity';
 
 @Injectable()
 export class SqlHelperService {
