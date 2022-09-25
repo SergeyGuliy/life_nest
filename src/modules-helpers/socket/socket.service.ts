@@ -5,9 +5,9 @@ import { USER_ONLINE_STATUSES } from '@enums/index.js';
 
 import { RoomsService } from '../../modules/rooms/rooms.service';
 
-import { SocketNameSpacerService } from '../globalServices/socket-namespaser.service';
-import { UserManagerService } from '../entitiesManagers/users/user.service';
-import { ErrorHandlerService } from '../globalServices/error-handler.service';
+import { SocketNameSpacerService } from '../global-services/socket-namespaser.service';
+import { UsersManagerService } from '../entities-services/users/users.service';
+import { ErrorHandlerService } from '../global-services/error-handler.service';
 import { LOGOUT_TIMEOUT } from '@constants/index.js';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class SocketService {
     private roomsService: RoomsService,
     private socketNameSpacerService: SocketNameSpacerService,
 
-    private userManagerService: UserManagerService,
+    private userManagerService: UsersManagerService,
   ) {}
 
   private async logOutUserFormApp(userId) {

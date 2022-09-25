@@ -5,7 +5,7 @@ import {
 } from '@nestjs/websockets';
 
 import { Socket, Server } from 'socket.io';
-import { SocketNameSpacerService } from '../../../sub_modules/globalServices/socket-namespaser.service';
+import { SocketNameSpacerService } from '../../../modules-helpers/global-services/socket-namespaser.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

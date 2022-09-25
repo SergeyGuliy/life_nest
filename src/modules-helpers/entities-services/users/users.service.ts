@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Users } from '../../../assets/database/entities-postgres/users.entity';
-import { ErrorHandlerService } from '../../globalServices/error-handler.service';
+import { ErrorHandlerService } from '../../global-services/error-handler.service';
 
 @Injectable()
-export class UserManagerService {
+export class UsersManagerService {
   constructor(
     private readonly errorHandlerService: ErrorHandlerService,
     @InjectRepository(Users)

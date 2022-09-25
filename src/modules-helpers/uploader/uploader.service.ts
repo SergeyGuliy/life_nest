@@ -3,14 +3,14 @@ import { thumbnail } from 'easyimage';
 import * as fs from 'fs';
 import * as util from 'util';
 
-import { UserManagerService } from '../entitiesManagers/users/user.service';
+import { UsersManagerService } from '../entities-services/users/users.service';
 
 const unlinkAsync = util.promisify(fs.unlink);
 const rmdirAsync = util.promisify(fs.rmdir);
 
 @Injectable()
 export class UploaderService {
-  constructor(private readonly userManagerService: UserManagerService) {}
+  constructor(private readonly userManagerService: UsersManagerService) {}
 
   async setUserAvatar(userId, { avatarSmall, avatarBig }) {
     await this.userManagerService.update(userId, {

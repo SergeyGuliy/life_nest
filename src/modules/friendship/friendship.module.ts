@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 
 import { FriendshipController } from './friendship.controller';
 import { FriendshipService } from './friendship.service';
-import { EntityManagerModule } from '../../sub_modules/entitiesManagers/entitiy-manager.module';
-import { GlobalServicesModule } from '../../sub_modules/globalServices/global-services.module';
+import { EntityManagerModule } from '../../modules-helpers/entities-services/entitiy-manager.module';
+import { GlobalServicesModule } from '../../modules-helpers/global-services/global-services.module';
 
 @Module({
   imports: [EntityManagerModule, GlobalServicesModule],

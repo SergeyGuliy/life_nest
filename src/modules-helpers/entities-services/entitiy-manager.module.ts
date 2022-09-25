@@ -7,12 +7,12 @@ import { Messages } from '../../assets/database/entities-postgres/messages.entit
 import { Friendships } from '../../assets/database/entities-postgres/friendships.entity';
 import { Rooms } from '../../assets/database/entities-postgres/rooms.entity';
 
-import { UserManagerService } from './users/user.service';
-import { UserSettingsManagerService } from './users/user-settings.service';
+import { UsersManagerService } from './users/users.service';
+import { UsersSettingsManagerService } from './users-settings/users-settings.service';
 import { ChatsManagerService } from './chats/chats.service';
 import { FriendshipManagerService } from './friendship/friendship.service';
 import { RoomsManagerService } from './rooms/rooms.service';
-import { GlobalServicesModule } from '../globalServices/global-services.module';
+import { GlobalServicesModule } from '../global-services/global-services.module';
 
 @Module({
   imports: [
@@ -26,16 +26,16 @@ import { GlobalServicesModule } from '../globalServices/global-services.module';
     GlobalServicesModule,
   ],
   providers: [
-    UserManagerService,
+    UsersManagerService,
     RoomsManagerService,
-    UserSettingsManagerService,
+    UsersSettingsManagerService,
     ChatsManagerService,
     FriendshipManagerService,
   ],
   exports: [
-    UserManagerService,
+    UsersManagerService,
     RoomsManagerService,
-    UserSettingsManagerService,
+    UsersSettingsManagerService,
     ChatsManagerService,
     FriendshipManagerService,
     TypeOrmModule.forFeature([

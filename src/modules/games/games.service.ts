@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 
 // import { RoomsSocketGateway } from './games.gateway';
 //
-// import { RoomsManagerService } from '../../sub_modules/entitiesManagers/rooms/rooms.service';
-// import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
-// import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
+// import { RoomsManagerService } from '../../modules-helpers/entities-services/rooms/rooms.service';
+// import { UserManagerService } from '../../modules-helpers/entities-services/users/user.service';
+// import { ErrorHandlerService } from '../../modules-helpers/global-services/error-handler.service';
 
 import {
   Game,

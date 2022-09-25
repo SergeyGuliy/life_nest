@@ -5,10 +5,10 @@ import * as phone from 'phone';
 
 import { PasswordEncoderService } from './password-encoder.service';
 import { CreateUserDto } from '../../assets/dto/createUser.dto';
-import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
-import { UserSettingsManagerService } from '../../sub_modules/entitiesManagers/users/user-settings.service';
-import { MyLogger } from '../../sub_modules/globalServices/my-logger.service';
-import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
+import { UsersManagerService } from '../../modules-helpers/entities-services/users/users.service';
+import { UsersSettingsManagerService } from '../../modules-helpers/entities-services/users-settings/users-settings.service';
+import { MyLogger } from '../../modules-helpers/global-services/my-logger.service';
+import { ErrorHandlerService } from '../../modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class AuthService {
@@ -16,8 +16,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly passwordEncoderService: PasswordEncoderService,
-    private readonly userManagerService: UserManagerService,
-    private readonly userSettingsManagerService: UserSettingsManagerService,
+    private readonly userManagerService: UsersManagerService,
+    private readonly userSettingsManagerService: UsersSettingsManagerService,
     private readonly myLogger: MyLogger,
   ) {}
 

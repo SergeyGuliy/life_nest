@@ -8,7 +8,7 @@ import {
 import { Socket, Server } from 'socket.io';
 
 import { SocketService } from '../socket.service';
-import { SocketNameSpacerService } from '../../globalServices/socket-namespaser.service';
+import { SocketNameSpacerService } from '../../global-services/socket-namespaser.service';
 import {
   socketSetup_callUserIdToServer,
   socketSetup_giveUserIdToServer,

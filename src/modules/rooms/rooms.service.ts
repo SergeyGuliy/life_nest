@@ -3,9 +3,9 @@ import { random } from 'lodash';
 
 import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
 
-import { RoomsManagerService } from '../../sub_modules/entitiesManagers/rooms/rooms.service';
-import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
-import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
+import { RoomsManagerService } from '../../modules-helpers/entities-services/rooms/rooms.service';
+import { UsersManagerService } from '../../modules-helpers/entities-services/users/users.service';
+import { ErrorHandlerService } from '../../modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class RoomsService {
@@ -13,7 +13,7 @@ export class RoomsService {
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly roomsWsEmitter: RoomsWsEmitter,
     private readonly roomsManagerService: RoomsManagerService,
-    private readonly userManagerService: UserManagerService,
+    private readonly userManagerService: UsersManagerService,
   ) {}
 
   async getRooms(query) {

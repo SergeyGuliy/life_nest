@@ -1,15 +1,14 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { ErrorHandlerService } from '../../../sub_modules/globalServices/error-handler.service';
-import { RoomsManagerService } from '../../../sub_modules/entitiesManagers/rooms/rooms.service';
+import { ErrorHandlerService } from '../../../modules-helpers/global-services/error-handler.service';
+import { RoomsManagerService } from '../../../modules-helpers/entities-services/rooms/rooms.service';
 
-import { ROOM_TYPES } from '@enums/index.js';
-import { UserManagerService } from '../../../sub_modules/entitiesManagers/users/user.service';
+import { UsersManagerService } from '../../../modules-helpers/entities-services/users/users.service';
 
 @Injectable()
 export class CountOfUsersValidationGuard implements CanActivate {
   constructor(
     private readonly roomsManagerService: RoomsManagerService,
-    private readonly userManagerService: UserManagerService,
+    private readonly userManagerService: UsersManagerService,
     private readonly errorHandlerService: ErrorHandlerService,
   ) {}
 

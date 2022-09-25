@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 
 import { FRIENDSHIP_STATUSES } from '@enums/index.js';
 
-import { FriendshipManagerService } from '../../sub_modules/entitiesManagers/friendship/friendship.service';
-import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
-import { ErrorHandlerService } from '../../sub_modules/globalServices/error-handler.service';
+import { FriendshipManagerService } from '../../modules-helpers/entities-services/friendship/friendship.service';
+import { UsersManagerService } from '../../modules-helpers/entities-services/users/users.service';
+import { ErrorHandlerService } from '../../modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class FriendshipService {
   constructor(
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly friendshipManagerService: FriendshipManagerService,
-    private readonly userManagerService: UserManagerService,
+    private readonly userManagerService: UsersManagerService,
   ) {}
 
   async getAllFriendship() {

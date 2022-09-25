@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { UserSettings } from '../../../assets/database/entities-postgres/users-settings.entity';
 
 @Injectable()
-export class UserSettingsManagerService {
+export class UsersSettingsManagerService {
   constructor(
     @InjectRepository(UserSettings)
     private userSettingsRepository: Repository<UserSettings>,

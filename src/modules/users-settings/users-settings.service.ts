@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserManagerService } from '../../sub_modules/entitiesManagers/users/user.service';
-import { UserSettingsManagerService } from '../../sub_modules/entitiesManagers/users/user-settings.service';
+import { UsersManagerService } from '../../modules-helpers/entities-services/users/users.service';
+import { UsersSettingsManagerService } from '../../modules-helpers/entities-services/users-settings/users-settings.service';
 
 @Injectable()
-export class UserSettingsService {
+export class UsersSettingsService {
   constructor(
-    private readonly userManagerService: UserManagerService,
-    private readonly userSettingsManagerService: UserSettingsManagerService,
+    private readonly userManagerService: UsersManagerService,
+    private readonly userSettingsManagerService: UsersSettingsManagerService,
   ) {}
 
   async changeLanguage({ userSettingsId }, locale) {
