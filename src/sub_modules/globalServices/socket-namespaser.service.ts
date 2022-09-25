@@ -34,7 +34,7 @@ export class SocketNameSpacerService {
     return Object.keys(mapOfUsers).filter((i) => mapOfUsers[i] === userId);
   }
 }
-//
-// setInterval(() => {
-//   console.log(mapOfUsers);
-// }, 3000);
+
+setInterval(() => {
+  console.log(mapOfUsers);
+}, 5000);

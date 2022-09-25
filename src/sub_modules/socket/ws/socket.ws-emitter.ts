@@ -8,11 +8,11 @@ export class SocketWsEmitter {
   @WebSocketServer() server: Server;
 
   public forceDisconnectSidFromServer(sidsToDisconnect: string[]) {
-    if (sidsToDisconnect.length) {
-      sidsToDisconnect.forEach((sid) => {
-        this.server.to(sid).emit(socketSetup_forceDisconnect);
-        this.server.to(sid).disconnectSockets(true);
-      });
-    }
+    if (!sidsToDisconnect.length) return;
+
+    sidsToDisconnect.forEach((sid) => {
+      this.server.to(sid).emit(socketSetup_forceDisconnect);
+      this.server.to(sid).disconnectSockets(true);
+    });
   }
 }
