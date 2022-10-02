@@ -8,6 +8,7 @@ import {
   Query,
   UseGuards,
   Patch,
+  Inject,
 } from '@nestjs/common';
 
 import { RoomsService } from './rooms.service';
@@ -23,7 +24,8 @@ import { CountOfUsersValidationGuard } from '@assets/guards/rooms/count-of-users
 @UseGuards(JwtAuthGuard)
 @Controller('rooms')
 export class RoomsController {
-  constructor(private readonly roomsService: RoomsService) {}
+  @Inject(RoomsService)
+  private readonly roomsService: RoomsService;
 
   @Post('create')
   async createRoom(@Body() roomData: CreateRoomDto, @User() user: any) {

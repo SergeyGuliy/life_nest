@@ -1,22 +1,65 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { random } from 'lodash';
 
 import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
 
 import { RoomsManagerService } from '@modules-helpers/entities-services/rooms/rooms.service';
 import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class RoomsService {
-  constructor(
-    private readonly errorHandlerService: ErrorHandlerService,
-    private readonly roomsWsEmitter: RoomsWsEmitter,
-    private readonly roomsManagerService: RoomsManagerService,
-    private readonly userManagerService: UsersManagerService,
-  ) {}
+  @Inject(RoomsWsEmitter)
+  private readonly roomsWsEmitter: RoomsWsEmitter;
+  @Inject(RoomsManagerService)
+  private readonly roomsManagerService: RoomsManagerService;
+  @Inject(UsersManagerService)
+  private readonly userManagerService: UsersManagerService;
 
-  async getRooms(query) {
+  private async setNewAdminOrDelete(
+    roomJoinedId: number,
+    roomCreatedId: number,
+    roomData,
+  ) {
+    const usersInRoom = await this.userManagerService.find({
+      where: {
+        roomJoinedId,
+      },
+    });
+    if (!usersInRoom.length) {
+      await this.deleteRoom(roomJoinedId);
+    } else {
+      await this.setNewAdmin(
+        roomCreatedId,
+        roomJoinedId,
+        usersInRoom,
+        roomData,
+      );
+    }
+  }
+
+  private async setNewAdmin(
+    roomCreatedId: number,
+    roomJoinedId: number,
+    usersInRoom,
+    roomData,
+  ) {
+    this.roomsWsEmitter.roomInListUpdated(roomJoinedId, {
+      ...roomData,
+      usersInRoomLength: usersInRoom.length,
+    });
+    if (roomCreatedId === roomJoinedId) {
+      const idOfNewAdmin = usersInRoom[random(usersInRoom.length - 1)].userId;
+      await this.userManagerService.update(idOfNewAdmin, {
+        roomCreatedId: roomJoinedId,
+      });
+      const newAdmin = await this.userManagerService.findOne({
+        where: { userId: idOfNewAdmin },
+      });
+      this.roomsWsEmitter.updateRoomAdmin(roomJoinedId, newAdmin);
+    }
+  }
+
+  public async getRooms(query) {
     if (query.typeOfRoom?.length) {
       const where = query.typeOfRoom.map((i) => {
         const newI = {
@@ -49,15 +92,11 @@ export class RoomsService {
     }
   }
 
-  async getRoomDataById(query) {
-    return await this.roomsManagerService.findOne(query);
-  }
-
-  async getRoomById(roomId) {
+  public async getRoomById(roomId) {
     const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
-    const roomData = await this.getRoomDataById({
+    const roomData = await this.roomsManagerService.findOne({
       where: { roomId },
     });
     return {
@@ -66,7 +105,7 @@ export class RoomsService {
     };
   }
 
-  async createRoom(creatorId, roomData) {
+  public async createRoom(creatorId, roomData) {
     const newRoom = await this.roomsManagerService.save({
       ...roomData,
       creatorId,
@@ -86,8 +125,8 @@ export class RoomsService {
     return newRoom;
   }
 
-  async userJoinRoom(userId: number, roomId: number) {
-    const roomData = await this.getRoomDataById({
+  public async userJoinRoom(userId: number, roomId: number) {
+    const roomData = await this.roomsManagerService.findOne({
       where: { roomId },
     });
 
@@ -110,7 +149,7 @@ export class RoomsService {
     });
   }
 
-  async userLeaveRoom(user) {
+  public async userLeaveRoom(user) {
     const { userId } = user;
     const {
       roomJoinedId,
@@ -125,7 +164,7 @@ export class RoomsService {
         userId,
       },
     });
-    const roomData = await this.getRoomDataById({
+    const roomData = await this.roomsManagerService.findOne({
       where: { roomId: roomJoinedId },
     });
     const usersInRoom = await this.userManagerService.find({
@@ -137,51 +176,7 @@ export class RoomsService {
     return newUserData;
   }
 
-  async setNewAdminOrDelete(
-    roomJoinedId: number,
-    roomCreatedId: number,
-    roomData,
-  ) {
-    const usersInRoom = await this.userManagerService.find({
-      where: {
-        roomJoinedId,
-      },
-    });
-    if (!usersInRoom.length) {
-      await this.deleteRoom(roomJoinedId);
-    } else {
-      await this.setNewAdmin(
-        roomCreatedId,
-        roomJoinedId,
-        usersInRoom,
-        roomData,
-      );
-    }
-  }
-
-  async setNewAdmin(
-    roomCreatedId: number,
-    roomJoinedId: number,
-    usersInRoom,
-    roomData,
-  ) {
-    this.roomsWsEmitter.roomInListUpdated(roomJoinedId, {
-      ...roomData,
-      usersInRoomLength: usersInRoom.length,
-    });
-    if (roomCreatedId === roomJoinedId) {
-      const idOfNewAdmin = usersInRoom[random(usersInRoom.length - 1)].userId;
-      await this.userManagerService.update(idOfNewAdmin, {
-        roomCreatedId: roomJoinedId,
-      });
-      const newAdmin = await this.userManagerService.findOne({
-        where: { userId: idOfNewAdmin },
-      });
-      this.roomsWsEmitter.updateRoomAdmin(roomJoinedId, newAdmin);
-    }
-  }
-
-  async toggleLockRoom(userId, roomId, lockState) {
+  public async toggleLockRoom(userId, roomId, lockState) {
     await this.roomsManagerService.update(roomId, {
       isBlocked: lockState,
     });
@@ -189,7 +184,7 @@ export class RoomsService {
     return;
   }
 
-  async deleteRoomRequest(userId, roomId) {
+  public async deleteRoomRequest(userId, roomId) {
     const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
@@ -200,23 +195,23 @@ export class RoomsService {
     await this.deleteRoom(roomId);
   }
 
-  async kickUserFromRoomRequest(senderUserId, roomId, kickUserId) {
+  public async kickUserFromRoomRequest(senderUserId, roomId, kickUserId) {
     await this.kickUserFromRoom(roomId, kickUserId);
   }
 
-  async deleteRoom(roomId) {
+  public async deleteRoom(roomId) {
     this.roomsWsEmitter.roomInListDeleted(roomId);
     return await this.roomsManagerService.delete(roomId);
   }
 
-  async kickUserFromRoom(roomId, kickUserId) {
+  public async kickUserFromRoom(roomId, kickUserId) {
     await this.userManagerService.update(kickUserId, {
       roomJoinedId: null,
     });
     await this.roomsWsEmitter.userLeaveRoom(roomId, kickUserId);
   }
 
-  async setNewRoomAdmin(senderUserId, roomId, newAdminId) {
+  public async setNewRoomAdmin(senderUserId, roomId, newAdminId) {
     await this.userManagerService.update(senderUserId, {
       roomCreatedId: null,
     });
