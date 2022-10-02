@@ -1,51 +1,41 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   UseGuards,
   Put,
+  Inject,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { UpdateUserDto } from '@assets/dto/updateUser.dto';
 import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
+import { IsUserExistGuard } from '@assets/guards/users/is-user-exist.guard';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  @Inject(UserService)
+  private readonly userService: UserService;
 
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async getAllUsers() {
-    return await this.userService.getAllUsers();
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Get(':userId')
+  @UseGuards(JwtAuthGuard, IsUserExistGuard)
   async getUserById(@Param('userId') userId: string) {
     return await this.userService.getUserById(Number(userId));
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put(':userId')
+  @UseGuards(JwtAuthGuard)
   async editUser(@Param('userId') userId: string, @Body() user: UpdateUserDto) {
     return await this.userService.editUser(Number(userId), user);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put(':userId')
+  @UseGuards(JwtAuthGuard)
   async changeUserTheme(
     @Param('userId') userId: string,
     @Body() user: { isDarkTheme: boolean },
   ) {
     return await this.userService.changeUserTheme(Number(userId), user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Delete(':userId')
-  async deleteUser(@Param('userId') userId: string) {
-    return await this.userService.deleteUser(Number(userId));
   }
 }

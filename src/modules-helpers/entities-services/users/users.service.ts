@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -7,11 +7,10 @@ import { ErrorHandlerService } from '../../global-services/error-handler.service
 
 @Injectable()
 export class UsersManagerService {
-  constructor(
-    private readonly errorHandlerService: ErrorHandlerService,
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
-  ) {}
+  @Inject(ErrorHandlerService)
+  private readonly errorHandlerService: ErrorHandlerService;
+  @InjectRepository(Users)
+  private readonly usersRepository: Repository<Users>;
 
   async update(userId, newUserData) {
     await this.usersRepository.update(userId, newUserData);
@@ -37,7 +36,7 @@ export class UsersManagerService {
   }
 
   async getUserByIdWithToken(userId: number) {
-    this.catchUserNotExists(userId);
+    await this.catchUserNotExists(userId);
     return await this.fetchSecuredUserData(userId);
   }
 
