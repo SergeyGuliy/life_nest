@@ -13,13 +13,9 @@ import {
   rooms_RoomsUpdater,
 } from '@constants/ws/rooms.js';
 
-import { RoomsWsEmitter } from './rooms.ws-emitter';
-
 @Injectable()
 @WebSocketGateway()
 export class RoomsWsListener {
-  constructor(private roomsWsEmitter: RoomsWsEmitter) {}
-
   @SubscribeMessage(rooms_userConnectsRoom)
   public userConnectsRoom(client: Socket, { roomId }) {
     client.join(this.getRoomName(roomId));

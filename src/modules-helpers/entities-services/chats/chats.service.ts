@@ -7,7 +7,7 @@ import { Messages } from './messages.entity';
 @Injectable()
 export class ChatsManagerService {
   @InjectRepository(Messages)
-  private readonly messagesRepository: Repository<Messages>
+  private readonly messagesRepository: Repository<Messages>;
 
   public async save(messageData) {
     return await this.messagesRepository.save(messageData);

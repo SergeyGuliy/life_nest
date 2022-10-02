@@ -2,7 +2,7 @@ import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 
 import { Server } from 'socket.io';
 import { SocketNameSpacerService } from '@modules-helpers/global-services/socket-namespaser.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   rooms_updateUsersListInRoom,
   rooms_updateRoomAdmin,
@@ -18,8 +18,10 @@ import {
 @Injectable()
 @WebSocketGateway()
 export class RoomsWsEmitter {
-  constructor(private socketNameSpacerService: SocketNameSpacerService) {}
-  @WebSocketServer() server: Server;
+  @WebSocketServer()
+  private readonly server: Server;
+  @Inject(SocketNameSpacerService)
+  private readonly socketNameSpacerService: SocketNameSpacerService;
 
   public updateUsersListInRoom(roomId, usersInRoom): void {
     this.server
