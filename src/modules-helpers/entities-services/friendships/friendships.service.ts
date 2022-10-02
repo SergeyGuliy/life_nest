@@ -9,23 +9,23 @@ export class FriendshipManagerService {
   @InjectRepository(Friendships)
   private readonly friendshipRepository: Repository<Friendships>;
 
-  async save(query) {
+  public async save(query) {
     return await this.friendshipRepository.save(query);
   }
 
-  async update(friendshipId, newData) {
+  public async update(friendshipId, newData) {
     return await this.friendshipRepository.update(friendshipId, newData);
   }
 
-  async findOne(query) {
+  public async findOne(query) {
     return this.friendshipRepository.findOne(query);
   }
 
-  async find(query) {
+  public async find(query) {
     return await this.friendshipRepository.find(query);
   }
 
-  async delete(friendshipsId) {
+  public async delete(friendshipsId) {
     return this.friendshipRepository.delete(friendshipsId);
   }
 

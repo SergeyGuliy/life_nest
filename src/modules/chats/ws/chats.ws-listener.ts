@@ -3,6 +3,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { Inject } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 
 import { ChatsService } from '../chats.service';
@@ -14,11 +15,12 @@ import { ChatsWsEmitter } from './chats.ws-emitter';
 
 @WebSocketGateway()
 export class ChatsWsListener {
-  constructor(
-    private chatService: ChatsService,
-    private socketNameSpacerService: SocketNameSpacerService,
-    private chatsWsEmitter: ChatsWsEmitter,
-  ) {}
+  @Inject(ChatsService)
+  private chatService: ChatsService;
+  @Inject(SocketNameSpacerService)
+  private socketNameSpacerService: SocketNameSpacerService;
+  @Inject(ChatsWsEmitter)
+  private chatsWsEmitter: ChatsWsEmitter;
 
   @WebSocketServer() server: Server;
 

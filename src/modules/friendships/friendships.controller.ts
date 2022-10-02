@@ -24,20 +24,20 @@ export class FriendshipsController {
   @Inject(FriendshipsService)
   private readonly friendshipService: FriendshipsService;
 
-  @UseGuards(JwtAuthGuard)
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getAllFriendship() {
     return await this.friendshipService.getAllFriendship();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('friends')
+  @UseGuards(JwtAuthGuard)
   async getYourFriends(@User() user: any) {
     return await this.friendshipService.getYourFriends(+user.userId);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('requests')
+  @UseGuards(JwtAuthGuard)
   async getYouRequests(@User() user: any) {
     return await this.friendshipService.getYouRequests(+user.userId);
   }

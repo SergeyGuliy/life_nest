@@ -1,5 +1,6 @@
 import {
   ClassSerializerInterceptor,
+  Inject,
   Injectable,
   UseInterceptors,
 } from '@nestjs/common';
@@ -9,7 +10,8 @@ import { MESSAGE_RECEIVER_TYPES } from '@enums/index.js';
 
 @Injectable()
 export class ChatsService {
-  constructor(private readonly chatsManagerService: ChatsManagerService) {}
+  @Inject(ChatsManagerService)
+  private readonly chatsManagerService: ChatsManagerService;
 
   @UseInterceptors(ClassSerializerInterceptor)
   public async saveMessage(messageData) {

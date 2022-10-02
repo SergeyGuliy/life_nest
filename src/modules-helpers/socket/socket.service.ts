@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { debounce } from 'throttle-debounce';
 
 import { USER_ONLINE_STATUSES } from '@enums/index.js';
@@ -12,13 +12,14 @@ import { LOGOUT_TIMEOUT } from '@constants/index.js';
 
 @Injectable()
 export class SocketService {
-  constructor(
-    private readonly errorHandlerService: ErrorHandlerService,
-    private roomsService: RoomsService,
-    private socketNameSpacerService: SocketNameSpacerService,
-
-    private userManagerService: UsersManagerService,
-  ) {}
+  @Inject(ErrorHandlerService)
+  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(RoomsService)
+  private roomsService: RoomsService;
+  @Inject(SocketNameSpacerService)
+  private socketNameSpacerService: SocketNameSpacerService;
+  @Inject(UsersManagerService)
+  private userManagerService: UsersManagerService;
 
   private async logOutUserFormApp(userId) {
     const newUserSid = this.socketNameSpacerService.findSidByUserId(userId);

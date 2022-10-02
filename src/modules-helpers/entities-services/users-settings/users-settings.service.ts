@@ -6,12 +6,10 @@ import { UserSettings } from './users-settings.entity';
 
 @Injectable()
 export class UsersSettingsManagerService {
-  constructor(
-    @InjectRepository(UserSettings)
-    private userSettingsRepository: Repository<UserSettings>,
-  ) {}
+  @InjectRepository(UserSettings)
+  private readonly userSettingsRepository: Repository<UserSettings>
 
-  async saveUserSettings(userSettings) {
+  public async saveUserSettings(userSettings) {
     return await this.userSettingsRepository.save(userSettings);
   }
 }

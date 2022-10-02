@@ -5,7 +5,8 @@ import { chat_messageToClient } from '@constants/ws/chats';
 
 @WebSocketGateway()
 export class ChatsWsEmitter {
-  @WebSocketServer() server: Server;
+  @WebSocketServer()
+  private readonly server: Server;
 
   public sendMessageToClient(target, messageData): void {
     this.server.to(target).emit(chat_messageToClient, messageData);

@@ -1,32 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import * as phone from 'phone';
 
 import { PasswordEncoderService } from './password-encoder.service';
-import { CreateUserDto } from '@assets/dto/createUser.dto';
 import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
 import { UsersSettingsManagerService } from '@modules-helpers/entities-services/users-settings/users-settings.service';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly errorHandlerService: ErrorHandlerService,
-    private readonly passwordEncoderService: PasswordEncoderService,
-    private readonly userManagerService: UsersManagerService,
-    private readonly userSettingsManagerService: UsersSettingsManagerService,
-  ) {}
+  @Inject(JwtService)
+  private readonly jwtService: JwtService;
+  @Inject(UsersManagerService)
+  private readonly userManagerService: UsersManagerService;
+  @Inject(PasswordEncoderService)
+  private readonly passwordEncoderService: PasswordEncoderService;
+  @Inject(UsersSettingsManagerService)
+  private readonly userSettingsManagerService: UsersSettingsManagerService;
 
-  private async setNewRefreshTokenToUser(userId: number): Promise<any> {
-    await this.userManagerService.update(userId, {
-      refreshToken: uuidv4(),
-    });
-    return this.userManagerService.getUserByIdWithToken(userId);
-  }
+  private async returnUserDataToClient(userId) {
+    const userData = await this.setNewRefreshTokenToUser(userId);
 
-  private returnUserDataToClient(userData) {
     return {
       userData,
       refreshToken: userData.refreshToken,
@@ -37,36 +31,39 @@ export class AuthService {
     };
   }
 
-  public async register(newUserData): Promise<any> {
-    const { userId } = await this.createUser({
-      ...newUserData,
+  public async setNewRefreshTokenToUser(userId: number): Promise<any> {
+    await this.userManagerService.update(userId, {
       refreshToken: uuidv4(),
     });
-    const userData = await this.userManagerService.getUserByIdWithToken(userId);
-    return this.returnUserDataToClient(userData);
+    return this.userManagerService.getUserByIdWithToken(userId);
+  }
+
+  public async register(newUserData): Promise<any> {
+    const [phoneCountryCode, country] = phone(newUserData.phone);
+
+    const formattedUser = {
+      ...newUserData,
+      phoneCountryCode,
+      country,
+      password: await this.passwordEncoderService.generatePasswordHash(
+        newUserData.password,
+      ),
+      refreshToken: uuidv4(),
+      userSettings: await this.userSettingsManagerService.saveUserSettings({}),
+    };
+    const { userId } = await this.userManagerService.save(formattedUser);
+    return this.returnUserDataToClient(userId);
   }
 
   public async login({ email }): Promise<any> {
     const { userId } = await this.userManagerService.getUserByEmailOrPhoneOrId({
       email,
     });
-    const userData = await this.userManagerService.getUserByIdWithToken(userId);
-    return this.returnUserDataToClient(userData);
+    return this.returnUserDataToClient(userId);
   }
 
-  public async refreshToken(userId, oldRefreshToken): Promise<any> {
-    const { refreshToken } = await this.userManagerService.getUserByIdWithToken(
-      userId,
-    );
-
-    const userData = await this.setNewRefreshTokenToUser(userId);
-
-    if (refreshToken === oldRefreshToken) {
-      return this.returnUserDataToClient(userData);
-    } else {
-      await this.setNewRefreshTokenToUser(userId);
-      this.errorHandlerService.error('invalidRefreshToken', 'en');
-    }
+  public async refreshToken(userId): Promise<any> {
+    return this.returnUserDataToClient(userId);
   }
 
   public async changePassword(userId, newPassword): Promise<any> {
@@ -74,20 +71,5 @@ export class AuthService {
       password: newPassword,
     });
     return 'Password successfully changed';
-  }
-
-  public async createUser(user: CreateUserDto): Promise<any> {
-    const formattedPhone = phone(user.phone);
-
-    const formattedUser = {
-      ...user,
-      phoneCountryCode: formattedPhone[0],
-      country: formattedPhone[1],
-      password: await this.passwordEncoderService.generatePasswordHash(
-        user.password,
-      ),
-      userSettings: await this.userSettingsManagerService.saveUserSettings({}),
-    };
-    return await this.userManagerService.save(formattedUser);
   }
 }

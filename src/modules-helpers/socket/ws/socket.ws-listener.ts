@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -18,12 +19,14 @@ import { SocketWsEmitter } from './socket.ws-emitter';
 @WebSocketGateway()
 export class SocketWsListener
   implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(
-    private socketService: SocketService,
-    private socketNameSpacerService: SocketNameSpacerService,
-    private socketWsEmitter: SocketWsEmitter,
-  ) {}
-  @WebSocketServer() server: Server;
+  @WebSocketServer()
+  private readonly server: Server;
+  @Inject(SocketService)
+  private socketService: SocketService;
+  @Inject(SocketNameSpacerService)
+  private socketNameSpacerService: SocketNameSpacerService;
+  @Inject(SocketWsEmitter)
+  private socketWsEmitter: SocketWsEmitter;
 
   public handleConnection(client: Socket): void {
     client.emit(socketSetup_callUserIdToServer, client.id);

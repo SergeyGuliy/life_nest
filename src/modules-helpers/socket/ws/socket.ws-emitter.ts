@@ -5,7 +5,8 @@ import { socketSetup_forceDisconnect } from '@constants/ws/socketSetup.js';
 
 @WebSocketGateway()
 export class SocketWsEmitter {
-  @WebSocketServer() server: Server;
+  @WebSocketServer()
+  private readonly server: Server;
 
   public forceDisconnectSidFromServer(sidsToDisconnect: string[]) {
     if (!sidsToDisconnect.length) return;

@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Inject,
   Param,
   Post,
   Res,
@@ -16,7 +17,9 @@ import { UploaderService } from './uploader.service';
 
 @Controller('uploader')
 export class UploaderController {
-  constructor(private uploaderService: UploaderService) {}
+  @Inject(UploaderService)
+  private readonly uploaderService: UploaderService;
+
   @UseGuards(JwtAuthGuard)
   @Post('uploadVoice')
   @UseInterceptors(

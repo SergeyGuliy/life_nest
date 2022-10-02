@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
 
 import { User } from '@assets/decorators/user.decorator';
 import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
@@ -7,7 +7,8 @@ import { ChatsService } from './chats.service';
 @Controller('chats')
 @UseGuards(JwtAuthGuard)
 export class ChatsController {
-  constructor(private readonly chatsService: ChatsService) {}
+  @Inject(ChatsService)
+  private readonly chatsService: ChatsService;
 
   @Get('global')
   async getAllGlobalMessages() {

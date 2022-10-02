@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { thumbnail } from 'easyimage';
 import * as fs from 'fs';
 import * as util from 'util';
@@ -10,23 +10,26 @@ const rmdirAsync = util.promisify(fs.rmdir);
 
 @Injectable()
 export class UploaderService {
-  constructor(private readonly userManagerService: UsersManagerService) {}
+  @Inject(UsersManagerService)
+  private readonly userManagerService: UsersManagerService;
 
-  async setUserAvatar(userId, { avatarSmall, avatarBig }) {
+  private async setUserAvatar(userId, { avatarSmall, avatarBig }) {
     await this.userManagerService.update(userId, {
       avatarSmall,
       avatarBig,
     });
     return await this.userManagerService.findOne(userId);
   }
-  async clearUserAvatar(userId) {
+
+  private async clearUserAvatar(userId) {
     await this.userManagerService.update(userId, {
       avatarSmall: '',
       avatarBig: '',
     });
     return await this.userManagerService.findOne(userId);
   }
-  async uploadPhoto(files, userId) {
+
+  public async uploadPhoto(files, userId) {
     if (files.avatarImg && files.avatarImg[0]) {
       const sourceId = files.avatarImg[0].filename;
       await rmdirAsync(`./uploads/images/avatars/${userId}`, {

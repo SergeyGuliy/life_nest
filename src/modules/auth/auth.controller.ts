@@ -9,6 +9,7 @@ import { User } from '@assets/decorators/user.decorator';
 import { UserCanBeCreatedGuard } from '@assets/guards/auth/user-can-be-created.guard';
 import { ValidateLoginPasswordGuard } from '@assets/guards/auth/validate-login-password.guard';
 import { ValidateChangePasswordGuard } from '@assets/guards/auth/validate-change-password.guard';
+import { ValidateRevalidationTokenGuard } from '@assets/guards/auth/validate-revalidation-token.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,8 +29,9 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  refreshToken(@Body() { userId, refreshToken }) {
-    return this.authService.refreshToken(userId, refreshToken);
+  @UseGuards(ValidateRevalidationTokenGuard)
+  refreshToken(@Body() { userId }) {
+    return this.authService.refreshToken(userId);
   }
 
   @Post('change-password')

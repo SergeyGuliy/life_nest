@@ -27,34 +27,43 @@ export class RoomsController {
   @Inject(RoomsService)
   private readonly roomsService: RoomsService;
 
-  @Post('create')
-  async createRoom(@Body() roomData: CreateRoomDto, @User() user: any) {
-    return await this.roomsService.createRoom(user.userId, roomData);
-  }
-
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getRooms(@Query() query) {
     return await this.roomsService.getRooms(query);
   }
 
   @Get(':roomId')
+  @UseGuards(JwtAuthGuard)
   async getRoomById(@Param('roomId') roomId: string) {
     return await this.roomsService.getRoomById(roomId);
   }
 
+  @Post('create')
+  @UseGuards(JwtAuthGuard)
+  async createRoom(@Body() roomData: CreateRoomDto, @User() user: any) {
+    return await this.roomsService.createRoom(user.userId, roomData);
+  }
+
   @Patch('leave')
+  @UseGuards(JwtAuthGuard)
   async userLeaveRoom(@User() user: any) {
     return await this.roomsService.userLeaveRoom(user);
   }
 
   @Patch(':roomId/join')
-  @UseGuards(RoomBlockedGuard, PasswordGuard, CountOfUsersValidationGuard)
+  @UseGuards(
+    JwtAuthGuard,
+    RoomBlockedGuard,
+    PasswordGuard,
+    CountOfUsersValidationGuard,
+  )
   async userJoinRoom(@Param('roomId') roomId: number, @User() user: any) {
     return await this.roomsService.userJoinRoom(user.userId, roomId);
   }
 
   @Patch(':roomId/kick-user')
-  @UseGuards(IsRoomAdminGuard)
+  @UseGuards(JwtAuthGuard, IsRoomAdminGuard)
   async kickUserFromRoom(
     @Param('roomId') roomId: number,
     @User() { userId },
@@ -68,7 +77,7 @@ export class RoomsController {
   }
 
   @Patch(':roomId/set-new-admin')
-  @UseGuards(IsRoomAdminGuard)
+  @UseGuards(JwtAuthGuard, IsRoomAdminGuard)
   async setNewRoomAdmin(
     @Param('roomId') roomId: number,
     @User() { userId },
@@ -82,7 +91,7 @@ export class RoomsController {
   }
 
   @Patch(':roomId/toggle-lock-room')
-  @UseGuards(IsRoomAdminGuard)
+  @UseGuards(JwtAuthGuard, IsRoomAdminGuard)
   async toggleLockRoom(
     @Param('roomId') roomId: number,
     @User() { userId },
@@ -92,7 +101,7 @@ export class RoomsController {
   }
 
   @Delete(':roomId/delete-room')
-  @UseGuards(IsRoomAdminGuard)
+  @UseGuards(JwtAuthGuard, IsRoomAdminGuard)
   async deleteRoom(@Param('roomId') roomId: number, @User() { userId }) {
     return await this.roomsService.deleteRoomRequest(+userId, +roomId);
   }
