@@ -6,10 +6,8 @@ import { Friendships } from './friendships.entity';
 
 @Injectable()
 export class FriendshipManagerService {
-  constructor(
-    @InjectRepository(Friendships)
-    private friendshipRepository: Repository<Friendships>,
-  ) {}
+  @InjectRepository(Friendships)
+  private readonly friendshipRepository: Repository<Friendships>;
 
   async save(query) {
     return await this.friendshipRepository.save(query);

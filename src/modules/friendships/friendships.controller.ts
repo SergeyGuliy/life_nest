@@ -14,6 +14,7 @@ import { CanSendFriendshipRequestGuard } from '@assets/guards/friendships/can-se
 import { IsRequestExistsGuard } from '@assets/guards/friendships/is-request-exists.guard';
 
 import { FriendshipsService } from './friendships.service';
+import { DeclineIfStatusGuard } from '@assets/guards/friendships/decline-if-status.guard';
 
 @Controller('friendships')
 export class FriendshipsController {
@@ -44,13 +45,21 @@ export class FriendshipsController {
   }
 
   @Put(':userId/accept')
-  @UseGuards(JwtAuthGuard, CanSendFriendshipRequestGuard)
+  @UseGuards(
+    JwtAuthGuard,
+    CanSendFriendshipRequestGuard,
+    DeclineIfStatusGuard('accept'),
+  )
   async acceptRequest(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.acceptRequest(+user.userId, +userId);
   }
 
   @Put(':userId/ignore')
-  @UseGuards(JwtAuthGuard, CanSendFriendshipRequestGuard)
+  @UseGuards(
+    JwtAuthGuard,
+    CanSendFriendshipRequestGuard,
+    DeclineIfStatusGuard('ignore'),
+  )
   async ignoreRequest(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.ignoreRequest(+user.userId, +userId);
   }

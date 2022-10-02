@@ -84,55 +84,35 @@ export class FriendshipsService {
   }
 
   public async acceptRequest(yourId: number, senderId: number) {
-    const friendships = await this.friendshipManagerService.getYourFriendshipConnection(
+    const {
+      friendshipsId,
+    } = await this.friendshipManagerService.getYourFriendshipConnection(
       yourId,
       senderId,
     );
-    if (!friendships) {
-      this.errorHandlerService.error('youDontHaveRequest', 'en', [senderId]);
-    }
-    if (friendships.friendshipsStatus === FRIENDSHIP_STATUSES.APPROVED) {
-      this.errorHandlerService.error('userAlreadyInFriends', 'en');
-    }
-    if (yourId === +friendships.friendshipReceiver) {
-      await this.friendshipManagerService.update(friendships.friendshipsId, {
-        friendshipsStatus: FRIENDSHIP_STATUSES.APPROVED,
-      });
-      return this.friendshipManagerService.findOne({
-        where: {
-          friendshipsId: friendships.friendshipsId,
-        },
-        relations: ['friendshipReceiver', 'friendshipSender'],
-      });
-    } else {
-      this.errorHandlerService.error('acceptFriendshipCanOnlyReceiver', 'en');
-    }
+    await this.friendshipManagerService.update(friendshipsId, {
+      friendshipsStatus: FRIENDSHIP_STATUSES.APPROVED,
+    });
+    return this.friendshipManagerService.findOne({
+      where: { friendshipsId },
+      relations: ['friendshipReceiver', 'friendshipSender'],
+    });
   }
 
   public async ignoreRequest(yourId: number, receiverId: number) {
-    const friendships = await this.friendshipManagerService.getYourFriendshipConnection(
+    const {
+      friendshipsId,
+    } = await this.friendshipManagerService.getYourFriendshipConnection(
       yourId,
       receiverId,
     );
-    if (!friendships) {
-      this.errorHandlerService.error('youDontHaveRequest', 'en', [receiverId]);
-    }
-    if (friendships.friendshipsStatus === FRIENDSHIP_STATUSES.APPROVED) {
-      this.errorHandlerService.error('userAlreadyInFriends', 'en');
-    }
-    if (yourId === +friendships.friendshipReceiver) {
-      await this.friendshipManagerService.update(friendships.friendshipsId, {
-        friendshipsStatus: FRIENDSHIP_STATUSES.IGNORED,
-      });
-      return this.friendshipManagerService.findOne({
-        where: {
-          friendshipsId: friendships.friendshipsId,
-        },
-        relations: ['friendshipReceiver', 'friendshipSender'],
-      });
-    } else {
-      this.errorHandlerService.error('ignoreCanOnlyReceiver', 'en');
-    }
+    await this.friendshipManagerService.update(friendshipsId, {
+      friendshipsStatus: FRIENDSHIP_STATUSES.IGNORED,
+    });
+    return this.friendshipManagerService.findOne({
+      where: { friendshipsId },
+      relations: ['friendshipReceiver', 'friendshipSender'],
+    });
   }
 
   public async deleteFriendship(yourId: number, targetId: number) {
