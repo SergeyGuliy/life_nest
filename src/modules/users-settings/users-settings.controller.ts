@@ -7,23 +7,23 @@ import { User } from '@assets/decorators/user.decorator';
 @Controller('users-settings')
 export class UsersSettingsController {
   @Inject(UsersSettingsService)
-  private readonly authService: UsersSettingsService;
+  private readonly usersSettingsService: UsersSettingsService;
 
-  @UseGuards(JwtAuthGuard)
   @Post('change-locale')
+  @UseGuards(JwtAuthGuard)
   changeLocale(@Body() { locale }, @User() userData) {
-    return this.authService.changeLanguage(userData, locale);
+    return this.usersSettingsService.changeLanguage(userData, locale);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('change-theme')
+  @UseGuards(JwtAuthGuard)
   changeTheme(@Body() { isDarkTheme }, @User() userData) {
-    return this.authService.changeTheme(userData, isDarkTheme);
+    return this.usersSettingsService.changeTheme(userData, isDarkTheme);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('update-settings')
+  @UseGuards(JwtAuthGuard)
   updateUserSettings(@Body() userSettings, @User() userData) {
-    return this.authService.updateUserSettings(userData, userSettings);
+    return this.usersSettingsService.updateUserSettings(userData, userSettings);
   }
 }
