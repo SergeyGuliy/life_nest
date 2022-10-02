@@ -1,18 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { FRIENDSHIP_STATUSES } from '@enums/index.js';
 
 import { FriendshipManagerService } from '@modules-helpers/entities-services/friendships/friendships.service';
-import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class FriendshipsService {
-  constructor(
-    private readonly errorHandlerService: ErrorHandlerService,
-    private readonly friendshipManagerService: FriendshipManagerService,
-    private readonly userManagerService: UsersManagerService,
-  ) {}
+  @Inject(FriendshipManagerService)
+  private readonly friendshipManagerService: FriendshipManagerService;
+
+  private async setStatusForFriendship(yourId, receiverId, status) {
+    const {
+      friendshipsId,
+    } = await this.friendshipManagerService.getYourFriendshipConnection(
+      yourId,
+      receiverId,
+    );
+    await this.friendshipManagerService.update(friendshipsId, {
+      friendshipsStatus: FRIENDSHIP_STATUSES.IGNORED,
+    });
+    return await this.friendshipManagerService.findOne({
+      where: { friendshipsId },
+      relations: ['friendshipReceiver', 'friendshipSender'],
+    });
+  }
 
   public async getAllFriendship() {
     return await this.friendshipManagerService.find({
@@ -83,53 +94,33 @@ export class FriendshipsService {
     );
   }
 
-  public async acceptRequest(yourId: number, senderId: number) {
-    const {
-      friendshipsId,
-    } = await this.friendshipManagerService.getYourFriendshipConnection(
+  public acceptRequest(yourId: number, senderId: number) {
+    return this.setStatusForFriendship(
       yourId,
       senderId,
+      FRIENDSHIP_STATUSES.APPROVED,
     );
-    await this.friendshipManagerService.update(friendshipsId, {
-      friendshipsStatus: FRIENDSHIP_STATUSES.APPROVED,
-    });
-    return this.friendshipManagerService.findOne({
-      where: { friendshipsId },
-      relations: ['friendshipReceiver', 'friendshipSender'],
-    });
   }
 
-  public async ignoreRequest(yourId: number, receiverId: number) {
-    const {
-      friendshipsId,
-    } = await this.friendshipManagerService.getYourFriendshipConnection(
+  public ignoreRequest(yourId: number, receiverId: number) {
+    return this.setStatusForFriendship(
       yourId,
       receiverId,
+      FRIENDSHIP_STATUSES.IGNORED,
     );
-    await this.friendshipManagerService.update(friendshipsId, {
-      friendshipsStatus: FRIENDSHIP_STATUSES.IGNORED,
-    });
-    return this.friendshipManagerService.findOne({
-      where: { friendshipsId },
-      relations: ['friendshipReceiver', 'friendshipSender'],
-    });
   }
 
   public async deleteFriendship(yourId: number, targetId: number) {
-    const friendships = await this.friendshipManagerService.getBothFriendshipConnection(
+    const {
+      friendshipsId,
+    } = await this.friendshipManagerService.getBothFriendshipConnection(
       yourId,
       targetId,
     );
-    if (
-      !friendships ||
-      friendships.friendshipsStatus !== FRIENDSHIP_STATUSES.APPROVED
-    ) {
-      this.errorHandlerService.error('cantDeleteIfUserNotInFriendList', 'en');
-    }
-    await this.friendshipManagerService.delete(friendships.friendshipsId);
+    await this.friendshipManagerService.delete(friendshipsId);
     return {
       userId: targetId,
-      friendshipsId: friendships.friendshipsId,
+      friendshipsId,
     };
   }
 }

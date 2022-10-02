@@ -6,19 +6,23 @@ import {
   UseGuards,
   Post,
   Put,
+  Inject,
 } from '@nestjs/common';
 
 import { User } from '@assets/decorators/user.decorator';
+
 import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { CanSendFriendshipRequestGuard } from '@assets/guards/friendships/can-send-friendship-request.guard';
 import { IsRequestExistsGuard } from '@assets/guards/friendships/is-request-exists.guard';
+import { DeleteFriendshipGuard } from '@assets/guards/friendships/delete-friendship.guard';
+import { DeclineIfStatusGuard } from '@assets/guards/friendships/decline-if-status.guard';
 
 import { FriendshipsService } from './friendships.service';
-import { DeclineIfStatusGuard } from '@assets/guards/friendships/decline-if-status.guard';
 
 @Controller('friendships')
 export class FriendshipsController {
-  constructor(private readonly friendshipService: FriendshipsService) {}
+  @Inject(FriendshipsService)
+  private readonly friendshipService: FriendshipsService;
 
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -65,7 +69,7 @@ export class FriendshipsController {
   }
 
   @Delete(':userId/delete')
-  @UseGuards(JwtAuthGuard, CanSendFriendshipRequestGuard)
+  @UseGuards(JwtAuthGuard, CanSendFriendshipRequestGuard, DeleteFriendshipGuard)
   async deleteFriendship(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.deleteFriendship(+user.userId, +userId);
   }
