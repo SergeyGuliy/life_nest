@@ -13,14 +13,14 @@ export class GamesService {
   ) {}
 
   getGameById(gameData) {
-    console.log('getGameById');
-    console.log(gameData);
+    // console.log('getGameById');
+    // console.log(gameData);
   }
 
   async startGame(roomId, gameData) {
-    console.log('createGame');
-    console.log(roomId);
-    console.log(gameData);
+    // console.log('createGame');
+    // console.log(roomId);
+    // console.log(gameData);
 
     const createdGame = new this.gameModel({
       name: 'name',

@@ -5,12 +5,24 @@ import { errors } from '@assets/errors';
 export class ErrorHandlerService {
   private readonly errors = errors;
 
+  private parseErrorString(errorTemplate, keys) {
+    let errorString = errorTemplate;
+    if (keys.length) {
+      keys.forEach((item, id) => {
+        errorString = errorTemplate.replace(`{${id}`, `'${item}'`);
+      });
+    }
+    return errorString;
+  }
+
   public error(errorType, locale = 'en', keys = [], context = {}) {
     const error = this.errors[errorType];
+
     if (error) {
       const { status, locales } = error;
       if (status && locales[locale]) {
-        throw new HttpException(locales[locale], status);
+        const errorString = this.parseErrorString(locales[locale], keys);
+        throw new HttpException(errorString, status);
       } else {
         throw new HttpException('Unknown error', HttpStatus.BAD_REQUEST);
       }

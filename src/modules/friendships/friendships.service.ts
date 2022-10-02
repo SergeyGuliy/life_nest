@@ -14,15 +14,43 @@ export class FriendshipsService {
     private readonly userManagerService: UsersManagerService,
   ) {}
 
-  async getAllFriendship() {
+  private async getBothFriendshipConnection(
+    senderId: number,
+    receiverId: number,
+  ) {
+    return await this.friendshipManagerService.findOne({
+      where: [
+        {
+          friendshipReceiver: { userId: receiverId },
+          friendshipSender: { userId: senderId },
+        },
+        {
+          friendshipReceiver: { userId: senderId },
+          friendshipSender: { userId: receiverId },
+        },
+      ],
+      loadRelationIds: true,
+    });
+  }
+  private async getYourFriendshipConnection(yourId, senderId) {
+    return await this.friendshipManagerService.findOne({
+      where: [
+        {
+          friendshipReceiver: { userId: yourId },
+          friendshipSender: { userId: senderId },
+        },
+      ],
+      loadRelationIds: true,
+    });
+  }
+
+  public async getAllFriendship() {
     return await this.friendshipManagerService.find({
       relations: ['friendshipReceiver', 'friendshipSender'],
     });
   }
 
-  async sendRequest(yourId: number, receiverId: number) {
-    await this.interceptor(yourId, receiverId);
-
+  public async sendRequest(yourId: number, receiverId: number) {
     const friendships = await this.getBothFriendshipConnection(
       yourId,
       receiverId,
@@ -34,17 +62,13 @@ export class FriendshipsService {
       });
       return await this.getBothFriendshipConnection(yourId, receiverId);
     }
-    this.errorHandlerService.error(
-      'friendshipsInStatus',
-      'en',
-      [friendships.friendshipsStatus],
-      friendships,
-    );
+    return '';
+    // this.errorHandlerService.error('friendshipsInStatus', 'en', [
+    //   friendships.friendshipsStatus,
+    // ]);
   }
 
-  async acceptRequest(yourId: number, senderId: number) {
-    await this.interceptor(yourId, senderId);
-
+  public async acceptRequest(yourId: number, senderId: number) {
     const friendships = await this.getYourFriendshipConnection(
       yourId,
       senderId,
@@ -70,9 +94,7 @@ export class FriendshipsService {
     }
   }
 
-  async ignoreRequest(yourId: number, receiverId: number) {
-    await this.interceptor(yourId, receiverId);
-
+  public async ignoreRequest(yourId: number, receiverId: number) {
     const friendships = await this.getYourFriendshipConnection(
       yourId,
       receiverId,
@@ -98,8 +120,7 @@ export class FriendshipsService {
     }
   }
 
-  async deleteFriendship(yourId: number, targetId: number) {
-    await this.interceptor(yourId, targetId);
+  public async deleteFriendship(yourId: number, targetId: number) {
     const friendships = await this.getBothFriendshipConnection(
       yourId,
       targetId,
@@ -117,23 +138,7 @@ export class FriendshipsService {
     };
   }
 
-  async getBothFriendshipConnection(senderId: number, receiverId: number) {
-    return await this.friendshipManagerService.findOne({
-      where: [
-        {
-          friendshipReceiver: { userId: receiverId },
-          friendshipSender: { userId: senderId },
-        },
-        {
-          friendshipReceiver: { userId: senderId },
-          friendshipSender: { userId: receiverId },
-        },
-      ],
-      loadRelationIds: true,
-    });
-  }
-
-  async getYourFriends(yourId: number) {
+  public async getYourFriends(yourId: number) {
     return await this.friendshipManagerService.find({
       where: [
         {
@@ -153,7 +158,7 @@ export class FriendshipsService {
     });
   }
 
-  async getYouRequests(yourId: number) {
+  public async getYouRequests(yourId: number) {
     return await this.friendshipManagerService.find({
       where: [
         {
@@ -183,29 +188,5 @@ export class FriendshipsService {
       ],
       relations: ['friendshipReceiver', 'friendshipSender'],
     });
-  }
-
-  async getYourFriendshipConnection(yourId, senderId) {
-    return await this.friendshipManagerService.findOne({
-      where: [
-        {
-          friendshipReceiver: { userId: yourId },
-          friendshipSender: { userId: senderId },
-        },
-      ],
-      loadRelationIds: true,
-    });
-  }
-
-  async interceptor(senderId: number, receiverId: number) {
-    if (senderId === receiverId) {
-      this.errorHandlerService.error('cantSendRequestToYourself', 'en');
-    }
-    const user = await this.userManagerService.findOne(receiverId);
-    if (!user) {
-      this.errorHandlerService.error('friendshipReceiverNotFound', 'en', [
-        receiverId,
-      ]);
-    }
   }
 }

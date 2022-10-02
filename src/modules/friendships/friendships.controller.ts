@@ -11,6 +11,7 @@ import {
 import { User } from '@assets/decorators/user.decorator';
 import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { FriendshipsService } from './friendships.service';
+import { CanSendFriendshipRequestGuard } from '@assets/guards/friendships/can-send-friendship-request.guard';
 
 @Controller('friendships')
 export class FriendshipsController {
@@ -34,25 +35,25 @@ export class FriendshipsController {
     return await this.friendshipService.getYouRequests(+user.userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CanSendFriendshipRequestGuard)
   @Post(':userId/add')
   async sendRequest(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.sendRequest(+user.userId, +userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CanSendFriendshipRequestGuard)
   @Put(':userId/accept')
   async acceptRequest(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.acceptRequest(+user.userId, +userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CanSendFriendshipRequestGuard)
   @Put(':userId/ignore')
   async ignoreRequest(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.ignoreRequest(+user.userId, +userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CanSendFriendshipRequestGuard)
   @Delete(':userId/delete')
   async deleteFriendship(@Param('userId') userId: string, @User() user: any) {
     return await this.friendshipService.deleteFriendship(+user.userId, +userId);

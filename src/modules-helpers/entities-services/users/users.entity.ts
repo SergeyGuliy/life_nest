@@ -16,7 +16,7 @@ import { BaseEntity } from '@assets/base.entity';
 import { Friendships } from '../friendships/friendships.entity';
 import { UserSettings } from '../users-settings/users-settings.entity';
 
-@Entity('users11')
+@Entity('users')
 export class Users extends BaseEntity {
   @PrimaryGeneratedColumn()
   public userId: number;
