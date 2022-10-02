@@ -30,4 +30,35 @@ export class FriendshipManagerService {
   async delete(friendshipsId) {
     return this.friendshipRepository.delete(friendshipsId);
   }
+
+  public async getBothFriendshipConnection(
+    senderId: number,
+    receiverId: number,
+  ) {
+    return await this.friendshipRepository.findOne({
+      where: [
+        {
+          friendshipReceiver: { userId: receiverId },
+          friendshipSender: { userId: senderId },
+        },
+        {
+          friendshipReceiver: { userId: senderId },
+          friendshipSender: { userId: receiverId },
+        },
+      ],
+      loadRelationIds: true,
+    });
+  }
+
+  public async getYourFriendshipConnection(yourId, senderId) {
+    return await this.friendshipRepository.findOne({
+      where: [
+        {
+          friendshipReceiver: { userId: yourId },
+          friendshipSender: { userId: senderId },
+        },
+      ],
+      loadRelationIds: true,
+    });
+  }
 }

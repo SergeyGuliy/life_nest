@@ -16,11 +16,6 @@ export class CanSendFriendshipRequestGuard implements CanActivate {
     const senderId = user.userId;
     const receiverId = params.userId;
 
-    console.log(typeof senderId)
-    console.log(senderId)
-    console.log(typeof receiverId)
-    console.log(receiverId)
-
     if (+senderId === +receiverId) {
       this.errorHandlerService.error('cantSendRequestToYourself', 'en');
     }
