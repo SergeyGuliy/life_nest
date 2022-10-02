@@ -13,7 +13,7 @@ export class IsUserExistGuard implements CanActivate {
   @Inject(UsersManagerService)
   private readonly usersManagerService: UsersManagerService;
   @Inject(ErrorHandlerService)
-  private errorHandlerService: ErrorHandlerService;
+  private readonly errorHandlerService: ErrorHandlerService;
 
   async canActivate(context: ExecutionContext) {
     const { userId } = context.switchToHttp().getRequest().params;

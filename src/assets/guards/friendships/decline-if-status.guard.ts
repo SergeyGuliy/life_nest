@@ -14,9 +14,9 @@ import { FRIENDSHIP_STATUSES } from '../../../../../life_shared/enums';
 export const DeclineIfStatusGuard = (type): Type<CanActivate> => {
   class DeclineIfStatusGuardMixin implements CanActivate {
     @Inject(FriendshipManagerService)
-    friendshipManagerService: FriendshipManagerService;
+    private readonly friendshipManagerService: FriendshipManagerService;
     @Inject(ErrorHandlerService)
-    errorHandlerService: ErrorHandlerService;
+    private readonly errorHandlerService: ErrorHandlerService;
 
     async canActivate(context: ExecutionContext): Promise<any> {
       const { user, params } = context.switchToHttp().getRequest();

@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  Inject,
+} from '@nestjs/common';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 import { RoomsManagerService } from '@modules-helpers/entities-services/rooms/rooms.service';
 
@@ -6,11 +11,12 @@ import { UsersManagerService } from '@modules-helpers/entities-services/users/us
 
 @Injectable()
 export class CountOfUsersValidationGuard implements CanActivate {
-  constructor(
-    private readonly roomsManagerService: RoomsManagerService,
-    private readonly userManagerService: UsersManagerService,
-    private readonly errorHandlerService: ErrorHandlerService,
-  ) {}
+  @Inject(RoomsManagerService)
+  private readonly roomsManagerService: RoomsManagerService;
+  @Inject(UsersManagerService)
+  private readonly userManagerService: UsersManagerService;
+  @Inject(ErrorHandlerService)
+  private readonly errorHandlerService: ErrorHandlerService;
 
   async canActivate(context: ExecutionContext) {
     const { params } = context.switchToHttp().getRequest();

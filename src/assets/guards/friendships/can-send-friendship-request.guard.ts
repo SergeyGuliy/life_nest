@@ -1,14 +1,19 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  Inject,
+} from '@nestjs/common';
 
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
 
 @Injectable()
 export class CanSendFriendshipRequestGuard implements CanActivate {
-  constructor(
-    private readonly userManagerService: UsersManagerService,
-    private readonly errorHandlerService: ErrorHandlerService,
-  ) {}
+  @Inject(UsersManagerService)
+  private readonly userManagerService: UsersManagerService;
+  @Inject(ErrorHandlerService)
+  private readonly errorHandlerService: ErrorHandlerService;
 
   async canActivate(context: ExecutionContext): Promise<any> {
     const { user, params } = context.switchToHttp().getRequest();

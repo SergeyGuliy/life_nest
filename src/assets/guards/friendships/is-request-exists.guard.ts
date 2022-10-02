@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  Inject,
+} from '@nestjs/common';
 
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
@@ -6,10 +11,10 @@ import { FriendshipManagerService } from '@modules-helpers/entities-services/fri
 
 @Injectable()
 export class IsRequestExistsGuard implements CanActivate {
-  constructor(
-    private readonly friendshipManagerService: FriendshipManagerService,
-    private readonly errorHandlerService: ErrorHandlerService,
-  ) {}
+  @Inject(FriendshipManagerService)
+  private readonly friendshipManagerService: FriendshipManagerService;
+  @Inject(ErrorHandlerService)
+  private readonly errorHandlerService: ErrorHandlerService;
 
   async canActivate(context: ExecutionContext): Promise<any> {
     const { user, params } = context.switchToHttp().getRequest();

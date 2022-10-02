@@ -1,13 +1,13 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {Injectable, CanActivate, ExecutionContext, Inject} from '@nestjs/common';
 import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class IsRoomAdminGuard implements CanActivate {
-  constructor(
-    private readonly userManagerService: UsersManagerService,
-    private readonly errorHandlerService: ErrorHandlerService,
-  ) {}
+  @Inject(UsersManagerService)
+  private readonly userManagerService: UsersManagerService
+  @Inject(ErrorHandlerService)
+  private readonly errorHandlerService: ErrorHandlerService
 
   async canActivate(context: ExecutionContext) {
     const { params, user } = context.switchToHttp().getRequest();
