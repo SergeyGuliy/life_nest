@@ -1,12 +1,13 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Inject } from '@nestjs/common';
 
 import { UsersSettingsService } from './users-settings.service';
 import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { User } from '@assets/decorators/user.decorator';
 
-@Controller('auth')
+@Controller('users-settings')
 export class UsersSettingsController {
-  constructor(private readonly authService: UsersSettingsService) {}
+  @Inject(UsersSettingsService)
+  private readonly authService: UsersSettingsService;
 
   @UseGuards(JwtAuthGuard)
   @Post('change-locale')
