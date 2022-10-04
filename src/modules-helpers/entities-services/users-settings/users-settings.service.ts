@@ -7,7 +7,7 @@ import { UserSettings } from './users-settings.entity';
 @Injectable()
 export class UsersSettingsManagerService {
   @InjectRepository(UserSettings)
-  private readonly userSettingsRepository: Repository<UserSettings>
+  private readonly userSettingsRepository: Repository<UserSettings>;
 
   public async saveUserSettings(userSettings) {
     return await this.userSettingsRepository.save(userSettings);
