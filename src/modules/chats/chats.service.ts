@@ -5,24 +5,21 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 
-import { ChatsManagerService } from '@modules-helpers/entities-services/chats/chats.service';
+import { ChatsManager } from '@modules-helpers/entities-services/chats/chats.service';
 import { MESSAGE_RECEIVER_TYPES } from '@enums/index.js';
 
 @Injectable()
 export class ChatsService {
-  @Inject(ChatsManagerService)
-  private readonly chatsManagerService: ChatsManagerService;
+  @Inject(ChatsManager)
+  private readonly chatsService: ChatsManager;
 
   @UseInterceptors(ClassSerializerInterceptor)
   public async saveMessage(messageData) {
-    const savedMessage = await this.chatsManagerService.save(messageData);
-    return await this.chatsManagerService.findOne(savedMessage.messageId, {
-      relations: ['messageSender'],
-    });
+    return await this.chatsService.saveAndReturn(messageData);
   }
 
   public async getAllGlobalMessages() {
-    return await this.chatsManagerService.find({
+    return await this.chatsService.db.find({
       where: {
         messageReceiverType: MESSAGE_RECEIVER_TYPES.GLOBAL,
       },
@@ -31,7 +28,7 @@ export class ChatsService {
   }
 
   public async getAllPrivateMessages(userId) {
-    return await this.chatsManagerService.find({
+    return await this.chatsService.db.find({
       where: [
         {
           messageReceiverType: MESSAGE_RECEIVER_TYPES.PRIVATE,
@@ -47,7 +44,7 @@ export class ChatsService {
   }
 
   public async getAllRoomMessages(roomJoinedId) {
-    return await this.chatsManagerService.find({
+    return await this.chatsService.db.find({
       where: {
         messageReceiverType: MESSAGE_RECEIVER_TYPES.ROOM,
         messageReceiverRoomId: roomJoinedId,

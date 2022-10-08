@@ -5,19 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Messages } from './messages.entity';
 
 @Injectable()
-export class ChatsManagerService {
+export class ChatsManager {
   @InjectRepository(Messages)
-  private readonly messagesRepository: Repository<Messages>;
+  public readonly db: Repository<Messages>;
 
-  public async save(messageData) {
-    return await this.messagesRepository.save(messageData);
-  }
-
-  public async findOne(messageId, query) {
-    return await this.messagesRepository.findOne(messageId, query);
-  }
-
-  public async find(query) {
-    return await this.messagesRepository.find(query);
+  public async saveAndReturn(messageData) {
+    const savedMessage = await this.db.save(messageData);
+    return await this.db.findOne(savedMessage.messageId, {
+      relations: ['messageSender'],
+    });
   }
 }
