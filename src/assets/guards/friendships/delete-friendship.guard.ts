@@ -7,13 +7,13 @@ import {
 
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
-import { FriendshipManagerService } from '@modules-helpers/entities-services/friendships/friendships.service';
+import { FriendshipManager } from '@modules-helpers/entities-services/friendships/friendships.service';
 import { FRIENDSHIP_STATUSES } from '../../../../../life_shared/enums';
 
 @Injectable()
 export class DeleteFriendshipGuard implements CanActivate {
-  @Inject(FriendshipManagerService)
-  private readonly friendshipManagerService: FriendshipManagerService;
+  @Inject(FriendshipManager)
+  private readonly friendshipManager: FriendshipManager;
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
 
@@ -23,7 +23,7 @@ export class DeleteFriendshipGuard implements CanActivate {
     const senderId = user.userId;
     const receiverId = params.userId;
 
-    const friendships = await this.friendshipManagerService.getBothFriendshipConnection(
+    const friendships = await this.friendshipManager.getFriendship(
       senderId,
       receiverId,
     );

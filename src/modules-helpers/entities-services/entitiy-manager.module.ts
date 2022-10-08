@@ -10,7 +10,7 @@ import { Rooms } from './rooms/rooms.entity';
 import { UsersManagerService } from './users/users.service';
 import { UsersSettingsManagerService } from './users-settings/users-settings.service';
 import { ChatsManager } from './chats/chats.service';
-import { FriendshipManagerService } from './friendships/friendships.service';
+import { FriendshipManager } from './friendships/friendships.service';
 import { RoomsManagerService } from './rooms/rooms.service';
 import { GlobalServicesModule } from '../global-services/global-services.module';
 
@@ -30,14 +30,14 @@ import { GlobalServicesModule } from '../global-services/global-services.module'
     RoomsManagerService,
     UsersSettingsManagerService,
     ChatsManager,
-    FriendshipManagerService,
+    FriendshipManager,
   ],
   exports: [
     UsersManagerService,
     RoomsManagerService,
     UsersSettingsManagerService,
     ChatsManager,
-    FriendshipManagerService,
+    FriendshipManager,
     TypeOrmModule.forFeature([
       Users,
       UserSettings,

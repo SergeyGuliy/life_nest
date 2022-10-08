@@ -5,35 +5,20 @@ import { Repository } from 'typeorm';
 import { Friendships } from './friendships.entity';
 
 @Injectable()
-export class FriendshipManagerService {
+export class FriendshipManager {
   @InjectRepository(Friendships)
-  private readonly friendshipRepository: Repository<Friendships>;
+  public readonly db: Repository<Friendships>;
 
-  public async save(query) {
-    return await this.friendshipRepository.save(query);
+  public async saveAndReturn({ yourId, receiverId }) {
+    await this.db.save({
+      friendshipSender: { userId: yourId },
+      friendshipReceiver: { userId: receiverId },
+    });
+    return await this.getFriendship(yourId, receiverId);
   }
 
-  public async update(friendshipId, newData) {
-    return await this.friendshipRepository.update(friendshipId, newData);
-  }
-
-  public async findOne(query) {
-    return this.friendshipRepository.findOne(query);
-  }
-
-  public async find(query) {
-    return await this.friendshipRepository.find(query);
-  }
-
-  public async delete(friendshipsId) {
-    return this.friendshipRepository.delete(friendshipsId);
-  }
-
-  public async getBothFriendshipConnection(
-    senderId: number,
-    receiverId: number,
-  ) {
-    return await this.friendshipRepository.findOne({
+  public async getFriendship(senderId: number, receiverId: number) {
+    return await this.db.findOne({
       where: [
         {
           friendshipReceiver: { userId: receiverId },
@@ -48,8 +33,13 @@ export class FriendshipManagerService {
     });
   }
 
-  public async getYourFriendshipConnection(yourId, senderId) {
-    return await this.friendshipRepository.findOne({
+  public async getFriendshipID(senderId: number, receiverId: number) {
+    const { friendshipsId } = await this.getFriendship(senderId, receiverId);
+    return friendshipsId;
+  }
+
+  public async getYourFriendships(yourId, senderId) {
+    return await this.db.findOne({
       where: [
         {
           friendshipReceiver: { userId: yourId },

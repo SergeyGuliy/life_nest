@@ -8,13 +8,13 @@ import {
 
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
-import { FriendshipManagerService } from '@modules-helpers/entities-services/friendships/friendships.service';
+import { FriendshipManager } from '@modules-helpers/entities-services/friendships/friendships.service';
 import { FRIENDSHIP_STATUSES } from '../../../../../life_shared/enums';
 
 export const DeclineIfStatusGuard = (type): Type<CanActivate> => {
   class DeclineIfStatusGuardMixin implements CanActivate {
-    @Inject(FriendshipManagerService)
-    private readonly friendshipManagerService: FriendshipManagerService;
+    @Inject(FriendshipManager)
+    private readonly friendshipManager: FriendshipManager;
     @Inject(ErrorHandlerService)
     private readonly errorHandlerService: ErrorHandlerService;
 
@@ -24,7 +24,7 @@ export const DeclineIfStatusGuard = (type): Type<CanActivate> => {
       const yourId = user.userId;
       const receiverId = params.userId;
 
-      const friendships = await this.friendshipManagerService.getYourFriendshipConnection(
+      const friendships = await this.friendshipManager.getYourFriendships(
         yourId,
         receiverId,
       );

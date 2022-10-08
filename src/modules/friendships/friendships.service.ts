@@ -2,37 +2,35 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { FRIENDSHIP_STATUSES } from '@enums/index.js';
 
-import { FriendshipManagerService } from '@modules-helpers/entities-services/friendships/friendships.service';
+import { FriendshipManager } from '@modules-helpers/entities-services/friendships/friendships.service';
 
 @Injectable()
 export class FriendshipsService {
-  @Inject(FriendshipManagerService)
-  private readonly friendshipManagerService: FriendshipManagerService;
+  @Inject(FriendshipManager)
+  private readonly friendshipManager: FriendshipManager;
 
   private async setStatusForFriendship(yourId, receiverId, status) {
-    const {
-      friendshipsId,
-    } = await this.friendshipManagerService.getYourFriendshipConnection(
+    const friendshipsId = await this.friendshipManager.getFriendshipID(
       yourId,
       receiverId,
     );
-    await this.friendshipManagerService.update(friendshipsId, {
-      friendshipsStatus: FRIENDSHIP_STATUSES.IGNORED,
+    await this.friendshipManager.db.update(friendshipsId, {
+      friendshipsStatus: status,
     });
-    return await this.friendshipManagerService.findOne({
+    return await this.friendshipManager.db.findOne({
       where: { friendshipsId },
       relations: ['friendshipReceiver', 'friendshipSender'],
     });
   }
 
   public async getAllFriendship() {
-    return await this.friendshipManagerService.find({
+    return await this.friendshipManager.db.find({
       relations: ['friendshipReceiver', 'friendshipSender'],
     });
   }
 
   public async getYourFriends(yourId: number) {
-    return await this.friendshipManagerService.find({
+    return await this.friendshipManager.db.find({
       where: [
         {
           friendshipReceiver: {
@@ -52,7 +50,7 @@ export class FriendshipsService {
   }
 
   public async getYouRequests(yourId: number) {
-    return await this.friendshipManagerService.find({
+    return await this.friendshipManager.db.find({
       where: [
         {
           friendshipReceiver: {
@@ -84,14 +82,10 @@ export class FriendshipsService {
   }
 
   public async sendRequest(yourId: number, receiverId: number) {
-    await this.friendshipManagerService.save({
-      friendshipReceiver: { userId: receiverId },
-      friendshipSender: { userId: yourId },
-    });
-    return await this.friendshipManagerService.getBothFriendshipConnection(
+    return await this.friendshipManager.saveAndReturn({
       yourId,
       receiverId,
-    );
+    });
   }
 
   public acceptRequest(yourId: number, senderId: number) {
@@ -111,13 +105,11 @@ export class FriendshipsService {
   }
 
   public async deleteFriendship(yourId: number, targetId: number) {
-    const {
-      friendshipsId,
-    } = await this.friendshipManagerService.getBothFriendshipConnection(
+    const friendshipsId = await this.friendshipManager.getFriendshipID(
       yourId,
       targetId,
     );
-    await this.friendshipManagerService.delete(friendshipsId);
+    await this.friendshipManager.db.delete(friendshipsId);
     return {
       userId: targetId,
       friendshipsId,
