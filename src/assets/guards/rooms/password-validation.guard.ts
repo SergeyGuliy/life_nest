@@ -5,14 +5,14 @@ import {
   Inject,
 } from '@nestjs/common';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
-import { RoomsManagerService } from '@modules-helpers/entities-services/rooms/rooms.service';
+import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
 
 import { ROOM_TYPES } from '@enums/index.js';
 
 @Injectable()
 export class PasswordGuard implements CanActivate {
-  @Inject(RoomsManagerService)
-  private readonly roomsManagerService: RoomsManagerService;
+  @Inject(RoomsManager)
+  private readonly roomsManager: RoomsManager;
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
 
@@ -21,7 +21,7 @@ export class PasswordGuard implements CanActivate {
     const { roomId } = params;
     const { roomPassword } = body;
 
-    const roomData = await this.roomsManagerService.findOne(roomId);
+    const roomData = await this.roomsManager.db.findOne(roomId);
 
     if (
       roomData.typeOfRoom === ROOM_TYPES.PRIVATE &&

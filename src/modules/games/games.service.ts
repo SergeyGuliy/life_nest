@@ -8,9 +8,8 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class GamesService {
-  constructor(
-    @InjectModel(Game.name) private gameModel: Model<GameDocument>, // private readonly errorHandlerService: ErrorHandlerService, // private readonly roomsSocketGateway: RoomsSocketGateway, // private readonly roomsManagerService: RoomsManagerService, // private readonly userManagerService: UserManagerService,
-  ) {}
+  @InjectModel(Game.name)
+  private gameModel: Model<GameDocument>;
 
   getGameById(gameData) {
     // console.log('getGameById');

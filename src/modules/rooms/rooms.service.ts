@@ -3,15 +3,15 @@ import { random } from 'lodash';
 
 import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
 
-import { RoomsManagerService } from '@modules-helpers/entities-services/rooms/rooms.service';
+import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
 import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
 
 @Injectable()
 export class RoomsService {
   @Inject(RoomsWsEmitter)
   private readonly roomsWsEmitter: RoomsWsEmitter;
-  @Inject(RoomsManagerService)
-  private readonly roomsManagerService: RoomsManagerService;
+  @Inject(RoomsManager)
+  private readonly roomsManager: RoomsManager;
   @Inject(UsersManagerService)
   private readonly userManagerService: UsersManagerService;
 
@@ -70,7 +70,7 @@ export class RoomsService {
         }
         return newI;
       });
-      const rooms = await this.roomsManagerService.find({
+      const rooms = await this.roomsManager.db.find({
         where,
       });
       return await Promise.all(
@@ -96,7 +96,7 @@ export class RoomsService {
     const usersInRoom = await this.userManagerService.find({
       where: { roomJoinedId: roomId },
     });
-    const roomData = await this.roomsManagerService.findOne({
+    const roomData = await this.roomsManager.db.findOne({
       where: { roomId },
     });
     return {
@@ -106,7 +106,7 @@ export class RoomsService {
   }
 
   public async createRoom(creatorId, roomData) {
-    const newRoom = await this.roomsManagerService.save({
+    const newRoom = await this.roomsManager.db.save({
       ...roomData,
       creatorId,
       roomJoinedId: creatorId,
@@ -126,7 +126,7 @@ export class RoomsService {
   }
 
   public async userJoinRoom(userId: number, roomId: number) {
-    const roomData = await this.roomsManagerService.findOne({
+    const roomData = await this.roomsManager.db.findOne({
       where: { roomId },
     });
 
@@ -164,7 +164,7 @@ export class RoomsService {
         userId,
       },
     });
-    const roomData = await this.roomsManagerService.findOne({
+    const roomData = await this.roomsManager.db.findOne({
       where: { roomId: roomJoinedId },
     });
     const usersInRoom = await this.userManagerService.find({
@@ -177,7 +177,7 @@ export class RoomsService {
   }
 
   public async toggleLockRoom(userId, roomId, lockState) {
-    await this.roomsManagerService.update(roomId, {
+    await this.roomsManager.db.update(roomId, {
       isBlocked: lockState,
     });
     await this.roomsWsEmitter.updateToggleLockRoom(roomId, lockState);
@@ -201,7 +201,7 @@ export class RoomsService {
 
   public async deleteRoom(roomId) {
     this.roomsWsEmitter.roomInListDeleted(roomId);
-    return await this.roomsManagerService.delete(roomId);
+    return await this.roomsManager.db.delete(roomId);
   }
 
   public async kickUserFromRoom(roomId, kickUserId) {
