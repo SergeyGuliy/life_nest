@@ -5,7 +5,7 @@ import * as phone from 'phone';
 
 import { PasswordEncoderService } from './password-encoder.service';
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
-import { UsersSettingsManagerService } from '@modules-helpers/entities-services/users-settings/users-settings.service';
+import { UsersSettingsManager } from '@modules-helpers/entities-services/users-settings/users-settings.service';
 
 @Injectable()
 export class AuthService {
@@ -15,8 +15,8 @@ export class AuthService {
   private readonly usersManager: UsersManager;
   @Inject(PasswordEncoderService)
   private readonly passwordEncoderService: PasswordEncoderService;
-  @Inject(UsersSettingsManagerService)
-  private readonly userSettingsManagerService: UsersSettingsManagerService;
+  @Inject(UsersSettingsManager)
+  private readonly userSettingsManager: UsersSettingsManager;
 
   private async returnUserDataToClient(userId) {
     const userData = await this.setNewRefreshTokenToUser(userId);
@@ -49,7 +49,7 @@ export class AuthService {
         newUserData.password,
       ),
       refreshToken: uuidv4(),
-      userSettings: await this.userSettingsManagerService.saveUserSettings({}),
+      userSettings: await this.userSettingsManager.db.save({}),
     };
     const { userId } = await this.usersManager.db.save(formattedUser);
     return this.returnUserDataToClient(userId);

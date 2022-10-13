@@ -151,10 +151,9 @@ export class RoomsService {
 
   public async userLeaveRoom(user) {
     const { userId } = user;
-    const {
-      roomJoinedId,
-      roomCreatedId,
-    } = await this.usersManager.db.findOne(userId);
+    const { roomJoinedId, roomCreatedId } = await this.usersManager.db.findOne(
+      userId,
+    );
     await this.usersManager.db.update(userId, {
       roomCreatedId: null,
       roomJoinedId: null,

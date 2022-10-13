@@ -5,11 +5,7 @@ import { Repository } from 'typeorm';
 import { UserSettings } from './users-settings.entity';
 
 @Injectable()
-export class UsersSettingsManagerService {
+export class UsersSettingsManager {
   @InjectRepository(UserSettings)
-  private readonly userSettingsRepository: Repository<UserSettings>;
-
-  public async saveUserSettings(userSettings) {
-    return await this.userSettingsRepository.save(userSettings);
-  }
+  public readonly db: Repository<UserSettings>;
 }

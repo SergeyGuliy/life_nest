@@ -1,24 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
-import { UsersSettingsManagerService } from '@modules-helpers/entities-services/users-settings/users-settings.service';
+import { UsersSettingsManager } from '@modules-helpers/entities-services/users-settings/users-settings.service';
 
 @Injectable()
 export class UsersSettingsService {
   @Inject(UsersManager)
   private readonly usersManager: UsersManager;
-  @Inject(UsersSettingsManagerService)
-  private readonly userSettingsManagerService: UsersSettingsManagerService;
+  @Inject(UsersSettingsManager)
+  private readonly userSettingsManager: UsersSettingsManager;
 
   public async changeLanguage({ userSettingsId }, locale) {
-    return await this.userSettingsManagerService.saveUserSettings({
+    return await this.userSettingsManager.db.save({
       userSettingsId,
       locale: locale,
     });
   }
 
   public async changeTheme({ userSettingsId }, isDarkTheme) {
-    return await this.userSettingsManagerService.saveUserSettings({
+    return await this.userSettingsManager.db.save({
       userSettingsId,
       isDarkTheme: isDarkTheme,
     });
@@ -36,7 +36,7 @@ export class UsersSettingsService {
       });
     }
     if (userSettings) {
-      newUserSettings = await this.userSettingsManagerService.saveUserSettings({
+      newUserSettings = await this.userSettingsManager.db.save({
         userSettingsId,
         ...userSettings,
       });
