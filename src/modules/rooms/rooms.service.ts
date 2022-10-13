@@ -4,7 +4,7 @@ import { random } from 'lodash';
 import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
 
 import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
-import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
+import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 
 @Injectable()
 export class RoomsService {
@@ -12,15 +12,15 @@ export class RoomsService {
   private readonly roomsWsEmitter: RoomsWsEmitter;
   @Inject(RoomsManager)
   private readonly roomsManager: RoomsManager;
-  @Inject(UsersManagerService)
-  private readonly userManagerService: UsersManagerService;
+  @Inject(UsersManager)
+  private readonly usersManager: UsersManager;
 
   private async setNewAdminOrDelete(
     roomJoinedId: number,
     roomCreatedId: number,
     roomData,
   ) {
-    const usersInRoom = await this.userManagerService.find({
+    const usersInRoom = await this.usersManager.db.find({
       where: {
         roomJoinedId,
       },
@@ -49,10 +49,10 @@ export class RoomsService {
     });
     if (roomCreatedId === roomJoinedId) {
       const idOfNewAdmin = usersInRoom[random(usersInRoom.length - 1)].userId;
-      await this.userManagerService.update(idOfNewAdmin, {
+      await this.usersManager.db.update(idOfNewAdmin, {
         roomCreatedId: roomJoinedId,
       });
-      const newAdmin = await this.userManagerService.findOne({
+      const newAdmin = await this.usersManager.db.findOne({
         where: { userId: idOfNewAdmin },
       });
       this.roomsWsEmitter.updateRoomAdmin(roomJoinedId, newAdmin);
@@ -78,7 +78,7 @@ export class RoomsService {
           return {
             ...room,
             usersInRoomLength: (
-              await this.userManagerService.find({
+              await this.usersManager.db.find({
                 where: {
                   roomJoinedId: room.roomId,
                 },
@@ -93,7 +93,7 @@ export class RoomsService {
   }
 
   public async getRoomById(roomId) {
-    const usersInRoom = await this.userManagerService.find({
+    const usersInRoom = await this.usersManager.db.find({
       where: { roomJoinedId: roomId },
     });
     const roomData = await this.roomsManager.db.findOne({
@@ -111,11 +111,11 @@ export class RoomsService {
       creatorId,
       roomJoinedId: creatorId,
     });
-    await this.userManagerService.update(creatorId, {
+    await this.usersManager.db.update(creatorId, {
       roomCreatedId: newRoom.roomId,
       roomJoinedId: newRoom.roomId,
     });
-    const usersInRoom = await this.userManagerService.find({
+    const usersInRoom = await this.usersManager.db.find({
       where: { roomJoinedId: newRoom.roomId },
     });
     this.roomsWsEmitter.roomInListCreated({
@@ -130,11 +130,11 @@ export class RoomsService {
       where: { roomId },
     });
 
-    await this.userManagerService.update(userId, {
+    await this.usersManager.db.update(userId, {
       roomCreatedId: null,
       roomJoinedId: roomId,
     });
-    const usersInRoom = await this.userManagerService.find({
+    const usersInRoom = await this.usersManager.db.find({
       where: { roomJoinedId: roomId },
     });
     this.roomsWsEmitter.roomInListUpdated(roomId, {
@@ -142,7 +142,7 @@ export class RoomsService {
       usersInRoomLength: usersInRoom.length,
     });
     this.roomsWsEmitter.updateUsersListInRoom(roomId, usersInRoom);
-    return await this.userManagerService.findOne({
+    return await this.usersManager.db.findOne({
       where: {
         userId,
       },
@@ -154,12 +154,12 @@ export class RoomsService {
     const {
       roomJoinedId,
       roomCreatedId,
-    } = await this.userManagerService.findOne(userId);
-    await this.userManagerService.update(userId, {
+    } = await this.usersManager.db.findOne(userId);
+    await this.usersManager.db.update(userId, {
       roomCreatedId: null,
       roomJoinedId: null,
     });
-    const newUserData = await this.userManagerService.findOne({
+    const newUserData = await this.usersManager.db.findOne({
       where: {
         userId,
       },
@@ -167,7 +167,7 @@ export class RoomsService {
     const roomData = await this.roomsManager.db.findOne({
       where: { roomId: roomJoinedId },
     });
-    const usersInRoom = await this.userManagerService.find({
+    const usersInRoom = await this.usersManager.db.find({
       where: { roomJoinedId: roomJoinedId },
     });
     this.roomsWsEmitter.updateUsersListInRoom(roomJoinedId, usersInRoom);
@@ -185,7 +185,7 @@ export class RoomsService {
   }
 
   public async deleteRoomRequest(userId, roomId) {
-    const usersInRoom = await this.userManagerService.find({
+    const usersInRoom = await this.usersManager.db.find({
       where: { roomJoinedId: roomId },
     });
 
@@ -205,20 +205,20 @@ export class RoomsService {
   }
 
   public async kickUserFromRoom(roomId, kickUserId) {
-    await this.userManagerService.update(kickUserId, {
+    await this.usersManager.db.update(kickUserId, {
       roomJoinedId: null,
     });
     await this.roomsWsEmitter.userLeaveRoom(roomId, kickUserId);
   }
 
   public async setNewRoomAdmin(senderUserId, roomId, newAdminId) {
-    await this.userManagerService.update(senderUserId, {
+    await this.usersManager.db.update(senderUserId, {
       roomCreatedId: null,
     });
-    await this.userManagerService.update(newAdminId, {
+    await this.usersManager.db.update(newAdminId, {
       roomCreatedId: roomId,
     });
-    const newAdmin = await this.userManagerService.findOne({
+    const newAdmin = await this.usersManager.db.findOne({
       where: { userId: newAdminId },
     });
     this.roomsWsEmitter.updateRoomAdmin(roomId, newAdmin);

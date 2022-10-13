@@ -6,13 +6,13 @@ import {
 } from '@nestjs/common';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
-import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
+import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 import { AuthService } from '@modules/auth/auth.service';
 
 @Injectable()
 export class ValidateRevalidationTokenGuard implements CanActivate {
-  @Inject(UsersManagerService)
-  private readonly userManagerService: UsersManagerService;
+  @Inject(UsersManager)
+  private readonly usersManager: UsersManager;
   @Inject(AuthService)
   private readonly authService: AuthService;
   @Inject(ErrorHandlerService)
@@ -22,7 +22,7 @@ export class ValidateRevalidationTokenGuard implements CanActivate {
     const { body } = context.switchToHttp().getRequest();
     const { userId, refreshToken } = body;
 
-    const userData = await this.userManagerService.getUserByIdWithToken(userId);
+    const userData = await this.usersManager.fetchSecuredUserData(userId);
 
     const oldRefreshToken = userData.refreshToken;
 

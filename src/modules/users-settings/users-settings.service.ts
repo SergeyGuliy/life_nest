@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
+import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 import { UsersSettingsManagerService } from '@modules-helpers/entities-services/users-settings/users-settings.service';
 
 @Injectable()
 export class UsersSettingsService {
-  @Inject(UsersManagerService)
-  private readonly userManagerService: UsersManagerService;
+  @Inject(UsersManager)
+  private readonly usersManager: UsersManager;
   @Inject(UsersSettingsManagerService)
   private readonly userSettingsManagerService: UsersSettingsManagerService;
 
@@ -30,7 +30,7 @@ export class UsersSettingsService {
   ) {
     let newProfileSettings, newUserSettings;
     if (profileSettings) {
-      newProfileSettings = await this.userManagerService.save({
+      newProfileSettings = await this.usersManager.db.save({
         userId,
         ...profileSettings,
       });

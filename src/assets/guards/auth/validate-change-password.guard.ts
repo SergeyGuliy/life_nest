@@ -6,13 +6,13 @@ import {
 } from '@nestjs/common';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
-import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
+import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 import { PasswordEncoderService } from '@modules/auth/password-encoder.service';
 
 @Injectable()
 export class ValidateChangePasswordGuard implements CanActivate {
-  @Inject(UsersManagerService)
-  private readonly userManagerService: UsersManagerService;
+  @Inject(UsersManager)
+  private readonly usersManager: UsersManager;
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
   @Inject(PasswordEncoderService)
@@ -26,7 +26,7 @@ export class ValidateChangePasswordGuard implements CanActivate {
       this.errorHandlerService.error('wrongPasswordOrLogin', 'en');
     }
 
-    const userData = await this.userManagerService.getUserByEmailOrPhoneOrId({
+    const userData = await this.usersManager.getUserByEmailOrPhoneOrId({
       userId: user?.userId,
     });
 

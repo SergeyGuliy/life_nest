@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
+import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 
 @Injectable()
 export class UserService {
-  @Inject(UsersManagerService)
-  private readonly userManagerService: UsersManagerService;
+  @Inject(UsersManager)
+  private readonly usersManager: UsersManager;
 
   public async getUserById(userId: number) {
-    return await this.userManagerService.findOne(userId);
+    return await this.usersManager.db.findOne(userId);
   }
 }

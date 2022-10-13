@@ -6,7 +6,7 @@ import { USER_ONLINE_STATUSES } from '@enums/index.js';
 import { RoomsService } from '@modules/rooms/rooms.service';
 
 import { SocketNameSpacerService } from '../global-services/socket-namespaser.service';
-import { UsersManagerService } from '../entities-services/users/users.service';
+import { UsersManager } from '../entities-services/users/users.service';
 import { ErrorHandlerService } from '../global-services/error-handler.service';
 import { LOGOUT_TIMEOUT } from '@constants/index.js';
 
@@ -18,8 +18,8 @@ export class SocketService {
   private roomsService: RoomsService;
   @Inject(SocketNameSpacerService)
   private socketNameSpacerService: SocketNameSpacerService;
-  @Inject(UsersManagerService)
-  private userManagerService: UsersManagerService;
+  @Inject(UsersManager)
+  private usersManager: UsersManager;
 
   private async logOutUserFormApp(userId) {
     const newUserSid = this.socketNameSpacerService.findSidByUserId(userId);
@@ -31,13 +31,13 @@ export class SocketService {
   }
 
   private async userLogOut(userId: number) {
-    await this.userManagerService.update(userId, {
+    await this.usersManager.db.update(userId, {
       userOnlineStatus: USER_ONLINE_STATUSES.OFFLINE,
     });
   }
 
   private async getUserById(userId: number) {
-    const user = await this.userManagerService.findOne(userId);
+    const user = await this.usersManager.db.findOne(userId);
     if (user) {
       return user;
     }
@@ -45,7 +45,7 @@ export class SocketService {
   }
 
   public async userLogIn(userId: number) {
-    return await this.userManagerService.update(userId, {
+    return await this.usersManager.db.update(userId, {
       userOnlineStatus: USER_ONLINE_STATUSES.ONLINE,
     });
   }

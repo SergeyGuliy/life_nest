@@ -3,30 +3,30 @@ import { thumbnail } from 'easyimage';
 import * as fs from 'fs';
 import * as util from 'util';
 
-import { UsersManagerService } from '../entities-services/users/users.service';
+import { UsersManager } from '../entities-services/users/users.service';
 
 const unlinkAsync = util.promisify(fs.unlink);
 const rmdirAsync = util.promisify(fs.rmdir);
 
 @Injectable()
 export class UploaderService {
-  @Inject(UsersManagerService)
-  private readonly userManagerService: UsersManagerService;
+  @Inject(UsersManager)
+  private readonly usersManager: UsersManager;
 
   private async setUserAvatar(userId, { avatarSmall, avatarBig }) {
-    await this.userManagerService.update(userId, {
+    await this.usersManager.db.update(userId, {
       avatarSmall,
       avatarBig,
     });
-    return await this.userManagerService.findOne(userId);
+    return await this.usersManager.db.findOne(userId);
   }
 
   private async clearUserAvatar(userId) {
-    await this.userManagerService.update(userId, {
+    await this.usersManager.db.update(userId, {
       avatarSmall: '',
       avatarBig: '',
     });
-    return await this.userManagerService.findOne(userId);
+    return await this.usersManager.db.findOne(userId);
   }
 
   public async uploadPhoto(files, userId) {

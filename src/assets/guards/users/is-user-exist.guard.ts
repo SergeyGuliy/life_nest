@@ -6,19 +6,19 @@ import {
 } from '@nestjs/common';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
-import { UsersManagerService } from '@modules-helpers/entities-services/users/users.service';
+import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 
 @Injectable()
 export class IsUserExistGuard implements CanActivate {
-  @Inject(UsersManagerService)
-  private readonly usersManagerService: UsersManagerService;
+  @Inject(UsersManager)
+  private readonly usersManager: UsersManager;
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
 
   async canActivate(context: ExecutionContext) {
     const { userId } = context.switchToHttp().getRequest().params;
 
-    const user = await this.usersManagerService.findOne(userId);
+    const user = await this.usersManager.db.findOne(userId);
     if (!user) this.errorHandlerService.error('userNotFound', 'en');
 
     return true;

@@ -3,45 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Users } from './users.entity';
-import { ErrorHandlerService } from '../../global-services/error-handler.service';
 
 @Injectable()
-export class UsersManagerService {
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+export class UsersManager {
   @InjectRepository(Users)
-  private readonly usersRepository: Repository<Users>;
-
-  public async update(userId, newUserData) {
-    await this.usersRepository.update(userId, newUserData);
-  }
-
-  public async find(condition = null) {
-    return await this.usersRepository.find(condition);
-  }
-
-  public async findOne(condition) {
-    return await this.usersRepository.findOne(condition);
-  }
-
-  public async save(userData) {
-    return await this.usersRepository.save(userData);
-  }
-
-  public async delete(userId: number) {
-    const deleteResponse = await this.usersRepository.delete(userId);
-    if (!deleteResponse.affected) {
-      this.errorHandlerService.error('userNotFound', 'en');
-    }
-  }
-
-  public async getUserByIdWithToken(userId: number) {
-    await this.catchUserNotExists(userId);
-    return await this.fetchSecuredUserData(userId);
-  }
+  public readonly db: Repository<Users>;
 
   public async fetchSecuredUserData(userId) {
-    return await this.usersRepository.findOne(userId, {
+    return await this.db.findOne(userId, {
       select: [
         'userId',
         'email',
@@ -67,17 +36,12 @@ export class UsersManagerService {
     phone = '',
     email = '',
   }) {
-    return await this.usersRepository
+    return await this.db
       .createQueryBuilder('user')
       .select(['user.phone', 'user.email', 'user.password', 'user.userId'])
       .where('user.email = :email', { email })
       .orWhere('user.phone = :phone', { phone })
       .orWhere('user.userId = :userId', { userId })
       .getOne();
-  }
-
-  public async catchUserNotExists(userId) {
-    const user = await this.usersRepository.findOne(userId);
-    if (!user) this.errorHandlerService.error('userNotFound', 'en');
   }
 }
