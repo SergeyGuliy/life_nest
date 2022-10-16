@@ -18,6 +18,10 @@ export class GamesWsEmitter {
       .emit('games_gameStarted', gameData);
   }
 
+  public gameTick(roomId): void {
+    this.server.to(this.getRoomName(roomId)).emit('games_tick', 'games_tick');
+  }
+
   private getRoomName(roomId: number) {
     return `ROOM-${roomId}`;
   }
