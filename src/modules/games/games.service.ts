@@ -6,6 +6,7 @@ import {
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
+import { GamesWsEmitter } from '@modules/games/ws/games.ws-emitter';
 
 @Injectable()
 export class GamesService {
@@ -13,10 +14,11 @@ export class GamesService {
   private gameModel: Model<GameDocument>;
   @Inject(RoomsManager)
   private readonly roomsManager: RoomsManager;
+  @Inject(GamesWsEmitter)
+  private gamesWsEmitter: GamesWsEmitter;
 
-  getGameById(gameData) {
-    console.log('getGameById');
-    return;
+  getGameById(gameId) {
+    return this.gameModel.findById(gameId);
   }
 
   async startGame(roomId, gameSettings) {
@@ -24,11 +26,13 @@ export class GamesService {
       roomId,
       gameSettings,
     });
-    const game = await createdGame.save();
+    const gameData = await createdGame.save();
+
     await this.roomsManager.db.update(roomId, {
-      gameId: game._id,
+      gameId: gameData._id.toString(),
     });
 
+    this.gamesWsEmitter.startGame(roomId, gameData);
     return;
   }
 }

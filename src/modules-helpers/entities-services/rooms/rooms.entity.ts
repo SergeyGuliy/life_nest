@@ -2,9 +2,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '@assets/base.entity';
 
 import { ROOM_TYPES } from '@enums/index.js';
-import { ObjectId } from 'mongoose';
 
-@Entity('rooms')
+@Entity('rooms1')
 export class Rooms extends BaseEntity {
   @PrimaryGeneratedColumn()
   public roomId: number;
@@ -38,9 +37,9 @@ export class Rooms extends BaseEntity {
   public creatorId: null | number;
 
   @Column({
-    default: null,
+    default: '',
   })
-  public gameId: ObjectId;
+  public gameId: string;
 
   // @OneToOne(() => Users, (users) => users.createdRoomId)
   // public roomHostId: Users;

@@ -23,7 +23,7 @@ export class GamesController {
     return this.gameService.startGame(roomId, gameSettings);
   }
 
-  @Get(':roomId')
+  @Get(':gameId')
   async getGameById(@Param('gameId') gameId: string) {
     return this.gameService.getGameById(gameId);
   }

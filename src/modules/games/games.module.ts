@@ -16,6 +16,7 @@ import {
   GamesSettings,
   GamesSettingsEntity,
 } from '@modules-helpers/entities-services/games/games-settings.entity';
+import { GamesWsEmitter } from '@modules/games/ws/games.ws-emitter';
 
 @Module({
   imports: [
@@ -27,7 +28,12 @@ import {
     ]),
   ],
   controllers: [GamesController],
-  providers: [GamesService, RoomsSocketGateway, SocketNameSpacerService],
+  providers: [
+    GamesService,
+    RoomsSocketGateway,
+    SocketNameSpacerService,
+    GamesWsEmitter,
+  ],
   exports: [GamesService],
 })
 export class GamesModule {}
