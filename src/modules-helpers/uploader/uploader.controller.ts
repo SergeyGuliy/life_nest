@@ -14,6 +14,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { User } from '@assets/decorators/user.decorator';
 import { UploaderService } from './uploader.service';
+import { diskStorage } from 'multer';
 
 @Controller('uploader')
 export class UploaderController {
@@ -23,12 +24,23 @@ export class UploaderController {
   @UseGuards(JwtAuthGuard)
   @Post('uploadVoice')
   @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'messageVoiceFile', maxCount: 1 }], {
-      dest: './uploads/voiceMessages',
+    FileFieldsInterceptor([{ name: 'voice', maxCount: 1 }], {
+      storage: diskStorage({
+        destination: './uploads/voiceMessages',
+        filename: (req, file, callback) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          const { userId } = req.user;
+          const { fieldname } = file;
+          const filenameFormatted = `${fieldname}_senderId=${userId}_${new Date().getTime()}.mp3`;
+
+          callback(null, filenameFormatted);
+        },
+      }),
     }),
   )
   async uploadVoice(@UploadedFiles() files) {
-    return files.messageVoiceFile[0].filename;
+    return files.voice[0].filename;
   }
 
   @UseGuards(JwtAuthGuard)
