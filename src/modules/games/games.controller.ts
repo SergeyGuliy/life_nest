@@ -18,9 +18,9 @@ import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 export class GamesController {
   constructor(private readonly gameService: GamesService) {}
 
-  @Post('create')
-  async startGame(@Body() gameData: any, @Body() roomId: any) {
-    return this.gameService.startGame(roomId, gameData);
+  @Post('start')
+  async startGame(@Body() { gameSettings, roomId }) {
+    return this.gameService.startGame(roomId, gameSettings);
   }
 
   @Get(':roomId')

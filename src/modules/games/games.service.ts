@@ -1,33 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   Game,
   GameDocument,
 } from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
 
 @Injectable()
 export class GamesService {
   @InjectModel(Game.name)
   private gameModel: Model<GameDocument>;
+  @Inject(RoomsManager)
+  private readonly roomsManager: RoomsManager;
 
   getGameById(gameData) {
-    // console.log('getGameById');
-    // console.log(gameData);
+    console.log('getGameById');
+    return;
   }
 
-  async startGame(roomId, gameData) {
-    // console.log('createGame');
-    // console.log(roomId);
-    // console.log(gameData);
-
+  async startGame(roomId, gameSettings) {
     const createdGame = new this.gameModel({
-      name: 'name',
-      age: 11,
-      breed: 'breed',
+      roomId,
+      gameSettings,
     });
-    return {
-      game: await createdGame.save(),
-    };
+    const game = await createdGame.save();
+    await this.roomsManager.db.update(roomId, {
+      gameId: game._id,
+    });
+
+    return;
   }
 }

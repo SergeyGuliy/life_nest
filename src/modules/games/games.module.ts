@@ -12,12 +12,19 @@ import {
   Game,
   GamesEntity,
 } from '@modules-helpers/entities-services/games/games.entity';
+import {
+  GamesSettings,
+  GamesSettingsEntity,
+} from '@modules-helpers/entities-services/games/games-settings.entity';
 
 @Module({
   imports: [
     GlobalServicesModule,
     EntityManagerModule,
-    MongooseModule.forFeature([{ name: Game.name, schema: GamesEntity }]),
+    MongooseModule.forFeature([
+      { name: Game.name, schema: GamesEntity },
+      { name: GamesSettings.name, schema: GamesSettingsEntity },
+    ]),
   ],
   controllers: [GamesController],
   providers: [GamesService, RoomsSocketGateway, SocketNameSpacerService],
