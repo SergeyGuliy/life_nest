@@ -14,7 +14,13 @@ export class Game {
   _id: ObjectId;
 
   @Prop()
-  roomId: string;
+  roomId: number;
+
+  @Prop()
+  gameAdmin: number;
+
+  @Prop({ type: Array })
+  gameUsers: any;
 
   @Prop({ type: Object })
   gameSettings: any;
@@ -24,6 +30,12 @@ export class Game {
 
   @Prop({ type: Array })
   gameHistory: any;
+
+  @Prop({ type: Array })
+  shares: any;
+
+  @Prop({ type: Array })
+  cryptocurrencies: any;
 }
 
 export const GamesEntity = SchemaFactory.createForClass(Game);

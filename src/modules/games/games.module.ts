@@ -18,7 +18,7 @@ import {
 } from '@modules-helpers/entities-services/games/games-settings.entity';
 import { GamesWsEmitter } from '@modules/games/ws/games.ws-emitter';
 import { GamesTime } from '@modules/games/games-modules/games-time';
-import {GamesHistory} from "@modules/games/games-modules/games-history";
+import { GamesHistory } from '@modules/games/games-modules/games-history';
 
 @Module({
   imports: [

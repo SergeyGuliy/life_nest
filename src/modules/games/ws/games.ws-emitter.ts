@@ -22,6 +22,14 @@ export class GamesWsEmitter {
     this.server.to(this.getRoomName(roomId)).emit('games_tick', tickData);
   }
 
+  public async sendUserData(userId, userData) {
+    const sid = this.socketNameSpacerService.findSidByUserId(userId);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.server.to(sid).emit('games_sendUserData', userData);
+  }
+
   private getRoomName(roomId: number) {
     return `ROOM-${roomId}`;
   }
