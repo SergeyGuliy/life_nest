@@ -9,6 +9,7 @@ import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.ser
 import { GamesWsEmitter } from '@modules/games/ws/games.ws-emitter';
 import { GamesTime } from '@modules/games/games-modules/games-time';
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
+import {GamesUsers} from "@modules/games/games-modules/games-users";
 
 @Injectable()
 export class GamesService {
@@ -23,6 +24,8 @@ export class GamesService {
   private gamesWsEmitter: GamesWsEmitter;
   @Inject(GamesTime)
   private gamesTime: GamesTime;
+  @Inject(GamesUsers)
+  private gamesUsers: GamesUsers;
 
   private gamesRunning = {};
 
@@ -46,16 +49,7 @@ export class GamesService {
       gameUsers: usersInGameIds,
       gameData: {
         currentDate: this.gamesTime.getDate(),
-        usersData: usersInGameIds.map((userId) => ({
-          userId,
-          cash: [],
-          work: null,
-          skills: [],
-          shares: [],
-          cryptocurrency: [],
-          deposits: [],
-          credits: [],
-        })),
+        usersData: usersInGameIds.map(this.gamesUsers.generateBasicUser),
       },
       gameHistory: [],
 

@@ -19,6 +19,7 @@ import {
 import { GamesWsEmitter } from '@modules/games/ws/games.ws-emitter';
 import { GamesTime } from '@modules/games/games-modules/games-time';
 import { GamesHistory } from '@modules/games/games-modules/games-history';
+import {GamesUsers} from "@modules/games/games-modules/games-users";
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { GamesHistory } from '@modules/games/games-modules/games-history';
     GamesService,
     GamesTime,
     GamesHistory,
+    GamesUsers,
     RoomsSocketGateway,
     SocketNameSpacerService,
     GamesWsEmitter,
