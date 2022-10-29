@@ -96,9 +96,7 @@ export class RoomsService {
   }
 
   public async getRoomById(roomId) {
-    const usersInRoom = await this.usersManager.db.find({
-      where: { roomJoinedId: roomId },
-    });
+    const usersInRoom = await this.usersManager.getUsersInRoom(roomId);
     const roomData = await this.roomsManager.db.findOne({
       where: { roomId },
     });
@@ -118,9 +116,9 @@ export class RoomsService {
       roomCreatedId: newRoom.roomId,
       roomJoinedId: newRoom.roomId,
     });
-    const usersInRoom = await this.usersManager.db.find({
-      where: { roomJoinedId: newRoom.roomId },
-    });
+
+    const usersInRoom = await this.usersManager.getUsersInRoom(newRoom.roomId);
+
     this.roomsWsEmitter.roomInListCreated({
       ...newRoom,
       usersInRoomLength: usersInRoom.length,
@@ -137,9 +135,9 @@ export class RoomsService {
       roomCreatedId: null,
       roomJoinedId: roomId,
     });
-    const usersInRoom = await this.usersManager.db.find({
-      where: { roomJoinedId: roomId },
-    });
+
+    const usersInRoom = await this.usersManager.getUsersInRoom(roomId);
+
     this.roomsWsEmitter.roomInListUpdated(roomId, {
       ...roomData,
       usersInRoomLength: usersInRoom.length,
@@ -169,9 +167,9 @@ export class RoomsService {
     const roomData = await this.roomsManager.db.findOne({
       where: { roomId: roomJoinedId },
     });
-    const usersInRoom = await this.usersManager.db.find({
-      where: { roomJoinedId: roomJoinedId },
-    });
+
+    const usersInRoom = await this.usersManager.getUsersInRoom(roomJoinedId);
+
     this.roomsWsEmitter.updateUsersListInRoom(roomJoinedId, usersInRoom);
     await this.roomsWsEmitter.userLeaveRoom(roomJoinedId, newUserData.userId);
     await this.setNewAdminOrDelete(roomJoinedId, roomCreatedId, roomData);
@@ -187,9 +185,7 @@ export class RoomsService {
   }
 
   public async deleteRoomRequest(userId, roomId) {
-    const usersInRoom = await this.usersManager.db.find({
-      where: { roomJoinedId: roomId },
-    });
+    const usersInRoom = await this.usersManager.getUsersInRoom(roomId);
 
     for await (const { userId } of usersInRoom) {
       await this.kickUserFromRoom(roomId, userId);

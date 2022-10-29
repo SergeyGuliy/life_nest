@@ -44,4 +44,10 @@ export class UsersManager {
       .orWhere('user.userId = :userId', { userId })
       .getOne();
   }
+
+  public getUsersInRoom(roomId) {
+    return this.db.find({
+      where: { roomJoinedId: roomId },
+    });
+  }
 }

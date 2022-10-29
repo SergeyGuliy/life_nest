@@ -35,8 +35,8 @@ export class RoomsWsEmitter {
       .emit(rooms_updateRoomAdmin, newAdmin);
   }
 
-  public async userLeaveRoom(roomId, userId) {
-    const sid = await this.socketNameSpacerService.findSidByUserId(userId);
+  public userLeaveRoom(roomId, userId) {
+    const sid = this.socketNameSpacerService.findSidByUserId(userId);
     if (typeof sid === 'string') {
       this.server.to(sid).emit(rooms_userLeaveRoom);
       this.server
