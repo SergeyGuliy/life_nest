@@ -48,6 +48,7 @@ export class GamesService {
         currentDate: this.gamesTime.getDate(),
         usersData: usersInGameIds.map((userId) => ({
           userId,
+          cash: [],
           work: null,
           skills: [],
           shares: [],
@@ -77,14 +78,12 @@ export class GamesService {
   }
 
   private gameTicker(roomId, { gameId, gameSettings }) {
-    console.log('----------------start----------------');
     this.gamesRunning[gameId] = setInterval(() => {
       this.gameTick(roomId, gameId);
     }, gameSettings.timePerTurn * 1000);
   }
 
   private async gameTick(roomId, gameId) {
-    console.log('----------------tick----------------');
     const game = await this.gameModel.findById(gameId);
 
     game.gameData.currentDate = this.gamesTime.incrementMonth(
