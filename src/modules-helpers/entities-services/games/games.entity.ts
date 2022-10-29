@@ -18,6 +18,9 @@ export class Game {
 
   @Prop({ type: Object })
   gameSettings: any;
+
+  @Prop({ type: Object })
+  gameData: any;
 }
 
 export const GamesEntity = SchemaFactory.createForClass(Game);

@@ -5,6 +5,7 @@ import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
 
 import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
+import { GamesService } from '@modules/games/games.service';
 
 @Injectable()
 export class RoomsService {
@@ -14,6 +15,8 @@ export class RoomsService {
   private readonly roomsManager: RoomsManager;
   @Inject(UsersManager)
   private readonly usersManager: UsersManager;
+  @Inject(GamesService)
+  private readonly gamesService: GamesService;
 
   private async setNewAdminOrDelete(
     roomJoinedId: number,
@@ -200,6 +203,10 @@ export class RoomsService {
 
   public async deleteRoom(roomId) {
     this.roomsWsEmitter.roomInListDeleted(roomId);
+    const { gameId } = await this.roomsManager.db.findOne(roomId);
+    if (gameId) {
+      this.gamesService.stopGame(gameId);
+    }
     return await this.roomsManager.db.delete(roomId);
   }
 

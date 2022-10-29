@@ -35,13 +35,13 @@ export class CreateRoomDto {
   roomPassword: string;
 
   @IsNumber()
-  @Min(2)
+  @Min(1)
   @Max(10)
   @Transform((o) => Number(o.obj.minCountOfUsers))
   minCountOfUsers: number;
 
   @IsNumber()
-  @Min(2)
+  @Min(1)
   @Max(10)
   @Transform((o) => Number(o.obj.maxCountOfUsers))
   maxCountOfUsers: number;

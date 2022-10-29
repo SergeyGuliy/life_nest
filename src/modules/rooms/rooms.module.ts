@@ -7,9 +7,10 @@ import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
 import { SocketNameSpacerService } from '@modules-helpers/global-services/socket-namespaser.service';
 import { EntityManagerModule } from '@modules-helpers/entities-services/entitiy-manager.module';
 import { GlobalServicesModule } from '@modules-helpers/global-services/global-services.module';
+import {GamesModule} from "@modules/games/games.module";
 
 @Module({
-  imports: [GlobalServicesModule, EntityManagerModule],
+  imports: [GlobalServicesModule, EntityManagerModule, GamesModule],
   controllers: [RoomsController],
   providers: [
     RoomsService,
