@@ -22,8 +22,11 @@ export class GamesService {
 
   private gamesRunning = {};
 
-  public getGameById(gameId) {
-    return this.gameModel.findById(gameId);
+  public async getGameById(gameId) {
+    const game = await this.gameModel.findById(gameId);
+    delete game.gameHistory;
+    console.log(game);
+    return game;
   }
 
   public async startGame(roomId, gameSettings) {
@@ -33,6 +36,7 @@ export class GamesService {
       gameData: {
         currentDate: this.gamesTime.getDate(),
       },
+      gameHistory: [],
     });
     const game = await createdGame.save();
 
@@ -49,8 +53,6 @@ export class GamesService {
 
   private gameTicker(roomId, { gameId, gameSettings }) {
     console.log('----------------start----------------');
-    console.log(`roomId = ${roomId}`);
-    console.log(`gameId = ${gameId}`);
     this.gamesRunning[gameId] = setInterval(() => {
       this.gameTick(roomId, gameId);
     }, gameSettings.timePerTurn * 1000);
@@ -58,19 +60,17 @@ export class GamesService {
 
   private async gameTick(roomId, gameId) {
     console.log('----------------tick----------------');
-    console.log(`roomId = ${roomId}`);
-    console.log(`gameId = ${gameId}`);
-
     const game = await this.gameModel.findById(gameId);
 
-    game.gameData.currentDate = this.updateTime(game.gameData.currentDate);
+    game.gameData.currentDate = this.gamesTime.incrementMonth(
+      game.gameData.currentDate.date,
+    );
+    game.gameHistory = [...game.gameHistory, game.gameData];
     await this.gameModel.updateOne({ _id: gameId }, game);
-    console.log(game.gameData.currentDate);
-    this.gamesWsEmitter.gameTick(roomId);
-  }
 
-  private updateTime(currentDate) {
-    return this.gamesTime.incrementMonth(currentDate.date);
+    this.gamesWsEmitter.gameTick(roomId, {
+      currentDate: game.gameData.currentDate,
+    });
   }
 
   public stopGame(gameId) {

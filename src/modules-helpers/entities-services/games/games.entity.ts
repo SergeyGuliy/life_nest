@@ -21,6 +21,9 @@ export class Game {
 
   @Prop({ type: Object })
   gameData: any;
+
+  @Prop({ type: Array })
+  gameHistory: any;
 }
 
 export const GamesEntity = SchemaFactory.createForClass(Game);

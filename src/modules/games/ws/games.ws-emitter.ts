@@ -18,8 +18,8 @@ export class GamesWsEmitter {
       .emit('games_gameStarted', gameData);
   }
 
-  public gameTick(roomId): void {
-    this.server.to(this.getRoomName(roomId)).emit('games_tick', 'games_tick');
+  public gameTick(roomId, tickData): void {
+    this.server.to(this.getRoomName(roomId)).emit('games_tick', tickData);
   }
 
   private getRoomName(roomId: number) {
