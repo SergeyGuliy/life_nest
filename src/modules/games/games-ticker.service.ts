@@ -11,7 +11,8 @@ import { GamesTime } from '@modules/games/games-modules/games-time';
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 import { GamesUsers } from '@modules/games/games-modules/games-users';
 import { GamesHistory } from '@modules/games/games-modules/games-history';
-import {GamesShares} from "@modules/games/games-modules/games-shares";
+import { GamesShares } from '@modules/games/games-modules/games-shares';
+import {GamesCryptos} from "@modules/games/games-modules/games-cryptos";
 
 @Injectable()
 export class GamesTickerService {
@@ -32,6 +33,8 @@ export class GamesTickerService {
   private gamesHistory: GamesHistory;
   @Inject(GamesShares)
   private gamesShares: GamesShares;
+  @Inject(GamesCryptos)
+  private gamesCryptos: GamesCryptos;
 
   private gamesRunning = {};
 
@@ -54,7 +57,7 @@ export class GamesTickerService {
       gameHistory: [],
 
       shares: this.gamesShares.generateBasicShares(),
-      cryptocurrencies: [],
+      cryptos: this.gamesCryptos.generateBasicCryptos(),
     });
 
     const game = await createdGame.save();
@@ -83,10 +86,10 @@ export class GamesTickerService {
   }
 
   private async gameTick(roomId, gameId) {
-    const game = await this.gameModel.findById(gameId);
+    let game = await this.gameModel.findById(gameId);
 
     // Save latest gameData in history
-    game.gameHistory = this.gamesHistory.saveHistory(game);
+    game = this.gamesHistory.saveHistory(game);
 
     // Set new date in current session
     game.gameData.currentDate = this.gamesTime.incrementMonth(
@@ -104,8 +107,8 @@ export class GamesTickerService {
     // Send tick data to users
     this.gamesWsEmitter.gameTick(roomId, {
       currentDate: game.gameData.currentDate,
-      shares: [],
-      cryptocurrencies: [],
+      shares: game.shares,
+      cryptos: game.cryptos,
     });
 
     // Send for each user its own userData

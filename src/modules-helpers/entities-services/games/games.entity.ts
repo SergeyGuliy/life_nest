@@ -35,7 +35,7 @@ export class Game {
   shares: any;
 
   @Prop({ type: Array })
-  cryptocurrencies: any;
+  cryptos: any;
 }
 
 export const GamesEntity = SchemaFactory.createForClass(Game);

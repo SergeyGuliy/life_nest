@@ -22,6 +22,7 @@ import { GamesHistory } from '@modules/games/games-modules/games-history';
 import { GamesUsers } from '@modules/games/games-modules/games-users';
 import { GamesTickerService } from '@modules/games/games-ticker.service';
 import { GamesShares } from '@modules/games/games-modules/games-shares';
+import {GamesCryptos} from "@modules/games/games-modules/games-cryptos";
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { GamesShares } from '@modules/games/games-modules/games-shares';
     GamesTime,
     GamesHistory,
     GamesShares,
+    GamesCryptos,
     GamesUsers,
     GamesTickerService,
     RoomsSocketGateway,

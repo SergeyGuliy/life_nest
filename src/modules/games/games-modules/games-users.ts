@@ -9,7 +9,7 @@ export class GamesUsers {
       work: null,
       skills: [],
       shares: [],
-      cryptocurrency: [],
+      cryptos: [],
       deposits: [],
       credits: [],
     };
