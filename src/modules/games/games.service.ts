@@ -24,7 +24,7 @@ export class GamesService {
     };
   }
 
-  public async getGameUserData(gameId, userId) {
+  public async getInGameUserData(gameId, userId) {
     const game = await this.gameModel.findById(gameId);
     return game.gameData.usersData.find((i) => i.userId === userId);
   }

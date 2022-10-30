@@ -31,9 +31,9 @@ export class GamesController {
     return this.gameService.getGameById(gameId);
   }
 
-  @Get(':gameId')
+  @Get('user-data/:gameId')
   @UseGuards(JwtAuthGuard)
-  async getGameUserData(@Param('gameId') gameId: string, @User() { userId }) {
-    return this.gameService.getGameUserData(gameId, userId);
+  async getInGameUserData(@Param('gameId') gameId: string, @User() { userId }) {
+    return this.gameService.getInGameUserData(gameId, userId);
   }
 }
