@@ -17,8 +17,16 @@ export class GamesService {
 
   public async getGameById(gameId) {
     const game = await this.gameModel.findById(gameId);
-    delete game.gameHistory;
-    return game;
+    return {
+      date: game.gameData.date,
+      shares: game.shares.map(({ history, ...shareData }) => shareData),
+      cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
+    };
+  }
+
+  public async getGameUserData(gameId, userId) {
+    const game = await this.gameModel.findById(gameId);
+    return game.gameData.usersData.find((i) => i.userId === userId);
   }
 
   public startGame(roomId, gameSettings) {
