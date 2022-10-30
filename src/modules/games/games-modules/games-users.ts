@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GamesUsers {
-  private calculateTick(oldUserData) {
+  private tickOne(oldUserData) {
     return {
       ...oldUserData,
       cash: oldUserData.cash + 100,
@@ -10,7 +10,7 @@ export class GamesUsers {
   }
 
   public tick(usersData) {
-    return usersData.map(this.calculateTick);
+    return usersData.map(this.tickOne);
   }
 
   public generateBasicUser(userId) {
