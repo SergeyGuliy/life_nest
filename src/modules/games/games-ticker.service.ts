@@ -12,7 +12,7 @@ import { UsersManager } from '@modules-helpers/entities-services/users/users.ser
 import { GamesUsers } from '@modules/games/games-modules/games-users';
 import { GamesHistory } from '@modules/games/games-modules/games-history';
 import { GamesShares } from '@modules/games/games-modules/games-shares';
-import {GamesCryptos} from "@modules/games/games-modules/games-cryptos";
+import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
 
 @Injectable()
 export class GamesTickerService {
@@ -107,8 +107,8 @@ export class GamesTickerService {
     // Send tick data to users
     this.gamesWsEmitter.gameTick(roomId, {
       currentDate: game.gameData.currentDate,
-      shares: game.shares,
-      cryptos: game.cryptos,
+      shares: game.shares.map(({ history, ...shareData }) => shareData),
+      cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
     });
 
     // Send for each user its own userData
