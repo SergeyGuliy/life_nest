@@ -38,6 +38,33 @@ export class GamesTickerService {
 
   private gamesRunning = {};
 
+  private tick(game) {
+    // Set new date in current session
+    game.gameData.date = this.gamesTime.tick(game.gameData.date.date);
+
+    // Recalculate users data
+    game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
+
+    // Recalculate cryptos data
+    game.cryptos = this.gamesCryptos.tick(game.cryptos);
+
+    return game;
+  }
+
+  private sendTick(roomId, game) {
+    // Send tick data to users
+    this.gamesWsEmitter.gameTick(roomId, {
+      date: game.gameData.date,
+      shares: game.shares.map(({ history, ...shareData }) => shareData),
+      cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
+    });
+
+    // Send for each user its own userData
+    game.gameData.usersData.forEach((userData) => {
+      this.gamesWsEmitter.sendUserData(userData.userId, userData);
+    });
+  }
+
   private async generateBacisGame(roomId, gameSettings) {
     const usersInRoom = await this.usersManager.getUsersInRoom(roomId);
     const usersInGameIds = usersInRoom.map(({ userId }) => userId);
@@ -51,13 +78,13 @@ export class GamesTickerService {
       gameAdmin: userId,
       gameUsers: usersInGameIds,
       gameData: {
-        currentDate: this.gamesTime.getDate(),
+        date: this.gamesTime.generate(),
         usersData: usersInGameIds.map(this.gamesUsers.generateBasicUser),
       },
       gameHistory: [],
 
-      shares: this.gamesShares.generateBasicShares(),
-      cryptos: this.gamesCryptos.generateBasicCryptos(),
+      shares: this.gamesShares.generate(),
+      cryptos: this.gamesCryptos.generate(),
     });
 
     const game = await createdGame.save();
@@ -89,32 +116,15 @@ export class GamesTickerService {
     let game = await this.gameModel.findById(gameId);
 
     // Save latest gameData in history
-    game = this.gamesHistory.saveHistory(game);
+    game = this.gamesHistory.save(game);
 
-    // Set new date in current session
-    game.gameData.currentDate = this.gamesTime.incrementMonth(
-      game.gameData.currentDate.date,
-    );
-
-    // Recalculate users data
-    game.gameData.usersData = game.gameData.usersData.map(
-      this.gamesUsers.calculateTickUserData,
-    );
+    // Tick game
+    game = this.tick(game);
 
     // Save current game in mongodb
     await this.gameModel.updateOne({ _id: gameId }, game);
 
-    // Send tick data to users
-    this.gamesWsEmitter.gameTick(roomId, {
-      currentDate: game.gameData.currentDate,
-      shares: game.shares.map(({ history, ...shareData }) => shareData),
-      cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
-    });
-
-    // Send for each user its own userData
-    game.gameData.usersData.forEach((userData) => {
-      this.gamesWsEmitter.sendUserData(userData.userId, userData);
-    });
+    this.sendTick(roomId, game);
   }
 
   public stopGame(gameId) {

@@ -2,23 +2,20 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GamesHistory {
-  private saveCryptosHistory(cryptos, currentDate) {
+  private saveCryptos(cryptos, date) {
     cryptos.forEach(({ history, ...cryptoData }) => {
       history.push({
         ...cryptoData,
-        date: currentDate,
+        date,
       });
     });
     return cryptos;
   }
 
-  public saveHistory(game) {
+  public save(game) {
     game.gameHistory = [...game.gameHistory, game.gameData];
 
-    game.cryptos = this.saveCryptosHistory(
-      game.cryptos,
-      game.gameData.currentDate,
-    );
+    game.cryptos = this.saveCryptos(game.cryptos, game.gameData.date);
 
     return game;
   }

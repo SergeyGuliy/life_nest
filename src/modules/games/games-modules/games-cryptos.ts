@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GamesCryptos {
-  private generateBasicCrypto() {
+  private generateOne() {
     return {
       name: 'BTC',
       currentPrice: 100,
@@ -10,7 +10,18 @@ export class GamesCryptos {
     };
   }
 
-  public generateBasicCryptos() {
-    return [this.generateBasicCrypto()];
+  private tickOne(oldUserData) {
+    return {
+      ...oldUserData,
+      cash: oldUserData.cash + 100,
+    };
+  }
+
+  public generate() {
+    return [this.generateOne()];
+  }
+
+  public tick(cryptos) {
+    return cryptos.map(this.tickOne);
   }
 }

@@ -3,7 +3,7 @@ import * as moment from 'moment/moment';
 
 @Injectable()
 export class GamesTime {
-  public getDate(dateProp = moment()) {
+  public generate(dateProp = null) {
     const date = moment(dateProp);
     const month = date.month();
     const monthCode = date.format('MMM');
@@ -16,9 +16,9 @@ export class GamesTime {
     };
   }
 
-  public incrementMonth(dateProp = moment()) {
-    const dateWithAddedMonth = moment(dateProp).add(1, 'M');
-    return this.getDate(dateWithAddedMonth);
+  public tick(date) {
+    const dateWithAddedMonth = moment(date.date).add(1, 'M');
+    return this.generate(dateWithAddedMonth);
   }
 
   public checkEndGame() {

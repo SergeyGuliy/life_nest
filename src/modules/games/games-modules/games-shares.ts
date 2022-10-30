@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GamesShares {
-  private generateBasicShare() {
+  private generateOne() {
     return {
       basePrice: 100,
       currentPrice: 100,
@@ -17,7 +17,7 @@ export class GamesShares {
     };
   }
 
-  public generateBasicShares() {
-    return [this.generateBasicShare()];
+  public generate() {
+    return [this.generateOne()];
   }
 }
