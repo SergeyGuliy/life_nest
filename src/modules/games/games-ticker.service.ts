@@ -10,6 +10,8 @@ import { GamesWsEmitter } from '@modules/games/ws/games.ws-emitter';
 import { GamesTime } from '@modules/games/games-modules/games-time';
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 import { GamesUsers } from '@modules/games/games-modules/games-users';
+import { GamesHistory } from '@modules/games/games-modules/games-history';
+import {GamesShares} from "@modules/games/games-modules/games-shares";
 
 @Injectable()
 export class GamesTickerService {
@@ -26,6 +28,10 @@ export class GamesTickerService {
   private gamesTime: GamesTime;
   @Inject(GamesUsers)
   private gamesUsers: GamesUsers;
+  @Inject(GamesHistory)
+  private gamesHistory: GamesHistory;
+  @Inject(GamesShares)
+  private gamesShares: GamesShares;
 
   private gamesRunning = {};
 
@@ -47,7 +53,7 @@ export class GamesTickerService {
       },
       gameHistory: [],
 
-      shares: [],
+      shares: this.gamesShares.generateBasicShares(),
       cryptocurrencies: [],
     });
 
@@ -79,20 +85,30 @@ export class GamesTickerService {
   private async gameTick(roomId, gameId) {
     const game = await this.gameModel.findById(gameId);
 
+    // Save latest gameData in history
+    game.gameHistory = this.gamesHistory.saveHistory(game);
+
+    // Set new date in current session
     game.gameData.currentDate = this.gamesTime.incrementMonth(
       game.gameData.currentDate.date,
     );
 
-    game.gameHistory = [...game.gameHistory, game.gameData];
+    // Recalculate users data
+    game.gameData.usersData = game.gameData.usersData.map(
+      this.gamesUsers.calculateTickUserData,
+    );
 
+    // Save current game in mongodb
     await this.gameModel.updateOne({ _id: gameId }, game);
 
+    // Send tick data to users
     this.gamesWsEmitter.gameTick(roomId, {
       currentDate: game.gameData.currentDate,
       shares: [],
       cryptocurrencies: [],
     });
 
+    // Send for each user its own userData
     game.gameData.usersData.forEach((userData) => {
       this.gamesWsEmitter.sendUserData(userData.userId, userData);
     });

@@ -14,4 +14,11 @@ export class GamesUsers {
       credits: [],
     };
   }
+
+  public calculateTickUserData(oldUserData) {
+    return {
+      ...oldUserData,
+      cash: oldUserData.cash + 100,
+    };
+  }
 }
