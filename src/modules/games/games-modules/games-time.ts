@@ -4,7 +4,7 @@ import * as moment from 'moment/moment';
 @Injectable()
 export class GamesTime {
   public generate(dateProp = null) {
-    const date = moment(dateProp);
+    const date = dateProp ? moment(dateProp) : moment();
     const month = date.month();
     const monthCode = date.format('MMM');
     const year = date.year();

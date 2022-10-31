@@ -40,7 +40,7 @@ export class GamesTickerService {
 
   private tick(game) {
     // Set new date in current session
-    game.gameData.date = this.gamesTime.tick(game.gameData.date.date);
+    game.gameData.date = this.gamesTime.tick(game.gameData.date);
 
     // Recalculate users data
     game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
