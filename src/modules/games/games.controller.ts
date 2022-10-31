@@ -7,17 +7,21 @@ import {
   Body,
   // Query,
   UseGuards,
+  Inject,
   // Patch,
 } from '@nestjs/common';
 
 import { GamesService } from './games.service';
 import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { User } from '@assets/decorators/user.decorator';
+import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
 
-@UseGuards(JwtAuthGuard)
 @Controller('games')
 export class GamesController {
-  constructor(private readonly gameService: GamesService) {}
+  @Inject(GamesService)
+  private readonly gameService: GamesService;
+  @Inject(GamesCryptos)
+  private readonly gamesCryptos: GamesCryptos;
 
   @Post('start')
   @UseGuards(JwtAuthGuard)
@@ -35,5 +39,11 @@ export class GamesController {
   @UseGuards(JwtAuthGuard)
   async getInGameUserData(@Param('gameId') gameId: string, @User() { userId }) {
     return this.gameService.getInGameUserData(gameId, userId);
+  }
+
+  @Post('crypto/get/')
+  @UseGuards(JwtAuthGuard)
+  async getCryptoHistory(@Body() body) {
+    return this.gamesCryptos.getCryptoHistory(body);
   }
 }
