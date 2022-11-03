@@ -46,4 +46,16 @@ export class GamesController {
   async getCryptoHistory(@Body() body) {
     return this.gamesCryptos.getCryptoHistory(body);
   }
+
+  @Post('user-action/')
+  @UseGuards(JwtAuthGuard)
+  async userAction(
+    @Body() { actionModule, actionMethod, actionData },
+    @User() { userId },
+  ) {
+    return this[actionModule][actionMethod]({
+      actionData,
+      userId,
+    });
+  }
 }

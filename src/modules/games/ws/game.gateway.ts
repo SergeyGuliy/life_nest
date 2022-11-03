@@ -18,8 +18,4 @@ export class RoomsSocketGateway {
   public userConnectsRoom(client: Socket, { roomId }) {
     client.emit('rooms_userJoinRoom', roomId);
   }
-
-  public updateUsersListInRoom(): void {
-    this.server.to('ffffff').emit('rooms_updateUsersListInRoom', {});
-  }
 }

@@ -23,10 +23,15 @@ export class GamesCryptos {
   private tickOne(oldCryptoData) {
     const { currentPrice } = oldCryptoData;
 
+    const modification = 5;
+
     return {
       ...oldCryptoData,
       previousPrice: currentPrice,
-      currentPrice: (currentPrice * (100 + (Math.random() * 10 - 5))) / 100,
+      currentPrice:
+        (currentPrice *
+          (100 + (Math.random() * modification - modification / 2))) /
+        100,
     };
   }
 
@@ -45,5 +50,11 @@ export class GamesCryptos {
   public async getCryptoHistory({ gameId, name }) {
     const game = await this.gameModel.findById(gameId);
     return game.cryptos.find((crypto) => crypto.name === name).history;
+  }
+
+  public async buySell({ userId, actionData }) {
+    console.log(userId);
+    console.log(actionData);
+    return actionData;
   }
 }
