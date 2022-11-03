@@ -47,9 +47,10 @@ export class GamesCryptos {
     return cryptos.map(this.tickOne);
   }
 
-  public async getCryptoHistory({ gameId, name }) {
-    const game = await this.gameModel.findById(gameId);
-    return game.cryptos.find((crypto) => crypto.name === name).history;
+  public async getCryptoHistory({ actionData }) {
+    const game = await this.gameModel.findById(actionData.gameId);
+    return game.cryptos.find((crypto) => crypto.name === actionData.name)
+      .history;
   }
 
   public async buySell({ userId, actionData }) {
