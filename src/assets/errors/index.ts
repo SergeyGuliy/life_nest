@@ -1,114 +1,16 @@
 import { HttpStatus } from '@nestjs/common';
-import { gameErrors } from '@assets/errors/game';
+import { gameErrors } from '@assets/errors/games';
+import { authErrors } from '@assets/errors/auth';
+import { friendshipsErrors } from '@assets/errors/friendships';
+import { roomsErrors } from '@assets/errors/rooms';
+import { usersErrors } from '@assets/errors/users';
 
 export const errors = {
-  invalidRefreshToken: {
-    status: HttpStatus.BAD_REQUEST,
-    locales: {
-      en: 'Invalid refreshToken',
-    },
-  },
-  emailAlreadyInUse: {
-    status: HttpStatus.BAD_REQUEST,
-    locales: {
-      en: 'Email already in use',
-    },
-  },
-  phoneAlreadyInUse: {
-    status: HttpStatus.BAD_REQUEST,
-    locales: {
-      en: 'Phone already in use',
-    },
-  },
-  phoneAndEmailAlreadyInUse: {
-    status: HttpStatus.BAD_REQUEST,
-    locales: {
-      en: 'Email and phone already in use',
-    },
-  },
-  cantDeleteIfUserNotInFriendList: {
-    status: HttpStatus.METHOD_NOT_ALLOWED,
-    locales: {
-      en: "You can't delete user if he is not in your friends list",
-    },
-  },
-  ignoreCanOnlyReceiver: {
-    status: HttpStatus.METHOD_NOT_ALLOWED,
-    locales: {
-      en: 'Ignore friendships connection can only receiver',
-    },
-  },
-  cantSendRequestToYourself: {
-    status: HttpStatus.NOT_FOUND,
-    locales: {
-      en: "You can't sent friendships request to yourself",
-    },
-  },
-  acceptFriendshipCanOnlyReceiver: {
-    status: HttpStatus.METHOD_NOT_ALLOWED,
-    locales: {
-      en: 'Accept friendships connection can only receiver',
-    },
-  },
-  userAlreadyInFriends: {
-    status: HttpStatus.METHOD_NOT_ALLOWED,
-    locales: {
-      en: 'User is already in your friends list',
-    },
-  },
-  roomAlreadyFull: {
-    status: HttpStatus.BAD_REQUEST,
-    locales: {
-      en: 'Room already full',
-    },
-  },
-  wrongRoomPassword: {
-    status: HttpStatus.BAD_REQUEST,
-    locales: {
-      en: 'Wrong room password',
-    },
-  },
-  isNotRoomAdmin: {
-    status: HttpStatus.BAD_REQUEST,
-    locales: {
-      en: 'You are not room admin',
-    },
-  },
-  roomIsBLocked: {
-    status: HttpStatus.BAD_REQUEST,
-    locales: {
-      en: 'Room is blocked',
-    },
-  },
-  wrongPasswordOrLogin: {
-    status: HttpStatus.BAD_REQUEST,
-    locales: {
-      en: 'Wrong password or login',
-    },
-  },
-  userNotFound: {
-    status: HttpStatus.NOT_FOUND,
-    locales: {
-      en: 'User not found',
-    },
-  },
-  friendshipsInStatus: {
-    status: HttpStatus.METHOD_NOT_ALLOWED,
-    locales: {
-      en: 'Friendship connection is in status: {0}',
-    },
-  },
-  youDontHaveRequest: {
-    status: HttpStatus.METHOD_NOT_ALLOWED,
-    locales: {
-      en: "You don't have request from user with ID: {0}",
-    },
-  },
-  friendshipReceiverNotFound: {
-    status: HttpStatus.NOT_FOUND,
-    locales: {
-      en: 'Friendship receiver with userId {0} not found',
-    },
-  },
+  ...authErrors,
+  ...usersErrors,
+
+  ...friendshipsErrors,
+
+  ...roomsErrors,
   ...gameErrors,
 };

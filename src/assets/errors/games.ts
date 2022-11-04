@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { usersDataErrors } from '@assets/errors/game/usersDataErrors';
+import { usersDataErrors } from '@assets/errors/games/usersDataErrors';
 
 export const gameErrors = {
   ...usersDataErrors,
