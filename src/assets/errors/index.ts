@@ -1,4 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
+import { gameErrors } from "@assets/errors/game";
 
 export const errors = {
   invalidRefreshToken: {

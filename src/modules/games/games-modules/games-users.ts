@@ -16,7 +16,7 @@ export class GamesUsers {
   public generateBasicUser(userId) {
     return {
       userId,
-      cash: 100,
+      cash: 1000,
       work: null,
       skills: [],
       shares: [],
