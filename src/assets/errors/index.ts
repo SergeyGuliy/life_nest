@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { gameErrors } from "@assets/errors/game";
+import { gameErrors } from '@assets/errors/game';
 
 export const errors = {
   invalidRefreshToken: {
@@ -110,4 +110,5 @@ export const errors = {
       en: 'Friendship receiver with userId {0} not found',
     },
   },
+  ...gameErrors,
 };

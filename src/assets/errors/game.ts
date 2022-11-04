@@ -1,16 +1,13 @@
 import { HttpStatus } from '@nestjs/common';
+import { usersDataErrors } from '@assets/errors/game/usersDataErrors';
 
 export const gameErrors = {
-  gameNotEnoughCash: {
+  ...usersDataErrors,
+
+  gamePriceIsNotSame: {
     status: HttpStatus.METHOD_NOT_ALLOWED,
     locales: {
-      en: 'Not enough cash',
-    },
-  },
-  gamePriceDifferent: {
-    status: HttpStatus.METHOD_NOT_ALLOWED,
-    locales: {
-      en: 'Not enough cash',
+      en: 'Price is not same',
     },
   },
 };

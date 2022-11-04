@@ -62,11 +62,11 @@ export class GamesCryptos {
 
     if (actionData.operationType === 'TAKER') {
       if (crypto.currentPrice !== actionData.operationPrice) {
-        this.errorHandlerService.error('gamePriceDifferent', 'en');
+        this.errorHandlerService.error('gamePriceIsNotSame', 'en');
       }
 
       if (actionData.operationTotal > user.cash) {
-        this.errorHandlerService.error('gameNotEnoughCash', 'en');
+        this.errorHandlerService.error('gameUserNotEnoughCash', 'en');
       } else {
         user.cash = user.cash - actionData.operationTotal;
       }
