@@ -1,4 +1,3 @@
-import { HttpStatus } from '@nestjs/common';
 import { gameErrors } from '@assets/errors/games';
 import { authErrors } from '@assets/errors/auth';
 import { friendshipsErrors } from '@assets/errors/friendships';
