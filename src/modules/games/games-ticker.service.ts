@@ -72,7 +72,7 @@ export class GamesTickerService {
       where: { roomCreatedId: roomId },
     });
 
-    const date = this.gamesTime.generate()
+    const date = this.gamesTime.generate();
 
     const createdGame = new this.gameModel({
       roomId,

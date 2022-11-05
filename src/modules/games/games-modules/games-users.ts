@@ -5,7 +5,7 @@ export class GamesUsers {
   private tickOne(oldUserData) {
     return {
       ...oldUserData,
-      cash: oldUserData.cash + 100,
+      cash: oldUserData.cash,
     };
   }
 
@@ -16,7 +16,7 @@ export class GamesUsers {
   public generateBasicUser(userId) {
     return {
       userId,
-      cash: 1000,
+      cash: 10000,
       work: null,
       skills: [],
       shares: [],

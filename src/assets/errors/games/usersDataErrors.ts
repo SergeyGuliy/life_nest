@@ -7,4 +7,10 @@ export const usersDataErrors = {
       en: 'Not enough cash',
     },
   },
+  gameUserNotCrypto: {
+    status: HttpStatus.METHOD_NOT_ALLOWED,
+    locales: {
+      en: 'Not enough crypto',
+    },
+  },
 };

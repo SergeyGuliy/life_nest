@@ -6,7 +6,7 @@ import {
 } from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
-import { $math, $mMethods } from '@assets/mathjs/index';
+import { $mRandom, $mChain, $mMedian } from '@assets/mathjs/index';
 import * as moment from 'moment';
 import { GamesTime } from '@modules/games/games-modules/games-time';
 
@@ -20,7 +20,7 @@ export class GamesCryptos {
   private readonly gamesTime: GamesTime;
 
   private generateOne(name) {
-    const basePrice = $mMethods.$mRandom(50, 250);
+    const basePrice = $mRandom(50, 250);
 
     return {
       name,
@@ -31,7 +31,7 @@ export class GamesCryptos {
   }
 
   private generateBasicHistory({ history, ...cryptoData }, startDate) {
-    const countOfHistory = $mMethods.$mRandom(5, 20, 0);
+    const countOfHistory = $mRandom(5, 20, 0);
 
     let date: any = moment(startDate.date).subtract(countOfHistory - 1, 'M');
     date = this.gamesTime.generate(date);
@@ -55,11 +55,8 @@ export class GamesCryptos {
   private tickOne(oldCryptoData) {
     const { currentPrice } = oldCryptoData;
 
-    const randomMod = $mMethods.$mRandom(-5, 5);
-    const newPricePrice = $mMethods
-      .$mChain(currentPrice)
-      .percent(randomMod)
-      .done();
+    const randomMod = $mRandom(-15, 15);
+    const newPricePrice = $mChain(currentPrice).percent(randomMod).done();
 
     return {
       ...oldCryptoData,
@@ -93,51 +90,96 @@ export class GamesCryptos {
     return game.cryptos.find((i) => i.name === actionData.name).history;
   }
 
+  private getOrGenUserCrypto(cryptos, cryptoName) {
+    const userCrypto = cryptos.find(({ name }) => name === cryptoName);
+
+    return (
+      userCrypto || {
+        name: cryptoName,
+        median: 0,
+        count: 0,
+      }
+    );
+  }
+
+  private updateUserCrypto(cryptos, crypto) {
+    const cryptoId = cryptos.findIndex(({ name }) => name === crypto.name);
+
+    if (cryptoId >= 0) {
+      cryptos[cryptoId] = crypto;
+    } else {
+      cryptos.push(crypto);
+    }
+
+    return cryptos;
+  }
+
   public async buySell({ userId, actionData }) {
     const game = await this.gameModel.findById(actionData.gameId);
     const user = game.gameData.usersData.find((i) => i.userId === userId);
-    const crypto = game.cryptos.find((i) => i.name === actionData.name);
 
-    if (actionData.operationType === 'TAKER') {
-      if (crypto.currentPrice !== actionData.operationPrice) {
+    const { operationType, buySell, operationPrice } = actionData;
+
+    if (operationType === 'TAKER') {
+      const crypto = game.cryptos.find((i) => i.name === actionData.name);
+
+      if (crypto.currentPrice !== operationPrice) {
         this.errorHandlerService.error('gamePriceIsNotSame', 'en');
       }
 
-      if (actionData.operationTotal > user.cash) {
-        this.errorHandlerService.error('gameUserNotEnoughCash', 'en');
-      } else {
-        user.cash = user.cash - actionData.operationTotal;
-      }
-
-      const userCrypto = user.cryptos.find((i) => i.name === actionData.name);
-
-      if (!userCrypto) {
-        user.cryptos.push({
-          name: actionData.name,
-          mediumPrice: actionData.operationPrice,
-          totalCount: actionData.operationCount,
-        });
-      } else {
-        const oldTotalCount = userCrypto.totalCount;
-        const oldMediumPrice = userCrypto.mediumPrice;
-        const oldFullPrice = oldTotalCount * oldMediumPrice;
-
-        const newFullCount = userCrypto.totalCount + actionData.operationCount;
-        const newFullPrice =
-          actionData.operationPrice * actionData.operationCount;
-
-        userCrypto.totalCount = newFullCount;
-        userCrypto.mediumPrice = (oldFullPrice + newFullPrice) / newFullCount;
+      switch (buySell) {
+        case 'BUY':
+          user.cryptos = this.takerBuy(actionData, user);
+          break;
+        case 'SELL':
+          user.cryptos = this.takerSell(actionData, user);
+          break;
       }
     }
 
-    if (actionData.operationType === 'MAKER') {
-      // TODO make in future
-    }
-
-    console.log(game.gameData.usersData);
+    // if (operationType === 'MAKER' && buySell === 'BUY') {
+    //   user.cryptos = this.takerBuy(crypto, actionData, user);
+    // } else if (operationType === 'MAKER' && buySell === 'SELL') {
+    //   user.cryptos = this.takerBuy(crypto, actionData, user);
+    // }
 
     await this.gameModel.updateOne({ _id: actionData.gameId }, game);
     return user;
+  }
+
+  private takerBuy(
+    { name, operationTotal, operationPrice, operationCount },
+    user,
+  ) {
+    const userCrypto = this.getOrGenUserCrypto(user.cryptos, name);
+    user.cash = $mChain(user.cash).subtract(operationTotal).done();
+
+    const { median, count } = userCrypto;
+
+    const [newMedian, newCount] = $mMedian(
+      [median, count],
+      [operationPrice, operationCount],
+    );
+
+    userCrypto.count = newCount;
+    userCrypto.median = newMedian;
+
+    return this.updateUserCrypto(user.cryptos, userCrypto);
+  }
+
+  private takerSell({ name, operationCount, operationTotal }, user) {
+    const userCrypto = this.getOrGenUserCrypto(user.cryptos, name);
+
+    if (operationCount > userCrypto.count) {
+      this.errorHandlerService.error('gameUserNotCrypto', 'en');
+    }
+
+    user.cash = $mChain(user.cash).add(operationTotal).done();
+
+    userCrypto.count = $mChain(userCrypto.count)
+      .subtract(operationCount)
+      .done();
+
+    return this.updateUserCrypto(user.cryptos, userCrypto);
   }
 }

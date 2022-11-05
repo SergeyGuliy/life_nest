@@ -1,7 +1,9 @@
+import { multiply, round } from 'mathjs';
+
 const customFunctions = {
   percent(original, percent) {
     const coefficient = (percent + 100) / 100;
-    return original * coefficient;
+    return round(multiply(original, coefficient), 2);
   },
 };
 
