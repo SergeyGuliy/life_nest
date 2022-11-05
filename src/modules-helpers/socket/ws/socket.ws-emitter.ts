@@ -1,5 +1,6 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+declare let life_shared: any
 
 import { socketSetup_forceDisconnect } from '@constants/ws/socketSetup.js';
 

@@ -6,6 +6,7 @@ import {
 } from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { MathService } from '@modules-helpers/global-services/math.service';
 
 @Injectable()
 export class GamesCryptos {
@@ -13,6 +14,8 @@ export class GamesCryptos {
   private gameModel: Model<GameDocument>;
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(MathService)
+  private readonly $math: MathService;
 
   private generateOne(name) {
     return {
@@ -26,15 +29,18 @@ export class GamesCryptos {
   private tickOne(oldCryptoData) {
     const { currentPrice } = oldCryptoData;
 
-    const modification = 5;
+    const randomMod = this.$math.random(-5, 5);
+    const newPricePrice = this.$math
+      .chain(currentPrice)
+      .percent(randomMod)
+      .round(2);
+
+    console.log(randomMod);
 
     return {
       ...oldCryptoData,
       previousPrice: currentPrice,
-      currentPrice:
-        (currentPrice *
-          (100 + (Math.random() * modification - modification / 2))) /
-        100,
+      currentPrice: newPricePrice,
     };
   }
 
