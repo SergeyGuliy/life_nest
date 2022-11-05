@@ -4,6 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 import * as helmet from 'helmet';
 // import * as csurf from 'csurf';
 import { SocketIoAdapter } from '@assets/adapters/ws.adapter';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('events').EventEmitter.defaultMaxListeners = 100;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

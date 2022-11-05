@@ -6,7 +6,8 @@ import {
 } from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
-import { MathService } from '@modules-helpers/global-services/math.service';
+import { $math, $mMethods } from '@assets/mathjs/index';
+import { GamesTime } from '@modules/games/games-modules/games-time';
 
 @Injectable()
 export class GamesCryptos {
@@ -14,10 +15,19 @@ export class GamesCryptos {
   private gameModel: Model<GameDocument>;
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
-  @Inject(MathService)
-  private readonly $math: MathService;
+  @Inject(GamesTime)
+  private gamesTime: GamesTime;
 
   private generateOne(name) {
+    return {
+      name,
+      previousPrice: 100,
+      currentPrice: 100,
+      history: [],
+    };
+  }
+
+  private generateBasicHistory(generatedCryptos) {
     return {
       name,
       previousPrice: 100,
@@ -29,13 +39,11 @@ export class GamesCryptos {
   private tickOne(oldCryptoData) {
     const { currentPrice } = oldCryptoData;
 
-    const randomMod = this.$math.random(-5, 5);
-    const newPricePrice = this.$math
-      .chain(currentPrice)
+    const randomMod = $mMethods.$mRandom(-5, 5);
+    const newPricePrice = $mMethods
+      .$mChain(currentPrice)
       .percent(randomMod)
-      .round(2);
-
-    console.log(randomMod);
+      .done();
 
     return {
       ...oldCryptoData,
@@ -45,11 +53,19 @@ export class GamesCryptos {
   }
 
   public generate() {
-    return [
+    let generatedCryptos = [
       this.generateOne('BTC'),
       this.generateOne('ETH'),
       this.generateOne('BNB'),
     ];
+
+    const currentDate = this.gamesTime.generate();
+
+    generatedCryptos = generatedCryptos.map(this.generateBasicHistory);
+    console.log(generatedCryptos);
+    console.log(currentDate);
+
+    return generatedCryptos;
   }
 
   public tick(cryptos) {
