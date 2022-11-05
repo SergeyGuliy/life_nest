@@ -12,8 +12,8 @@ $math.import(customFunctions);
 const ROUND = 2;
 
 const $mMethods = {
-  $mRandom(min, max) {
-    return $math.round($math.random(min, max), ROUND);
+  $mRandom(min, max, round = ROUND) {
+    return $math.round($math.random(min, max), round);
   },
   $mChain(val) {
     return $math.chain(val);

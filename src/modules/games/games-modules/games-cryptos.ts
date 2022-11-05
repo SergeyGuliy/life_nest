@@ -7,6 +7,7 @@ import {
 import { Model } from 'mongoose';
 import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 import { $math, $mMethods } from '@assets/mathjs/index';
+import * as moment from 'moment';
 import { GamesTime } from '@modules/games/games-modules/games-time';
 
 @Injectable()
@@ -16,23 +17,38 @@ export class GamesCryptos {
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
   @Inject(GamesTime)
-  private gamesTime: GamesTime;
+  private readonly gamesTime: GamesTime;
 
   private generateOne(name) {
+    const basePrice = $mMethods.$mRandom(50, 250);
+
     return {
       name,
-      previousPrice: 100,
-      currentPrice: 100,
+      previousPrice: basePrice,
+      currentPrice: basePrice,
       history: [],
     };
   }
 
-  private generateBasicHistory(generatedCryptos) {
+  private generateBasicHistory({ history, ...cryptoData }, startDate) {
+    const countOfHistory = $mMethods.$mRandom(5, 20, 0);
+
+    let date: any = moment(startDate.date).subtract(countOfHistory - 1, 'M');
+    date = this.gamesTime.generate(date);
+
+    [...Array(countOfHistory).keys()].forEach(() => {
+      cryptoData = {
+        ...cryptoData,
+        date,
+      };
+      history.push(cryptoData);
+      cryptoData = this.tickOne(cryptoData);
+      date = this.gamesTime.tick(date);
+    });
+
     return {
-      name,
-      previousPrice: 100,
-      currentPrice: 100,
-      history: [],
+      ...cryptoData,
+      history,
     };
   }
 
@@ -52,18 +68,18 @@ export class GamesCryptos {
     };
   }
 
-  public generate() {
-    let generatedCryptos = [
+  public generate(date) {
+    let generatedCryptos: { history: any }[] = [
       this.generateOne('BTC'),
       this.generateOne('ETH'),
       this.generateOne('BNB'),
+      this.generateOne('SOL'),
+      this.generateOne('DOT'),
+      this.generateOne('APE'),
     ];
-
-    const currentDate = this.gamesTime.generate();
-
-    generatedCryptos = generatedCryptos.map(this.generateBasicHistory);
-    console.log(generatedCryptos);
-    console.log(currentDate);
+    generatedCryptos = generatedCryptos.map((crypto) =>
+      this.generateBasicHistory(crypto, date),
+    );
 
     return generatedCryptos;
   }

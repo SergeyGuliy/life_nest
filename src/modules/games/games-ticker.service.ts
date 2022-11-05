@@ -72,19 +72,21 @@ export class GamesTickerService {
       where: { roomCreatedId: roomId },
     });
 
+    const date = this.gamesTime.generate()
+
     const createdGame = new this.gameModel({
       roomId,
       gameSettings,
       gameAdmin: userId,
       gameUsers: usersInGameIds,
       gameData: {
-        date: this.gamesTime.generate(),
+        date,
         usersData: usersInGameIds.map(this.gamesUsers.generateBasicUser),
       },
       gameHistory: [],
 
       shares: this.gamesShares.generate(),
-      cryptos: this.gamesCryptos.generate(),
+      cryptos: this.gamesCryptos.generate(date),
     });
 
     const game = await createdGame.save();
