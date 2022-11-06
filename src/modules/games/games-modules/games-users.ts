@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { GamesWork } from '@modules/games/games-modules/games-work';
 
 @Injectable()
 export class GamesUsers {
+  @Inject(GamesWork)
+  private readonly gamesWork: GamesWork;
+
   private tickOne(oldUserData) {
     return {
       ...oldUserData,
@@ -17,7 +21,7 @@ export class GamesUsers {
     return {
       userId,
       cash: 10000,
-      work: null,
+      work: this.gamesWork.generate(),
       skills: [],
       shares: [],
       cryptos: [],

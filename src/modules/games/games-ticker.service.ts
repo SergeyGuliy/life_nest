@@ -87,6 +87,7 @@ export class GamesTickerService {
 
       shares: this.gamesShares.generate(),
       cryptos: this.gamesCryptos.generate(date),
+      userDataCash: [],
     });
 
     const game = await createdGame.save();

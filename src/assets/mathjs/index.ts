@@ -18,6 +18,11 @@ function $mChain(val) {
   return $m.chain(val);
 }
 
+function $mRoundUpper(val, round) {
+  const minus = $m.chain(val).mod(round).done();
+  return $m.chain(val).subtract(minus).done();
+}
+
 function $mMedian([median1, count1], [median2, count2]) {
   const fullPrice1 = multiply(median1, count1);
   const fullPrice2 = multiply(median2, count2);
@@ -29,4 +34,4 @@ function $mMedian([median1, count1], [median2, count2]) {
   return [newMedian, newCount];
 }
 
-export { $m, $mRandom, $mChain, $mMedian };
+export { $m, $mRandom, $mChain, $mMedian, $mRoundUpper };

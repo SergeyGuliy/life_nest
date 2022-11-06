@@ -1,14 +1,20 @@
 const frontEnd = {
-  name: 'FrontEnd developer',
-  key: 'frontEnd',
-  description: 'description',
-  levels: {
-    baseSalaryMin: 1000,
-    baseSalaryMax: 1000,
-    // requiredSkills,
+  workData: {
+    name: 'FrontEnd developer',
+    key: 'frontEnd',
+    description: 'description',
   },
-  level: 1,
-  baseSalary: 1000,
+  levels: {
+    1: {
+      level: 1,
+      baseSalary: {
+        min: 900,
+        max: 1100,
+      },
+      trialPeriod: 6,
+      // requiredSkills,
+    },
+  },
 };
 
 export const gamesWorks = [frontEnd];
