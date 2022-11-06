@@ -6,16 +6,16 @@ declare module 'mathjs' {
     percent(this: any, n?: any): any;
   }
 }
-const $math = create(all);
-$math.import(customFunctions);
+const $m = create(all);
+$m.import(customFunctions);
 
 const ROUND = 2;
 
 function $mRandom(min, max, round = ROUND) {
-  return $math.round($math.random(min, max), round);
+  return $m.round($m.random(min, max), round);
 }
 function $mChain(val) {
-  return $math.chain(val);
+  return $m.chain(val);
 }
 
 function $mMedian([median1, count1], [median2, count2]) {
@@ -29,4 +29,4 @@ function $mMedian([median1, count1], [median2, count2]) {
   return [newMedian, newCount];
 }
 
-export { $math, $mRandom, $mChain, $mMedian };
+export { $m, $mRandom, $mChain, $mMedian };
