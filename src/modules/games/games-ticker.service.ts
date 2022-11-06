@@ -87,7 +87,7 @@ export class GamesTickerService {
 
       shares: this.gamesShares.generate(),
       cryptos: this.gamesCryptos.generate(date),
-      userDataCash: [],
+      userDataCache: [],
     });
 
     const game = await createdGame.save();
@@ -123,6 +123,9 @@ export class GamesTickerService {
 
     // Tick game
     game = this.tick(game);
+
+    // CLean tick cache
+    game.userDataCache = [];
 
     // Save current game in mongodb
     await this.gameModel.updateOne({ _id: gameId }, game);

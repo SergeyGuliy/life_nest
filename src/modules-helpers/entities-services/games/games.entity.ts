@@ -36,6 +36,9 @@ export class Game {
 
   @Prop({ type: Array })
   cryptos: any;
+
+  @Prop({ type: Array })
+  userDataCache: any;
 }
 
 export const GamesEntity = SchemaFactory.createForClass(Game);

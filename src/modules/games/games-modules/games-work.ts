@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { gamesWorks } from '@modules/games/games-modules/games-works';
 import { $mRandom, $mRoundUpper } from '@assets/mathjs';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,11 +7,14 @@ import {
   GameDocument,
 } from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
+import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class GamesWork {
   @InjectModel(Game.name)
   private gameModel: Model<GameDocument>;
+  @Inject(ErrorHandlerService)
+  private readonly errorHandlerService: ErrorHandlerService;
 
   public generate() {
     const gamesWorksCount = gamesWorks.length - 1;
@@ -38,7 +41,13 @@ export class GamesWork {
   }
 
   private getInvoice(userWork) {
-    const { baseSalary, chanceSuccessfulInterview, ...invoiceData } = userWork;
+    const {
+      baseSalary,
+      chanceSuccessfulInterview,
+      interviewVisited,
+      interviewPassed,
+      ...invoiceData
+    } = userWork;
     const { min, max } = baseSalary;
 
     const randomSalary = $mRandom(min, max, 0);
@@ -54,15 +63,23 @@ export class GamesWork {
     const game = await this.gameModel.findById(gameId);
     const user = game.gameData.usersData.find((i) => i.userId === userId);
     user.work = null;
+
     await this.gameModel.updateOne({ _id: gameId }, game);
     return user;
   };
 
-  public getWorksList() {
-    // TODO make filtration for available works
-    const availableWorks = gamesWorks;
+  public async getWorksList({ userId, gameId }) {
+    const game = await this.gameModel.findById(gameId);
 
-    return availableWorks.map(({ workData, levels }) => {
+    const dataFromCache = game.userDataCache.find(
+      (i) => i.userId === userId && i.key === 'getWorksList',
+    );
+    if (dataFromCache) return dataFromCache.cache;
+
+    // TODO make filtration for available works
+    const availableWorks = gamesWorks.filter((i) => i);
+
+    const workOpportunities = availableWorks.map(({ workData, levels }) => {
       const { level, baseSalary, trialPeriod } = levels[1];
 
       let { min, max } = baseSalary;
@@ -77,19 +94,84 @@ export class GamesWork {
         ...workData,
         level,
         trialPeriod,
+        interviewVisited: false,
+        interviewPassed: false,
         baseSalary: { min, max },
         chanceSuccessfulInterview,
       };
     });
+
+    game.userDataCache.push({
+      userId,
+      key: 'getWorksList',
+      cache: workOpportunities,
+    });
+    await this.gameModel.updateOne({ _id: gameId }, game);
+
+    return workOpportunities;
   }
 
-  public goToJobInterview(userWork) {
-    const randomNumber = $mRandom(0, 100);
-    const isPassInterview = userWork.chanceSuccessfulInterview > randomNumber;
+  public async acceptWork({ userId, gameId, actionData }) {
+    const game = await this.gameModel.findById(gameId);
 
-    if (isPassInterview) {
-      return this.getInvoice(userWork);
+    const dataFromCache = game.userDataCache.find(
+      (i) => i.userId === userId && i.key === 'getWorksList',
+    );
+    if (!dataFromCache) {
+      this.errorHandlerService.error('gameUserNotExistWork', 'en');
     }
-    return { code: 'failedInterview' };
+    const work = dataFromCache.cache.find(({ key }) => key === actionData);
+    if (!work) {
+      this.errorHandlerService.error('gameUserNotExistWork', 'en');
+    }
+
+    const {
+      baseSalary,
+      chanceSuccessfulInterview,
+      interviewVisited,
+      interviewPassed,
+      ...workData
+    } = work;
+
+    const user = game.gameData.usersData.find((i) => i.userId === userId);
+    user.work = workData;
+
+    const userDataCache = game.userDataCache.find(
+      (i) => i.userId === userId && i.key === 'getWorksList',
+    );
+    userDataCache.cache = [];
+
+    await this.gameModel.updateOne({ _id: gameId }, game);
+    return user;
+  }
+
+  public async goToJobInterview({ userId, gameId, actionData }) {
+    const game = await this.gameModel.findById(gameId);
+
+    const dataFromCache = game.userDataCache.find(
+      (i) => i.userId === userId && i.key === 'getWorksList',
+    );
+    if (!dataFromCache) {
+      this.errorHandlerService.error('gameUserNotExistWork', 'en');
+    }
+    const work = dataFromCache.cache.find(({ key }) => key === actionData);
+    if (!work) {
+      this.errorHandlerService.error('gameUserNotExistWork', 'en');
+    }
+
+    const randomNumber = $mRandom(0, 100);
+    const isPassInterview = work.chanceSuccessfulInterview > randomNumber;
+
+    work.interviewVisited = true;
+    work.interviewPassed = isPassInterview;
+
+    const { min, max } = work.baseSalary;
+    const randomSalary = $mRandom(min, max, 0);
+    const roundedSalary = $mRoundUpper(randomSalary, 5);
+
+    work.salary = roundedSalary;
+
+    await this.gameModel.updateOne({ _id: gameId }, game);
+    return dataFromCache.cache;
   }
 }
