@@ -23,6 +23,7 @@ import { GamesUsers } from '@modules/games/games-modules/games-users';
 import { GamesTickerService } from '@modules/games/games-ticker.service';
 import { GamesShares } from '@modules/games/games-modules/games-shares';
 import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
+import { GamesWork } from '@modules/games/games-modules/games-work';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
     GamesShares,
     GamesCryptos,
     GamesUsers,
+    GamesWork,
     GamesTickerService,
     RoomsSocketGateway,
     SocketNameSpacerService,
