@@ -1,9 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { gamesWorks } from '@modules/games/games-modules/games-works';
 import { $mRandom, $mRoundUpper } from '@assets/mathjs';
+import { InjectModel } from '@nestjs/mongoose';
+import {
+  Game,
+  GameDocument,
+} from '@modules-helpers/entities-services/games/games.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class GamesWork {
+  @InjectModel(Game.name)
+  private gameModel: Model<GameDocument>;
+
   public generate() {
     const gamesWorksCount = gamesWorks.length - 1;
     const { workData, levels } = gamesWorks[$mRandom(0, gamesWorksCount, 0)];
@@ -40,6 +49,14 @@ export class GamesWork {
       salary: roundedSalary,
     };
   }
+
+  public leaveWork = async ({ userId, gameId }) => {
+    const game = await this.gameModel.findById(gameId);
+    const user = game.gameData.usersData.find((i) => i.userId === userId);
+    user.work = null;
+    await this.gameModel.updateOne({ _id: gameId }, game);
+    return user;
+  };
 
   public getWorksList() {
     // TODO make filtration for available works

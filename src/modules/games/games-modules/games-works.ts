@@ -1,6 +1,7 @@
 const frontEnd = {
   workData: {
     name: 'FrontEnd developer',
+    economicSectors: 'informationTechnology',
     key: 'frontEnd',
     description: 'description',
   },

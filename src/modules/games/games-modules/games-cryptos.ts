@@ -85,8 +85,8 @@ export class GamesCryptos {
     return cryptos.map(this.tickOne);
   }
 
-  public async getCryptoHistory({ actionData }) {
-    const game = await this.gameModel.findById(actionData.gameId);
+  public async getCryptoHistory({ actionData, gameId }) {
+    const game = await this.gameModel.findById(gameId);
     return game.cryptos.find((i) => i.name === actionData.name).history;
   }
 
@@ -114,8 +114,8 @@ export class GamesCryptos {
     return cryptos;
   }
 
-  public async buySell({ userId, actionData }) {
-    const game = await this.gameModel.findById(actionData.gameId);
+  public async buySell({ userId, actionData, gameId }) {
+    const game = await this.gameModel.findById(gameId);
     const user = game.gameData.usersData.find((i) => i.userId === userId);
 
     const { operationType, buySell, operationPrice } = actionData;
@@ -143,7 +143,7 @@ export class GamesCryptos {
     //   user.cryptos = this.takerBuy(crypto, actionData, user);
     // }
 
-    await this.gameModel.updateOne({ _id: actionData.gameId }, game);
+    await this.gameModel.updateOne({ _id: gameId }, game);
     return user;
   }
 
