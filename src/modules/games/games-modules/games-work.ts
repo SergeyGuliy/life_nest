@@ -20,13 +20,12 @@ export class GamesWork {
     const modifiedSalary = randomSalary;
     const roundedSalary = $mRoundUpper(modifiedSalary, 5);
 
-    const userWork = {
+    return {
       ...workData,
       salary: roundedSalary,
       trialPeriod: 0,
       level,
     };
-    return gamesWorks[$mRandom(0, gamesWorksCount, 0)];
   }
 
   private getInvoice(userWork) {
