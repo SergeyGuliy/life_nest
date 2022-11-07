@@ -16,11 +16,11 @@ import { ChatsWsEmitter } from './chats.ws-emitter';
 @WebSocketGateway()
 export class ChatsWsListener {
   @Inject(ChatsService)
-  private chatService: ChatsService;
+  private readonly chatService: ChatsService;
   @Inject(SocketNameSpacerService)
-  private socketNameSpacerService: SocketNameSpacerService;
+  private readonly socketNameSpacerService: SocketNameSpacerService;
   @Inject(ChatsWsEmitter)
-  private chatsWsEmitter: ChatsWsEmitter;
+  private readonly chatsWsEmitter: ChatsWsEmitter;
 
   @WebSocketServer() server: Server;
 

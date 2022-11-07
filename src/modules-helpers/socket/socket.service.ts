@@ -7,19 +7,19 @@ import { RoomsService } from '@modules/rooms/rooms.service';
 
 import { SocketNameSpacerService } from '../global-services/socket-namespaser.service';
 import { UsersManager } from '../entities-services/users/users.service';
-import { ErrorHandlerService } from '../global-services/error-handler.service';
+import { ErrorService } from '../global-services/error-handler.service';
 import { LOGOUT_TIMEOUT } from '@constants/index.js';
 
 @Injectable()
 export class SocketService {
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
   @Inject(RoomsService)
-  private roomsService: RoomsService;
+  private readonly roomsService: RoomsService;
   @Inject(SocketNameSpacerService)
-  private socketNameSpacerService: SocketNameSpacerService;
+  private readonly socketNameSpacerService: SocketNameSpacerService;
   @Inject(UsersManager)
-  private usersManager: UsersManager;
+  private readonly usersManager: UsersManager;
 
   private async logOutUserFormApp(userId) {
     const newUserSid = this.socketNameSpacerService.findSidByUserId(userId);
@@ -38,10 +38,9 @@ export class SocketService {
 
   private async getUserById(userId: number) {
     const user = await this.usersManager.db.findOne(userId);
-    if (user) {
-      return user;
-    }
-    this.errorHandlerService.error('userNotFound', 'en');
+    if (!user) this.errorService.e('userNotFound', 'en');
+
+    return user;
   }
 
   public async userLogIn(userId: number) {

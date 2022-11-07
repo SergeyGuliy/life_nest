@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   Inject,
 } from '@nestjs/common';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 import { PasswordEncoderService } from '@modules/auth/password-encoder.service';
@@ -13,8 +13,8 @@ import { PasswordEncoderService } from '@modules/auth/password-encoder.service';
 export class ValidateLoginPasswordGuard implements CanActivate {
   @Inject(UsersManager)
   private readonly usersManager: UsersManager;
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
   @Inject(PasswordEncoderService)
   private readonly passwordEncoderService: PasswordEncoderService;
 
@@ -32,7 +32,7 @@ export class ValidateLoginPasswordGuard implements CanActivate {
         userPassword: userData.password,
       },
       () => {
-        this.errorHandlerService.error('wrongPasswordOrLogin', 'en');
+        this.errorService.e('wrongPasswordOrLogin', 'en');
       },
     );
 

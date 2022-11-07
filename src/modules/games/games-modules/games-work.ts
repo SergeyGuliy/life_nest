@@ -7,14 +7,14 @@ import {
   GameDocument,
 } from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class GamesWork {
   @InjectModel(Game.name)
-  private gameModel: Model<GameDocument>;
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  private readonly gameModel: Model<GameDocument>;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
 
   public generate() {
     const gamesWorksCount = gamesWorks.length - 1;
@@ -118,11 +118,11 @@ export class GamesWork {
       (i) => i.userId === userId && i.key === 'getWorksList',
     );
     if (!dataFromCache) {
-      this.errorHandlerService.error('gameUserNotExistWork', 'en');
+      this.errorService.e('gameUserNotExistWork', 'en');
     }
     const work = dataFromCache.cache.find(({ key }) => key === actionData);
     if (!work) {
-      this.errorHandlerService.error('gameUserNotExistWork', 'en');
+      this.errorService.e('gameUserNotExistWork', 'en');
     }
 
     const {
@@ -152,12 +152,10 @@ export class GamesWork {
       (i) => i.userId === userId && i.key === 'getWorksList',
     );
     if (!dataFromCache) {
-      this.errorHandlerService.error('gameUserNotExistWork', 'en');
+      this.errorService.e('gameUserNotExistWork', 'en');
     }
     const work = dataFromCache.cache.find(({ key }) => key === actionData);
-    if (!work) {
-      this.errorHandlerService.error('gameUserNotExistWork', 'en');
-    }
+    if (!work) this.errorService.e('gameUserNotExistWork', 'en');
 
     const randomNumber = $mRandom(0, 100);
     const isPassInterview = work.chanceSuccessfulInterview > randomNumber;

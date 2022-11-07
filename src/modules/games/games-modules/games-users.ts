@@ -4,7 +4,7 @@ import { GamesWork } from '@modules/games/games-modules/games-work';
 @Injectable()
 export class GamesUsers {
   @Inject(GamesWork)
-  private gamesWork: GamesWork;
+  private readonly gamesWork: GamesWork;
 
   private tickOne(oldUserData) {
     return {

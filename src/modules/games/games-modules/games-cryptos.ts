@@ -5,7 +5,7 @@ import {
   GameDocument,
 } from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 import { $mRandom, $mChain, $mMedian } from '@assets/mathjs/index';
 import * as moment from 'moment';
 import { GamesTime } from '@modules/games/games-modules/games-time';
@@ -14,8 +14,8 @@ import { GamesTime } from '@modules/games/games-modules/games-time';
 export class GamesCryptos {
   @InjectModel(Game.name)
   private gameModel: Model<GameDocument>;
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
   @Inject(GamesTime)
   private readonly gamesTime: GamesTime;
 
@@ -124,7 +124,7 @@ export class GamesCryptos {
       const crypto = game.cryptos.find((i) => i.name === actionData.name);
 
       if (crypto.currentPrice !== operationPrice) {
-        this.errorHandlerService.error('gamePriceIsNotSame', 'en');
+        this.errorService.e('gamePriceIsNotSame', 'en');
       }
 
       switch (buySell) {
@@ -171,7 +171,7 @@ export class GamesCryptos {
     const userCrypto = this.getOrGenUserCrypto(user.cryptos, name);
 
     if (operationCount > userCrypto.count) {
-      this.errorHandlerService.error('gameUserNotCrypto', 'en');
+      this.errorService.e('gameUserNotCrypto', 'en');
     }
 
     user.cash = $mChain(user.cash).add(operationTotal).done();

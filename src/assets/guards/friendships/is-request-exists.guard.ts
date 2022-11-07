@@ -5,7 +5,7 @@ import {
   Inject,
 } from '@nestjs/common';
 
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 
 import { FriendshipManager } from '@modules-helpers/entities-services/friendships/friendships.service';
 
@@ -13,8 +13,8 @@ import { FriendshipManager } from '@modules-helpers/entities-services/friendship
 export class IsRequestExistsGuard implements CanActivate {
   @Inject(FriendshipManager)
   private readonly friendshipManager: FriendshipManager;
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
 
   async canActivate(context: ExecutionContext): Promise<any> {
     const { user, params } = context.switchToHttp().getRequest();
@@ -26,7 +26,7 @@ export class IsRequestExistsGuard implements CanActivate {
       receiverId,
     );
     if (friendships) {
-      this.errorHandlerService.error('friendshipsInStatus', 'en', [
+      this.errorService.e('friendshipsInStatus', 'en', [
         friendships.friendshipsStatus,
       ]);
     }

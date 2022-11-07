@@ -22,11 +22,11 @@ export class SocketWsListener
   @WebSocketServer()
   private readonly server: Server;
   @Inject(SocketService)
-  private socketService: SocketService;
+  private readonly socketService: SocketService;
   @Inject(SocketNameSpacerService)
-  private socketNameSpacerService: SocketNameSpacerService;
+  private readonly socketNameSpacerService: SocketNameSpacerService;
   @Inject(SocketWsEmitter)
-  private socketWsEmitter: SocketWsEmitter;
+  private readonly socketWsEmitter: SocketWsEmitter;
 
   public handleConnection(client: Socket): void {
     client.emit(socketSetup_callUserIdToServer, client.id);

@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   Inject,
 } from '@nestjs/common';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
 
 import { ROOM_TYPES } from '@enums/index.js';
@@ -13,8 +13,8 @@ import { ROOM_TYPES } from '@enums/index.js';
 export class PasswordGuard implements CanActivate {
   @Inject(RoomsManager)
   private readonly roomsManager: RoomsManager;
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
 
   async canActivate(context: ExecutionContext) {
     const { params, body } = context.switchToHttp().getRequest();
@@ -27,7 +27,7 @@ export class PasswordGuard implements CanActivate {
       roomData.typeOfRoom === ROOM_TYPES.PRIVATE &&
       roomData.roomPassword !== roomPassword
     ) {
-      this.errorHandlerService.error('wrongRoomPassword', 'en');
+      this.errorService.e('wrongRoomPassword', 'en');
     }
     return true;
   }

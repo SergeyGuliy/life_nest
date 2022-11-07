@@ -10,10 +10,10 @@ import { GamesTickerService } from '@modules/games/games-ticker.service';
 @Injectable()
 export class GamesService {
   @InjectModel(Game.name)
-  private gameModel: Model<GameDocument>;
+  private readonly gameModel: Model<GameDocument>;
 
   @Inject(GamesTickerService)
-  private gamesTickerService: GamesTickerService;
+  private readonly gamesTickerService: GamesTickerService;
 
   public async getGameById(gameId) {
     const game = await this.gameModel.findById(gameId);

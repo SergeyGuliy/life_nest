@@ -5,15 +5,15 @@ import {
   Inject,
 } from '@nestjs/common';
 
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
 
 @Injectable()
 export class CanSendFriendshipRequestGuard implements CanActivate {
   @Inject(UsersManager)
   private readonly usersManager: UsersManager;
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
 
   async canActivate(context: ExecutionContext): Promise<any> {
     const { user, params } = context.switchToHttp().getRequest();
@@ -22,11 +22,11 @@ export class CanSendFriendshipRequestGuard implements CanActivate {
     const receiverId = params.userId;
 
     if (+senderId === +receiverId) {
-      this.errorHandlerService.error('cantSendRequestToYourself', 'en');
+      this.errorService.e('cantSendRequestToYourself', 'en');
     }
     const receiverUserData = await this.usersManager.db.findOne(receiverId);
     if (!receiverUserData) {
-      this.errorHandlerService.error('friendshipReceiverNotFound', 'en', [
+      this.errorService.e('friendshipReceiverNotFound', 'en', [
         receiverId,
       ]);
     }

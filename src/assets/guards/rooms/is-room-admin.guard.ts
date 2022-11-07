@@ -5,14 +5,14 @@ import {
   Inject,
 } from '@nestjs/common';
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 
 @Injectable()
 export class IsRoomAdminGuard implements CanActivate {
   @Inject(UsersManager)
   private readonly usersManager: UsersManager;
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
 
   async canActivate(context: ExecutionContext) {
     const { params, user } = context.switchToHttp().getRequest();
@@ -25,6 +25,6 @@ export class IsRoomAdminGuard implements CanActivate {
 
     if (+roomCreatedId === +roomId) return true;
 
-    this.errorHandlerService.error('isNotRoomAdmin', 'en');
+    this.errorService.e('isNotRoomAdmin', 'en');
   }
 }

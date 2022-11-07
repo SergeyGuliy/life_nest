@@ -2,7 +2,7 @@ import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { errors } from '@assets/errors';
 
 @Injectable()
-export class ErrorHandlerService {
+export class ErrorService {
   private readonly errors = errors;
 
   private parseErrorString(errorTemplate, keys) {
@@ -15,7 +15,7 @@ export class ErrorHandlerService {
     return errorString;
   }
 
-  public error(errorType, locale = 'en', keys = [], context = {}) {
+  public e(errorType, locale = 'en', keys = [], context = {}) {
     const error = this.errors[errorType];
 
     if (error) {

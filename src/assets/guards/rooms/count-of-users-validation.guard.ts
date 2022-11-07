@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   Inject,
 } from '@nestjs/common';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
 
 import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
@@ -15,8 +15,8 @@ export class CountOfUsersValidationGuard implements CanActivate {
   private readonly roomsManager: RoomsManager;
   @Inject(UsersManager)
   private readonly usersManager: UsersManager;
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
 
   async canActivate(context: ExecutionContext) {
     const { params } = context.switchToHttp().getRequest();
@@ -29,7 +29,7 @@ export class CountOfUsersValidationGuard implements CanActivate {
     });
 
     if (usersInRoom.length > maxCountOfUsers) {
-      this.errorHandlerService.error('roomAlreadyFull', 'en');
+      this.errorService.e('roomAlreadyFull', 'en');
     }
     return true;
   }

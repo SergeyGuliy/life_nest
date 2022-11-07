@@ -4,15 +4,15 @@ import {
   ExecutionContext,
   Inject,
 } from '@nestjs/common';
-import { ErrorHandlerService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
 
 @Injectable()
 export class RoomBlockedGuard implements CanActivate {
   @Inject(RoomsManager)
   private readonly roomsManager: RoomsManager;
-  @Inject(ErrorHandlerService)
-  private readonly errorHandlerService: ErrorHandlerService;
+  @Inject(ErrorService)
+  private readonly errorService: ErrorService;
 
   async canActivate(context: ExecutionContext) {
     const { params } = context.switchToHttp().getRequest();
@@ -21,7 +21,7 @@ export class RoomBlockedGuard implements CanActivate {
     const { isBlocked } = await this.roomsManager.db.findOne(roomId);
 
     if (isBlocked) {
-      this.errorHandlerService.error('roomIsBLocked', 'en');
+      this.errorService.e('roomIsBLocked', 'en');
     }
     return true;
   }

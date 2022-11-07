@@ -17,24 +17,24 @@ import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
 @Injectable()
 export class GamesTickerService {
   @InjectModel(Game.name)
-  private gameModel: Model<GameDocument>;
+  private readonly gameModel: Model<GameDocument>;
   @Inject(RoomsManager)
   private readonly roomsManager: RoomsManager;
   @Inject(UsersManager)
   private readonly usersManager: UsersManager;
 
   @Inject(GamesWsEmitter)
-  private gamesWsEmitter: GamesWsEmitter;
+  private readonly gamesWsEmitter: GamesWsEmitter;
   @Inject(GamesTime)
-  private gamesTime: GamesTime;
+  private readonly gamesTime: GamesTime;
   @Inject(GamesUsers)
-  private gamesUsers: GamesUsers;
+  private readonly gamesUsers: GamesUsers;
   @Inject(GamesHistory)
-  private gamesHistory: GamesHistory;
+  private readonly gamesHistory: GamesHistory;
   @Inject(GamesShares)
-  private gamesShares: GamesShares;
+  private readonly gamesShares: GamesShares;
   @Inject(GamesCryptos)
-  private gamesCryptos: GamesCryptos;
+  private readonly gamesCryptos: GamesCryptos;
 
   private gamesRunning = {};
 
