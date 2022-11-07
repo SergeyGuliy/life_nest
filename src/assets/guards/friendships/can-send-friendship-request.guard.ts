@@ -26,9 +26,7 @@ export class CanSendFriendshipRequestGuard implements CanActivate {
     }
     const receiverUserData = await this.usersManager.db.findOne(receiverId);
     if (!receiverUserData) {
-      this.errorService.e('friendshipReceiverNotFound', 'en', [
-        receiverId,
-      ]);
+      this.errorService.e('friendshipReceiverNotFound', 'en', [receiverId]);
     }
 
     return true;
