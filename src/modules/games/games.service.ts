@@ -19,12 +19,15 @@ export class GamesService {
     const game = await this.gameModel.findById(gameId);
     return {
       date: game.gameData.date,
+      modifiers: game.modifiers,
+
       shares: game.shares.map(({ history, ...shareData }) => shareData),
       cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
+      credits: game.credits,
     };
   }
 
-  public async getInGameUserData(gameId, userId) {
+  public async getUserData(gameId, userId) {
     const game = await this.gameModel.findById(gameId);
     return game.gameData.usersData.find((i) => i.userId === userId);
   }

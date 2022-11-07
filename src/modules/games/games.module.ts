@@ -24,7 +24,7 @@ import { GamesTickerService } from '@modules/games/games-ticker.service';
 import { GamesShares } from '@modules/games/games-modules/games-shares';
 import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
 import { GamesWork } from '@modules/games/games-modules/games-work';
-import { GamesModification } from '@modules/games/games-modules/games-modificators';
+import { GamesModifiers } from '@modules/games/games-modules/games-modificators';
 import { GamesDeposits } from '@modules/games/games-modules/games-deposits';
 import { GamesCredits } from '@modules/games/games-modules/games-credits';
 
@@ -50,7 +50,7 @@ import { GamesCredits } from '@modules/games/games-modules/games-credits';
     RoomsSocketGateway,
     SocketNameSpacerService,
     GamesWsEmitter,
-    GamesModification,
+    GamesModifiers,
     GamesDeposits,
     GamesCredits,
   ],
@@ -66,7 +66,7 @@ import { GamesCredits } from '@modules/games/games-modules/games-credits';
     RoomsSocketGateway,
     SocketNameSpacerService,
     GamesWsEmitter,
-    GamesModification,
+    GamesModifiers,
     GamesDeposits,
     GamesCredits,
   ],

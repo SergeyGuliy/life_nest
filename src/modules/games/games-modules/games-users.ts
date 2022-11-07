@@ -17,7 +17,7 @@ export class GamesUsers {
     return usersData.map(this.tickOne);
   }
 
-  public generateBasicUser = (userId) => {
+  public generate = (userId) => {
     return {
       userId,
       cash: 10000,

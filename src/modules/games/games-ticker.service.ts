@@ -13,6 +13,8 @@ import { GamesUsers } from '@modules/games/games-modules/games-users';
 import { GamesHistory } from '@modules/games/games-modules/games-history';
 import { GamesShares } from '@modules/games/games-modules/games-shares';
 import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
+import { GamesCredits } from '@modules/games/games-modules/games-credits';
+import { GamesModifiers } from '@modules/games/games-modules/games-modificators';
 
 @Injectable()
 export class GamesTickerService {
@@ -35,12 +37,22 @@ export class GamesTickerService {
   private readonly gamesShares: GamesShares;
   @Inject(GamesCryptos)
   private readonly gamesCryptos: GamesCryptos;
+  @Inject(GamesCredits)
+  private readonly gamesCredits: GamesCredits;
+  @Inject(GamesModifiers)
+  private readonly gamesModifiers: GamesModifiers;
 
   private gamesRunning = {};
 
   private tick(game) {
     // Set new date in current session
     game.gameData.date = this.gamesTime.tick(game.gameData.date);
+
+    // Recalculate inflation
+    // Recalculate keyRate
+    // Recalculate unemployment
+    // Recalculate credits
+    game.credits = this.gamesCredits.tick(game.credits, game.modifiers);
 
     // Recalculate users data
     game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
@@ -55,8 +67,11 @@ export class GamesTickerService {
     // Send tick data to users
     this.gamesWsEmitter.gameTick(roomId, {
       date: game.gameData.date,
+      modifiers: game.modifiers,
+
       shares: game.shares.map(({ history, ...shareData }) => shareData),
       cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
+      credits: game.credits,
     });
 
     // Send for each user its own userData
@@ -65,7 +80,7 @@ export class GamesTickerService {
     });
   }
 
-  private async generateBacisGame(roomId, gameSettings) {
+  private async generate(roomId, gameSettings) {
     const usersInRoom = await this.usersManager.getUsersInRoom(roomId);
     const usersInGameIds = usersInRoom.map(({ userId }) => userId);
     const { userId } = await this.usersManager.db.findOne({
@@ -79,14 +94,18 @@ export class GamesTickerService {
       gameSettings,
       gameAdmin: userId,
       gameUsers: usersInGameIds,
+
+      modifiers: this.gamesModifiers.generate(),
       gameData: {
         date,
-        usersData: usersInGameIds.map(this.gamesUsers.generateBasicUser),
+        usersData: usersInGameIds.map(this.gamesUsers.generate),
       },
-      gameHistory: [],
 
       shares: this.gamesShares.generate(),
       cryptos: this.gamesCryptos.generate(date),
+      credits: this.gamesCredits.generate(),
+
+      gameHistory: [],
       userDataCache: [],
     });
 
@@ -100,7 +119,7 @@ export class GamesTickerService {
   }
 
   public async startGame(roomId, gameSettings) {
-    const { game, gameId } = await this.generateBacisGame(roomId, gameSettings);
+    const { game, gameId } = await this.generate(roomId, gameSettings);
 
     this.gamesWsEmitter.startGame(roomId, game);
 
