@@ -48,9 +48,9 @@ export class GamesTickerService {
     // Set new date in current session
     game.gameData.date = this.gamesTime.tick(game.gameData.date);
 
-    // Recalculate inflation
-    // Recalculate keyRate
-    // Recalculate unemployment
+    // Recalculate modifiers: (inflation, keyRate, unemployment)
+    game.modifiers = this.gamesModifiers.tick(game.modifiers, 1);
+
     // Recalculate credits
     game.credits = this.gamesCredits.tick(game.credits, game.modifiers);
 

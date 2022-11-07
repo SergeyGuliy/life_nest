@@ -24,6 +24,5 @@ export class GamesCredits {
     console.log(credits);
     console.log(modifiers);
     return credits;
-    console.log('recalculateCredits');
   }
 }
