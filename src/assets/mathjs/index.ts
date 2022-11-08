@@ -1,4 +1,4 @@
-import { create, all, multiply, add, round, divide } from 'mathjs';
+import { create, all, multiply, add, round, divide, sum, random } from 'mathjs';
 
 import { customFunctions } from '@assets/mathjs/custom-functions';
 declare module 'mathjs' {
@@ -18,9 +18,9 @@ function $mChain(val) {
   return $m.chain(val);
 }
 
-function $mRoundUpper(val, round) {
-  const minus = $m.chain(val).mod(round).done();
-  return $m.chain(val).subtract(minus).done();
+function $mRoundUpper(val, roundUpper) {
+  const minus = $m.chain(val).mod(roundUpper).done();
+  return $m.chain(val).subtract(minus);
 }
 
 function $mMedian([median1, count1], [median2, count2]) {
@@ -34,4 +34,23 @@ function $mMedian([median1, count1], [median2, count2]) {
   return [newMedian, newCount];
 }
 
-export { $m, $mRandom, $mChain, $mMedian, $mRoundUpper };
+function $mHistory(history, count) {
+  const filtered = history.filter((i, index) => index >= 12 - count);
+  return round(divide(+sum(filtered), count), 2);
+}
+
+function $mBasicParams(base, delta, step = 0.05, roundLess = 2) {
+  const min = base - delta;
+  const max = base + delta;
+  return $mRoundUpper(random(min, max), step).round(roundLess).done();
+}
+
+export {
+  $m,
+  $mRandom,
+  $mChain,
+  $mMedian,
+  $mRoundUpper,
+  $mHistory,
+  $mBasicParams,
+};

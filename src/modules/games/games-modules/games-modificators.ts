@@ -1,30 +1,71 @@
 import { Injectable } from '@nestjs/common';
-import { $m, $mChain } from '@assets/mathjs';
-import { divide, round, sum } from 'mathjs';
+import {
+  $mBasicParams,
+  $mChain,
+  $mHistory,
+  $mRandom,
+  $mRoundUpper,
+} from '@assets/mathjs';
+import { round } from 'mathjs';
 
-function getPrice(history, count) {
-  const filtered = history.filter((i, index) => index >= 12 - count);
-  return round(divide(+sum(filtered), count), 2);
+function fff(duration, target) {
+  function randomNumber(minimum, maximum) {
+    return Math.random() * (maximum - minimum) + minimum;
+  }
+  const d1 = [];
+  let prev = 0;
+
+  for (let x = 0; x < duration; x++) {
+    const max = target / duration;
+    // console.log(max);
+    prev = randomNumber(prev, prev + max);
+
+    d1.push(prev);
+  }
+  return d1;
 }
 
-const modifiers = {
-  GDP: 2,
-  unemployment: 10,
-  keyRate: 5,
-  inflation: {
-    accumulated: 1,
-    month1: 1,
-    month3: 1,
-    month6: 1,
-    month12: 1,
-    history: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-  },
-};
+const a = fff(30, 3);
+console.log(a);
 
 @Injectable()
 export class GamesModifiers {
   public generate() {
-    return modifiers;
+    const basicInflation = $mBasicParams(5, 1);
+    const basicKeyRate = $mBasicParams(5, 1);
+    const basicUnemployment = $mBasicParams(5, 1);
+    const basicGDP = $mBasicParams(5, 1);
+    const inflationHistory = [...Array(12).keys()].map(
+      () => +$mBasicParams(basicInflation, 0.1, 0.01),
+    );
+    const accumulatedInflation = inflationHistory.reduce(
+      (ac, cur) =>
+        $mChain(ac)
+          .percent(cur / 12)
+          .round(8)
+          .done(),
+      1,
+    );
+
+    return {
+      basic: {
+        inflation: basicInflation,
+        keyRate: basicKeyRate,
+        unemployment: basicUnemployment,
+        GDP: basicGDP,
+      },
+      inflation: {
+        accumulated: accumulatedInflation,
+        month1: inflationHistory[12],
+        month3: $mHistory(inflationHistory, 3),
+        month6: $mHistory(inflationHistory, 6),
+        month12: $mHistory(inflationHistory, 12),
+        history: inflationHistory,
+      },
+      keyRate: basicKeyRate,
+      unemployment: basicUnemployment,
+      GDP: basicGDP,
+    };
   }
 
   private calcInflation(inflation, inflationIncrement) {
@@ -34,11 +75,14 @@ export class GamesModifiers {
     history.push(inflationIncrement);
 
     return {
-      accumulated: $mChain(accumulated).percent(inflationIncrement).done(),
+      accumulated: $mChain(accumulated)
+        .percent(inflationIncrement / 12)
+        .round(8)
+        .done(),
       month1: inflationIncrement,
-      month3: getPrice(history, 3),
-      month6: getPrice(history, 6),
-      month12: getPrice(history, 12),
+      month3: $mHistory(history, 3),
+      month6: $mHistory(history, 6),
+      month12: $mHistory(history, 12),
       history,
     };
   }

@@ -56,12 +56,12 @@ export class GamesCryptos {
     const { currentPrice } = oldCryptoData;
 
     const randomMod = $mRandom(-15, 15);
-    const newPricePrice = $mChain(currentPrice).percent(randomMod).done();
+    const newPrice = $mChain(currentPrice).percent(randomMod).round(2).done();
 
     return {
       ...oldCryptoData,
       previousPrice: currentPrice,
-      currentPrice: newPricePrice,
+      currentPrice: newPrice,
     };
   }
 

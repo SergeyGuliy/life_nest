@@ -30,7 +30,7 @@ export class GamesWork {
     const randomSalary = $mRandom(min, max, 0);
     // TODO add modifications (inflation, unemployment...)
     const modifiedSalary = randomSalary;
-    const roundedSalary = $mRoundUpper(modifiedSalary, 5);
+    const roundedSalary = $mRoundUpper(modifiedSalary, 5).done();
 
     return {
       ...workData,
@@ -51,7 +51,7 @@ export class GamesWork {
     const { min, max } = baseSalary;
 
     const randomSalary = $mRandom(min, max, 0);
-    const roundedSalary = $mRoundUpper(randomSalary, 5);
+    const roundedSalary = $mRoundUpper(randomSalary, 5).done();
 
     return {
       ...invoiceData,
@@ -165,7 +165,7 @@ export class GamesWork {
 
     const { min, max } = work.baseSalary;
     const randomSalary = $mRandom(min, max, 0);
-    const roundedSalary = $mRoundUpper(randomSalary, 5);
+    const roundedSalary = $mRoundUpper(randomSalary, 5).done();
 
     work.salary = roundedSalary;
 
