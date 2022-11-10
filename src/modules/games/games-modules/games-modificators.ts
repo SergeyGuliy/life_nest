@@ -5,12 +5,7 @@ import {
   $mHistory,
   $mGenerateLine,
 } from '@assets/mathjs';
-import { round } from 'mathjs';
 
-// console.log($mGenerateLine(30, 0, 3));
-// console.log($mGenerateLine(30, 0, 3));
-// console.log($mGenerateLine(30, 0, 3));
-// console.log($mGenerateLine(30, 0, 3));
 const arrMonth = [...Array(12).keys()];
 
 @Injectable()
@@ -34,7 +29,7 @@ export class GamesModifiers {
 
     return {
       awaiting: {
-        inflation: [...$mGenerateLine(60, 0, 12)],
+        inflation: [...$mGenerateLine(24, 0, 6)],
       },
       basic: {
         basicInflation: basicInflation,
@@ -87,51 +82,88 @@ export class GamesModifiers {
     };
   }
 
-  private calcKeyRate(keyRate, { basicKeyRate, basicInflation }, { month3 }) {
+  private calcKeyRate(keyRate, { month3 }, { basicKeyRate, basicInflation }) {
     const { month1, history } = keyRate;
     if (month1 <= 2 || month1 >= 20) {
-      console.log('-------------- UNEXPECTED CRISIS --------------');
+      console.log('-------------- UNEXPECTED calcKeyRate  --------------');
       return keyRate;
     }
 
     const ratioInflation = month3 / basicInflation;
 
     if (ratioInflation >= 1.05) {
-      console.log('------------- RAISE KEY RATE -------------');
-      const newKeyRate = basicKeyRate + (month3 - basicInflation);
+      console.log('------------- RAISE keyRate -------------');
+      const newKeyRate = $mBasicParams(
+        basicKeyRate + (month3 - basicInflation),
+        0,
+        0.5,
+        1,
+      );
       return recalculateHistory(history, newKeyRate);
     } else if (ratioInflation >= 0.95 && month1 > basicKeyRate) {
-      console.log('------------ DECREASE KEY RATE -----------');
-      const newKeyRate = basicKeyRate + (month3 - basicInflation);
+      console.log('------------ DECREASE keyRate -----------');
+      const newKeyRate = $mBasicParams(
+        basicKeyRate + (month3 - basicInflation),
+        0,
+        0.5,
+        1,
+      );
       return recalculateHistory(history, newKeyRate);
-    } else {
-      console.log('--------------- PRINT MONEY --------------');
-      return keyRate;
     }
+    console.log('--------------- PRINT MONEY --------------');
+    return keyRate;
   }
 
-  private calcUnemployment(newKeyRate) {
-    return round(newKeyRate * 1.5, 2);
+  private calcUnemployment(
+    unemployment,
+    { month3 },
+    { basicUnemployment, basicInflation },
+  ) {
+    const { month1, history } = unemployment;
+    if (month1 <= 2 || month1 >= 20) {
+      console.log('-------------- UNEXPECTED calcUnemployment --------------');
+      return unemployment;
+    }
+    const ratioKeyRate = month3 / basicUnemployment;
+
+    if (ratioKeyRate >= 1.05) {
+      console.log('------------- RAISE unemployment -------------');
+      const newUnemployment = $mBasicParams(
+        basicUnemployment + (month3 - basicInflation),
+        0,
+        0.5,
+        1,
+      );
+      return recalculateHistory(history, newUnemployment);
+    } else if (ratioKeyRate >= 0.95 && month1 > basicUnemployment) {
+      console.log('------------ DECREASE unemployment -----------');
+      const newUnemployment = $mBasicParams(
+        basicUnemployment + (month3 - basicInflation),
+        0,
+        0.5,
+        1,
+      );
+      return recalculateHistory(history, newUnemployment);
+    }
+    return unemployment;
   }
 
   public tick({ awaiting, basic, inflation, keyRate, unemployment, GDP }) {
     const { basicInflation, basicKeyRate, basicUnemployment, basicGDP } = basic;
-    const bonusInflation = awaiting.inflation.shift();
-    const currentInflation = basicInflation + bonusInflation;
 
-    const newKeyRate = this.calcKeyRate(keyRate, basic, inflation);
-    // const newUnemployment = this.calcUnemployment(newKeyRate);
-    const newInflation = this.calcInflation(
-      inflation,
-      currentInflation + basicInflation,
-    );
+    const bonusInflation = awaiting.inflation.shift();
+    const currentInflation = basicInflation + (bonusInflation || 0);
+
+    const newUnemployment = this.calcUnemployment(unemployment, keyRate, basic);
+    const newKeyRate = this.calcKeyRate(keyRate, inflation, basic);
+    const newInflation = this.calcInflation(inflation, currentInflation);
 
     return {
       awaiting,
       basic,
       inflation: newInflation,
       keyRate: newKeyRate,
-      unemployment: unemployment,
+      unemployment: newUnemployment,
       GDP,
     };
   }
