@@ -7,6 +7,7 @@ import {
 } from '@assets/mathjs';
 
 const arrMonth = [...Array(12).keys()];
+const reportMonth = [2, 5, 8, 11];
 
 @Injectable()
 export class GamesModifiers {
@@ -15,9 +16,18 @@ export class GamesModifiers {
     const basicKeyRate = $mBasicParams(5, 1);
     const basicUnemployment = $mBasicParams(5, 1);
     const basicGDP = $mBasicParams(5, 1);
+
     const inflationHistory = arrMonth.map(
       () => +$mBasicParams(basicInflation, 0.1, 0.01),
     );
+    const keyRateHistory = arrMonth.map(
+      () => +$mBasicParams(basicKeyRate, 0.1, 0.01),
+    );
+    const unemploymentHistory = arrMonth.map(
+      () => +$mBasicParams(basicUnemployment, 0.1, 0.01),
+    );
+    const GDPHistory = arrMonth.map(() => +$mBasicParams(basicGDP, 0.1, 0.01));
+
     const accumulatedInflation = inflationHistory.reduce(
       (ac, cur) =>
         $mChain(ac)
@@ -29,7 +39,7 @@ export class GamesModifiers {
 
     return {
       awaiting: {
-        inflation: [...$mGenerateLine(24, 0, 6)],
+        inflation: [...$mGenerateLine(12, 0, 6)],
       },
       basic: {
         basicInflation: basicInflation,
@@ -46,25 +56,25 @@ export class GamesModifiers {
         history: inflationHistory,
       },
       keyRate: {
-        month1: basicKeyRate,
-        month3: basicKeyRate,
-        month6: basicKeyRate,
-        month12: basicKeyRate,
-        history: arrMonth.map(() => basicKeyRate),
+        month1: keyRateHistory[12],
+        month3: $mHistory(keyRateHistory, 3),
+        month6: $mHistory(keyRateHistory, 6),
+        month12: $mHistory(keyRateHistory, 12),
+        history: keyRateHistory,
       },
       unemployment: {
-        month1: basicUnemployment,
-        month3: basicUnemployment,
-        month6: basicUnemployment,
-        month12: basicUnemployment,
-        history: arrMonth.map(() => basicUnemployment),
+        month1: unemploymentHistory[12],
+        month3: $mHistory(unemploymentHistory, 3),
+        month6: $mHistory(unemploymentHistory, 6),
+        month12: $mHistory(unemploymentHistory, 12),
+        history: unemploymentHistory,
       },
       GDP: {
-        month1: basicGDP,
-        month3: basicGDP,
-        month6: basicGDP,
-        month12: basicGDP,
-        history: arrMonth.map(() => basicGDP),
+        month1: GDPHistory[12],
+        month3: $mHistory(GDPHistory, 3),
+        month6: $mHistory(GDPHistory, 6),
+        month12: $mHistory(GDPHistory, 12),
+        history: GDPHistory,
       },
     };
   }
@@ -82,36 +92,36 @@ export class GamesModifiers {
     };
   }
 
-  private calcKeyRate(keyRate, { month3 }, { basicKeyRate, basicInflation }) {
+  private calcKeyRate(
+    keyRate,
+    { month3 },
+    { basicKeyRate, basicInflation },
+    month,
+  ) {
     const { month1, history } = keyRate;
+
+    if (!reportMonth.includes(month)) {
+      return recalculateHistory(history, month1);
+    }
+
     if (month1 <= 2 || month1 >= 20) {
-      console.log('-------------- UNEXPECTED calcKeyRate  --------------');
-      return keyRate;
+      return recalculateHistory(history, month1);
     }
 
     const ratioInflation = month3 / basicInflation;
+    const newKeyRate = $mBasicParams(
+      basicKeyRate + (month3 - basicInflation),
+      0,
+      0.25,
+      1,
+    );
 
-    if (ratioInflation >= 1.05) {
-      console.log('------------- RAISE keyRate -------------');
-      const newKeyRate = $mBasicParams(
-        basicKeyRate + (month3 - basicInflation),
-        0,
-        0.5,
-        1,
-      );
+    if (ratioInflation >= 1.1) {
       return recalculateHistory(history, newKeyRate);
-    } else if (ratioInflation >= 0.95 && month1 > basicKeyRate) {
-      console.log('------------ DECREASE keyRate -----------');
-      const newKeyRate = $mBasicParams(
-        basicKeyRate + (month3 - basicInflation),
-        0,
-        0.5,
-        1,
-      );
+    } else if (ratioInflation >= 0.9) {
       return recalculateHistory(history, newKeyRate);
     }
-    console.log('--------------- PRINT MONEY --------------');
-    return keyRate;
+    return recalculateHistory(history, month1);
   }
 
   private calcUnemployment(
@@ -121,41 +131,36 @@ export class GamesModifiers {
   ) {
     const { month1, history } = unemployment;
     if (month1 <= 2 || month1 >= 20) {
-      console.log('-------------- UNEXPECTED calcUnemployment --------------');
-      return unemployment;
+      return recalculateHistory(history, month1);
     }
     const ratioKeyRate = month3 / basicUnemployment;
+    const newUnemployment = $mBasicParams(
+      basicUnemployment + (month3 - basicInflation),
+      0,
+      0.1,
+      1,
+    );
 
-    if (ratioKeyRate >= 1.05) {
-      console.log('------------- RAISE unemployment -------------');
-      const newUnemployment = $mBasicParams(
-        basicUnemployment + (month3 - basicInflation),
-        0,
-        0.5,
-        1,
-      );
+    if (ratioKeyRate >= 1.1) {
       return recalculateHistory(history, newUnemployment);
-    } else if (ratioKeyRate >= 0.95 && month1 > basicUnemployment) {
-      console.log('------------ DECREASE unemployment -----------');
-      const newUnemployment = $mBasicParams(
-        basicUnemployment + (month3 - basicInflation),
-        0,
-        0.5,
-        1,
-      );
+    } else if (ratioKeyRate >= 0.9) {
       return recalculateHistory(history, newUnemployment);
     }
-    return unemployment;
+    return recalculateHistory(history, month1);
   }
 
-  public tick({ awaiting, basic, inflation, keyRate, unemployment, GDP }) {
+  public tick(
+    { awaiting, basic, inflation, keyRate, unemployment, GDP },
+    { month },
+  ) {
     const { basicInflation, basicKeyRate, basicUnemployment, basicGDP } = basic;
 
     const bonusInflation = awaiting.inflation.shift();
-    const currentInflation = basicInflation + (bonusInflation || 0);
+    const currentInflation =
+      basicInflation + (bonusInflation || $mBasicParams(0, 0.25, 0.01, 2));
 
     const newUnemployment = this.calcUnemployment(unemployment, keyRate, basic);
-    const newKeyRate = this.calcKeyRate(keyRate, inflation, basic);
+    const newKeyRate = this.calcKeyRate(keyRate, inflation, basic, month);
     const newInflation = this.calcInflation(inflation, currentInflation);
 
     return {
