@@ -49,10 +49,10 @@ export class GamesTickerService {
     game.gameData.date = this.gamesTime.tick(game.gameData.date);
 
     // Recalculate modifiers: (inflation, keyRate, unemployment)
-    game.modifiers = this.gamesModifiers.tick(game.modifiers, 1);
+    game.modifiers = this.gamesModifiers.tick(game.modifiers);
 
     // Recalculate credits
-    game.credits = this.gamesCredits.tick(game.credits, game.modifiers);
+    game.credits = this.gamesCredits.tick(game.credits);
 
     // Recalculate users data
     game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);

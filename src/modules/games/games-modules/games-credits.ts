@@ -20,9 +20,7 @@ export class GamesCredits {
     };
   }
 
-  public tick(credits, modifiers) {
-    console.log(credits);
-    console.log(modifiers);
+  public tick(credits) {
     return credits;
   }
 }
