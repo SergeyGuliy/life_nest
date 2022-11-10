@@ -45,6 +45,15 @@ function $mBasicParams(base, delta, step = 0.05, roundLess = 2) {
   return $mRoundUpper(random(min, max), step).round(roundLess).done();
 }
 
+function $mGenerateLine(duration, start, target) {
+  const randomizer = (target - start) / duration;
+
+  return [...Array(duration).keys()].map((i) => {
+    const localTarget = randomizer * (i + 1) + start;
+    return $mBasicParams(localTarget, randomizer, 0.01, 2);
+  });
+}
+
 export {
   $m,
   $mRandom,
@@ -53,4 +62,5 @@ export {
   $mRoundUpper,
   $mHistory,
   $mBasicParams,
+  $mGenerateLine,
 };

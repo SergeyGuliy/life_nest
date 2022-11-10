@@ -3,30 +3,14 @@ import {
   $mBasicParams,
   $mChain,
   $mHistory,
-  $mRandom,
-  $mRoundUpper,
+  $mGenerateLine,
 } from '@assets/mathjs';
 import { round } from 'mathjs';
 
-function fff(duration, target) {
-  function randomNumber(minimum, maximum) {
-    return Math.random() * (maximum - minimum) + minimum;
-  }
-  const d1 = [];
-  let prev = 0;
-
-  for (let x = 0; x < duration; x++) {
-    const max = target / duration;
-    // console.log(max);
-    prev = randomNumber(prev, prev + max);
-
-    d1.push(prev);
-  }
-  return d1;
-}
-
-const a = fff(30, 3);
-console.log(a);
+console.log($mGenerateLine(30, 0, 3));
+console.log($mGenerateLine(30, 0, 3));
+console.log($mGenerateLine(30, 0, 3));
+console.log($mGenerateLine(30, 0, 3));
 
 @Injectable()
 export class GamesModifiers {
