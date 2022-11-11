@@ -55,7 +55,10 @@ export class GamesTickerService {
     );
 
     // Recalculate credits
-    game.credits = this.gamesCredits.tick(game.credits);
+    game.credits = this.gamesCredits.tick(
+      game.credits,
+      game.modifiers.keyRate.month1,
+    );
 
     // Recalculate users data
     game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
@@ -91,6 +94,7 @@ export class GamesTickerService {
     });
 
     const date = this.gamesTime.generate();
+    const modifiers = this.gamesModifiers.generate();
 
     const createdGame = new this.gameModel({
       roomId,
@@ -98,7 +102,7 @@ export class GamesTickerService {
       gameAdmin: userId,
       gameUsers: usersInGameIds,
 
-      modifiers: this.gamesModifiers.generate(),
+      modifiers,
       gameData: {
         date,
         usersData: usersInGameIds.map(this.gamesUsers.generate),
@@ -106,7 +110,7 @@ export class GamesTickerService {
 
       shares: this.gamesShares.generate(),
       cryptos: this.gamesCryptos.generate(date),
-      credits: this.gamesCredits.generate(),
+      credits: this.gamesCredits.generate(modifiers.keyRate.month1),
 
       gameHistory: [],
       userDataCache: [],

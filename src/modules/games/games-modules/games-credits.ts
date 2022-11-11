@@ -20,7 +20,7 @@ export class GamesCredits {
     };
   }
 
-  public tick(credits) {
+  public tick(credits, keyRate) {
     return credits;
   }
 }

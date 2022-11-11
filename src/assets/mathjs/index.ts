@@ -39,7 +39,7 @@ function $mHistory(history, count) {
   return round(divide(+sum(filtered), count), 2);
 }
 
-function $mBasicParams(base, delta, step = 0.05, roundLess = 2) {
+function $mBase(base, delta, step = 0.05, roundLess = 2) {
   const min = base - delta;
   const max = base + delta;
   return $mRoundUpper(random(min, max), step).round(roundLess).done();
@@ -50,7 +50,7 @@ function $mGenerateLine(duration, start, target) {
 
   return [...Array(duration).keys()].map((i) => {
     const localTarget = randomizer * (i + 1) + start;
-    return $mBasicParams(localTarget, randomizer, 0.01, 2);
+    return +$mBase(localTarget, randomizer, 0.01, 2);
   });
 }
 
@@ -61,6 +61,6 @@ export {
   $mMedian,
   $mRoundUpper,
   $mHistory,
-  $mBasicParams,
+  $mBase,
   $mGenerateLine,
 };

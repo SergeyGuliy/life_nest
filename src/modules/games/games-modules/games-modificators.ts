@@ -1,37 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import {
-  $mBasicParams,
-  $mChain,
-  $mHistory,
-  $mGenerateLine,
-} from '@assets/mathjs';
+import { $mBase, $mChain, $mHistory, $mGenerateLine } from '@assets/mathjs';
 
-const arrMonth = [...Array(12).keys()];
+const months = [...Array(12).keys()];
 const reportMonth = [2, 5, 8, 11];
 
 @Injectable()
 export class GamesModifiers {
   public generate() {
-    const basicInflation = $mBasicParams(5, 1);
-    const basicKeyRate = $mBasicParams(5, 1);
-    const basicUnemployment = $mBasicParams(5, 1);
-    const basicGDP = $mBasicParams(5, 1);
+    const basicInflation = $mBase(5, 1);
+    const basicKeyRate = $mBase(5, 1);
+    const basicUnemployment = $mBase(5, 1);
+    const basicGDP = $mBase(5, 1);
 
-    const inflationHistory = arrMonth.map(
-      () => +$mBasicParams(basicInflation, 0.1, 0.01),
-    );
-    const keyRateHistory = arrMonth.map(
-      () => +$mBasicParams(basicKeyRate, 0.1, 0.01),
-    );
-    const unemploymentHistory = arrMonth.map(
-      () => +$mBasicParams(basicUnemployment, 0.1, 0.01),
-    );
-    const GDPHistory = arrMonth.map(() => +$mBasicParams(basicGDP, 0.1, 0.01));
+    const inflationHist = months.map(() => $mBase(basicInflation, 0.1, 0.01));
+    const keyRateHist = months.map(() => $mBase(basicKeyRate, 0.1, 0.01));
+    const unemployHist = months.map(() => $mBase(basicUnemployment, 0.1, 0.01));
+    const GDPHist = months.map(() => $mBase(basicGDP, 0.1, 0.01));
 
-    const accumulatedInflation = inflationHistory.reduce(
+    const accumulatedInflation = inflationHist.reduce(
       (ac, cur) =>
         $mChain(ac)
-          .percent(cur / 12)
+          .percent(+cur / 12)
           .round(8)
           .done(),
       1,
@@ -39,7 +28,7 @@ export class GamesModifiers {
 
     return {
       awaiting: {
-        inflation: [...$mGenerateLine(12, 0, 6)],
+        inflation: [...$mGenerateLine(12, 0, 12)],
       },
       basic: {
         basicInflation: basicInflation,
@@ -49,33 +38,11 @@ export class GamesModifiers {
       },
       inflation: {
         accumulated: accumulatedInflation,
-        month1: inflationHistory[12],
-        month3: $mHistory(inflationHistory, 3),
-        month6: $mHistory(inflationHistory, 6),
-        month12: $mHistory(inflationHistory, 12),
-        history: inflationHistory,
+        ...generateHistory(inflationHist),
       },
-      keyRate: {
-        month1: keyRateHistory[12],
-        month3: $mHistory(keyRateHistory, 3),
-        month6: $mHistory(keyRateHistory, 6),
-        month12: $mHistory(keyRateHistory, 12),
-        history: keyRateHistory,
-      },
-      unemployment: {
-        month1: unemploymentHistory[12],
-        month3: $mHistory(unemploymentHistory, 3),
-        month6: $mHistory(unemploymentHistory, 6),
-        month12: $mHistory(unemploymentHistory, 12),
-        history: unemploymentHistory,
-      },
-      GDP: {
-        month1: GDPHistory[12],
-        month3: $mHistory(GDPHistory, 3),
-        month6: $mHistory(GDPHistory, 6),
-        month12: $mHistory(GDPHistory, 12),
-        history: GDPHistory,
-      },
+      keyRate: generateHistory(keyRateHist),
+      unemployment: generateHistory(unemployHist),
+      GDP: generateHistory(GDPHist),
     };
   }
 
@@ -109,7 +76,7 @@ export class GamesModifiers {
     }
 
     const ratioInflation = month3 / basicInflation;
-    const newKeyRate = $mBasicParams(
+    const newKeyRate = $mBase(
       basicKeyRate + (month3 - basicInflation),
       0,
       0.25,
@@ -134,7 +101,7 @@ export class GamesModifiers {
       return recalculateHistory(history, month1);
     }
     const ratioKeyRate = month3 / basicUnemployment;
-    const newUnemployment = $mBasicParams(
+    const newUnemployment = $mBase(
       basicUnemployment + (month3 - basicInflation),
       0,
       0.1,
@@ -157,7 +124,7 @@ export class GamesModifiers {
 
     const bonusInflation = awaiting.inflation.shift();
     const currentInflation =
-      basicInflation + (bonusInflation || $mBasicParams(0, 0.25, 0.01, 2));
+      basicInflation + (bonusInflation || $mBase(0, 0.25, 0.01, 2));
 
     const newUnemployment = this.calcUnemployment(unemployment, keyRate, basic);
     const newKeyRate = this.calcKeyRate(keyRate, inflation, basic, month);
@@ -178,8 +145,12 @@ function recalculateHistory(history, newValue) {
   history.shift();
   history.push(newValue);
 
+  return generateHistory(history);
+}
+
+function generateHistory(history) {
   return {
-    month1: newValue,
+    month1: history[12],
     month3: $mHistory(history, 3),
     month6: $mHistory(history, 6),
     month12: $mHistory(history, 12),
