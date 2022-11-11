@@ -24,10 +24,10 @@ export class GamesModifiers {
           .done(),
       1,
     );
-
+    // ...$mGenerateLine(12, 0, 12)
     return {
       awaiting: {
-        inflation: [...$mGenerateLine(12, 0, 12)],
+        inflation: [],
       },
       basic: {
         basicInflation: basicInflation,

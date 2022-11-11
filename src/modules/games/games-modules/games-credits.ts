@@ -16,7 +16,10 @@ export class GamesCredits {
     return { base, step };
   }
 
-  public generate(keyRate = 0) {
+  public generate(keyRate = 0, date, oldCredits?: any) {
+    if (oldCredits && oldCredits?.oldKeyRate === keyRate) {
+      return oldCredits;
+    }
     const { base, step } = this.getBaseAndStep(keyRate);
 
     const credits = creditsDuration.map((duration) => {
@@ -30,8 +33,9 @@ export class GamesCredits {
       };
     });
     return {
-      lastRecalculation: 1,
+      lastRecalculation: date,
       credits,
+      oldKeyRate: keyRate,
     };
   }
 }

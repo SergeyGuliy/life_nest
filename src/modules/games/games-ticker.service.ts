@@ -55,7 +55,11 @@ export class GamesTickerService {
     );
 
     // Recalculate credits
-    game.credits = this.gamesCredits.generate(game.modifiers.keyRate.month1);
+    game.credits = this.gamesCredits.generate(
+      game.modifiers.keyRate.month1,
+      game.gameData.date,
+      game.credits,
+    );
 
     // Recalculate users data
     game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
@@ -107,7 +111,7 @@ export class GamesTickerService {
 
       shares: this.gamesShares.generate(),
       cryptos: this.gamesCryptos.generate(date),
-      credits: this.gamesCredits.generate(modifiers.keyRate.month1),
+      credits: this.gamesCredits.generate(modifiers.keyRate.month1, date),
 
       gameHistory: [],
       userDataCache: [],
