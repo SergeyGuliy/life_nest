@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { $mBase, $mChain, $mHistory, $mGenerateLine } from '@assets/mathjs';
 
-const months = [...Array(12).keys()];
-const reportMonth = [2, 5, 8, 11];
+import { reportMonths, months } from '../constants';
 
 @Injectable()
 export class GamesModifiers {
@@ -67,7 +66,7 @@ export class GamesModifiers {
   ) {
     const { month1, history } = keyRate;
 
-    if (!reportMonth.includes(month)) {
+    if (!reportMonths.includes(month)) {
       return recalculateHistory(history, month1);
     }
 

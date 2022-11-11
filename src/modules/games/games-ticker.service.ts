@@ -55,10 +55,7 @@ export class GamesTickerService {
     );
 
     // Recalculate credits
-    game.credits = this.gamesCredits.tick(
-      game.credits,
-      game.modifiers.keyRate.month1,
-    );
+    game.credits = this.gamesCredits.generate(game.modifiers.keyRate.month1);
 
     // Recalculate users data
     game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
