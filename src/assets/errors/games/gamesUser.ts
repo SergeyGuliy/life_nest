@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 
-export const usersDataErrors = {
+export const gamesUser = {
   gameUserNotEnoughCash: {
     status: HttpStatus.METHOD_NOT_ALLOWED,
     locales: {

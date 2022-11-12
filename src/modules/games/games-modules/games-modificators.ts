@@ -24,9 +24,10 @@ export class GamesModifiers {
           .done(),
       1,
     );
-    // ...$mGenerateLine(12, 0, 12)
+
     return {
       awaiting: {
+        // inflation: [...$mGenerateLine(12, 0, 12)],
         inflation: [],
       },
       basic: {
@@ -149,7 +150,7 @@ function recalculateHistory(history, newValue) {
 
 function generateHistory(history) {
   return {
-    month1: history[12],
+    month1: history[11],
     month3: $mHistory(history, 3),
     month6: $mHistory(history, 6),
     month12: $mHistory(history, 12),

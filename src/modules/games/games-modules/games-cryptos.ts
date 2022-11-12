@@ -152,7 +152,7 @@ export class GamesCryptos {
     user,
   ) {
     const userCrypto = this.getOrGenUserCrypto(user.cryptos, name);
-    user.cash = $mChain(user.cash).subtract(operationTotal).done();
+    user.cash = $mChain(user.cash).subtract(operationTotal).round(2).done();
 
     const { median, count } = userCrypto;
 
@@ -174,7 +174,7 @@ export class GamesCryptos {
       this.errorService.e('gameUserNotCrypto', 'en');
     }
 
-    user.cash = $mChain(user.cash).add(operationTotal).done();
+    user.cash = $mChain(user.cash).add(operationTotal).round(2).done();
 
     userCrypto.count = $mChain(userCrypto.count)
       .subtract(operationCount)

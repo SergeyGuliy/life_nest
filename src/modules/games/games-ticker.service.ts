@@ -44,49 +44,6 @@ export class GamesTickerService {
 
   private gamesRunning = {};
 
-  private tick(game) {
-    // Set new date in current session
-    game.gameData.date = this.gamesTime.tick(game.gameData.date);
-
-    // Recalculate modifiers: (inflation, keyRate, unemployment)
-    game.modifiers = this.gamesModifiers.tick(
-      game.modifiers,
-      game.gameData.date,
-    );
-
-    // Recalculate credits
-    game.credits = this.gamesCredits.generate(
-      game.modifiers.keyRate.month1,
-      game.gameData.date,
-      game.credits,
-    );
-
-    // Recalculate users data
-    game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
-
-    // Recalculate cryptos data
-    game.cryptos = this.gamesCryptos.tick(game.cryptos);
-
-    return game;
-  }
-
-  private sendTick(roomId, game) {
-    // Send tick data to users
-    this.gamesWsEmitter.gameTick(roomId, {
-      date: game.gameData.date,
-      modifiers: game.modifiers,
-
-      shares: game.shares.map(({ history, ...shareData }) => shareData),
-      cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
-      credits: game.credits,
-    });
-
-    // Send for each user its own userData
-    game.gameData.usersData.forEach((userData) => {
-      this.gamesWsEmitter.sendUserData(userData.userId, userData);
-    });
-  }
-
   private async generate(roomId, gameSettings) {
     const usersInRoom = await this.usersManager.getUsersInRoom(roomId);
     const usersInGameIds = usersInRoom.map(({ userId }) => userId);
@@ -134,6 +91,49 @@ export class GamesTickerService {
     this.gameTicker(roomId, { gameId, gameSettings: game.gameSettings });
 
     return;
+  }
+
+  private tick(game) {
+    // Set new date in current session
+    game.gameData.date = this.gamesTime.tick(game.gameData.date);
+
+    // Recalculate modifiers: (inflation, keyRate, unemployment)
+    game.modifiers = this.gamesModifiers.tick(
+      game.modifiers,
+      game.gameData.date,
+    );
+
+    // Recalculate credits
+    game.credits = this.gamesCredits.generate(
+      game.modifiers.keyRate.month1,
+      game.gameData.date,
+      game.credits,
+    );
+
+    // Recalculate users data
+    game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
+
+    // Recalculate cryptos data
+    game.cryptos = this.gamesCryptos.tick(game.cryptos);
+
+    return game;
+  }
+
+  private sendTick(roomId, game) {
+    // Send tick data to users
+    this.gamesWsEmitter.gameTick(roomId, {
+      date: game.gameData.date,
+      modifiers: game.modifiers,
+
+      shares: game.shares.map(({ history, ...shareData }) => shareData),
+      cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
+      credits: game.credits,
+    });
+
+    // Send for each user its own userData
+    game.gameData.usersData.forEach((userData) => {
+      this.gamesWsEmitter.sendUserData(userData.userId, userData);
+    });
   }
 
   private gameTicker(roomId, { gameId, gameSettings }) {
