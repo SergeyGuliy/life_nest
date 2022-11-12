@@ -16,7 +16,7 @@ import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
 import { User } from '@assets/decorators/user.decorator';
 import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
 import { GamesWork } from '@modules/games/games-modules/games-work';
-import {GamesCredits} from "@modules/games/games-modules/games-credits";
+import { GamesCredits } from '@modules/games/games-modules/games-credits';
 
 @Controller('games')
 export class GamesController {

@@ -8,6 +8,7 @@ import {
 } from '@modules-helpers/entities-services/games/games.entity';
 import { Model } from 'mongoose';
 import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
+import { GamesTime } from '@modules/games/games-modules/games-time';
 
 const creditDecreaseKeyRate = -20;
 const creditsDuration = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -18,6 +19,8 @@ export class GamesCredits {
   private gameModel: Model<GameDocument>;
   @Inject(ErrorService)
   private readonly errorService: ErrorService;
+  @Inject(GamesTime)
+  private readonly gamesTime: GamesTime;
 
   private getBaseAndStep(keyRate) {
     const step = 0.1;
@@ -83,10 +86,11 @@ export class GamesCredits {
     user.credits.push({
       duration: creditServer.duration,
       percent: creditServer.percent,
-      start: game.gameData.date,
+      creditStart: game.gameData.date,
       cashCount,
       incomePerMonth,
       incomeTotal,
+      creditEnd: this.gamesTime.tick(game.gameData.date, creditServer.duration),
     });
 
     await this.gameModel.updateOne({ _id: gameId }, game);

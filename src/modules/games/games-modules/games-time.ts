@@ -16,8 +16,8 @@ export class GamesTime {
     };
   }
 
-  public tick(date) {
-    const dateWithAddedMonth = moment(date.date).add(1, 'M');
+  public tick(date, countMonth = 1) {
+    const dateWithAddedMonth = moment(date.date).add(countMonth, 'M');
     return this.generate(dateWithAddedMonth);
   }
 
