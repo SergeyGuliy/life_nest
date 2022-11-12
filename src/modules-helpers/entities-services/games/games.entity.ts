@@ -40,6 +40,9 @@ export class Game {
   @Prop({ type: Object })
   credits: any;
 
+  @Prop({ type: Object })
+  deposits: any;
+
   @Prop({ type: Array })
   userDataCache: any;
 

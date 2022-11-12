@@ -10,7 +10,7 @@ import { Model } from 'mongoose';
 import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 import { GamesTime } from '@modules/games/games-modules/games-time';
 
-const creditDecreaseKeyRate = -20;
+const creditIncrementKeyRate = 20;
 const creditsDuration = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 @Injectable()
@@ -25,7 +25,7 @@ export class GamesCredits {
   private getBaseAndStep(keyRate) {
     const step = 0.1;
 
-    let base = $mChain(keyRate).percent(creditDecreaseKeyRate).done();
+    let base = $mChain(keyRate).percent(creditIncrementKeyRate).done();
     base = $mBase(base, 0, 0.1, 1);
 
     return { base, step };
@@ -60,8 +60,13 @@ export class GamesCredits {
 
     const { cashCount, credit } = actionData;
 
-    if (cashCount > user.cash) {
-      this.errorService.e('gameUserNotEnoughCash', 'en');
+    if (false) {
+      // TODO Check can user pay for credit
+      // this.errorService.e('gameUserNotEnoughCash', 'en');
+    }
+    if (false) {
+      // TODO Check credit history
+      // this.errorService.e('gameUserNotEnoughCash', 'en');
     }
 
     const creditServer = game.credits.credits.find(
@@ -71,12 +76,12 @@ export class GamesCredits {
       this.errorService.e('gamesCreditsPercentNotSame', 'en');
     }
     const monthPercent = $mChain(creditServer.percent).divide(12).done();
-    const incomePerMonth = $mChain(cashCount)
+    const decrementPerMonth = $mChain(cashCount)
       .percent(monthPercent)
       .subtract(cashCount)
       .round(2)
       .done();
-    const incomeTotal = $mChain(incomePerMonth)
+    const decrementTotal = $mChain(decrementPerMonth)
       .multiply(creditServer.duration)
       .round(2)
       .done();
@@ -88,8 +93,8 @@ export class GamesCredits {
       percent: creditServer.percent,
       creditStart: game.gameData.date,
       cashCount,
-      incomePerMonth,
-      incomeTotal,
+      decrementPerMonth,
+      decrementTotal,
       creditEnd: this.gamesTime.tick(game.gameData.date, creditServer.duration),
     });
 

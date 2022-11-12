@@ -15,6 +15,7 @@ import { GamesShares } from '@modules/games/games-modules/games-shares';
 import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
 import { GamesCredits } from '@modules/games/games-modules/games-credits';
 import { GamesModifiers } from '@modules/games/games-modules/games-modificators';
+import {GamesDeposits} from "@modules/games/games-modules/games-deposits";
 
 @Injectable()
 export class GamesTickerService {
@@ -39,6 +40,8 @@ export class GamesTickerService {
   private readonly gamesCryptos: GamesCryptos;
   @Inject(GamesCredits)
   private readonly gamesCredits: GamesCredits;
+  @Inject(GamesDeposits)
+  private readonly gamesDeposits: GamesDeposits;
   @Inject(GamesModifiers)
   private readonly gamesModifiers: GamesModifiers;
 
@@ -69,6 +72,7 @@ export class GamesTickerService {
       shares: this.gamesShares.generate(),
       cryptos: this.gamesCryptos.generate(date),
       credits: this.gamesCredits.generate(modifiers.keyRate.month1, date),
+      deposits: this.gamesDeposits.generate(modifiers.keyRate.month1, date),
 
       gameHistory: [],
       userDataCache: [],
