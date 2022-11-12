@@ -18,7 +18,7 @@ export class GamesWsEmitter {
       .emit('games_gameStarted', gameData);
   }
 
-  public gameTick(roomId, tickData): void {
+  public sendTick(roomId, tickData): void {
     this.server.to(this.getRoomName(roomId)).emit('games_tick', tickData);
   }
 

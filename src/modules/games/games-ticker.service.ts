@@ -15,7 +15,7 @@ import { GamesShares } from '@modules/games/games-modules/games-shares';
 import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
 import { GamesCredits } from '@modules/games/games-modules/games-credits';
 import { GamesModifiers } from '@modules/games/games-modules/games-modificators';
-import {GamesDeposits} from "@modules/games/games-modules/games-deposits";
+import { GamesDeposits } from '@modules/games/games-modules/games-deposits';
 
 @Injectable()
 export class GamesTickerService {
@@ -97,7 +97,36 @@ export class GamesTickerService {
     return;
   }
 
-  private tick(game) {
+  private sendTick(roomId, game) {
+    // Send tick data to users
+    this.gamesWsEmitter.sendTick(roomId, {
+      date: game.gameData.date,
+      modifiers: game.modifiers,
+
+      shares: game.shares.map(({ history, ...shareData }) => shareData),
+      cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
+      credits: game.credits,
+      deposits: game.deposits,
+    });
+
+    // Send for each user its own userData
+    game.gameData.usersData.forEach((userData) => {
+      this.gamesWsEmitter.sendUserData(userData.userId, userData);
+    });
+  }
+
+  private gameTicker(roomId, { gameId, gameSettings }) {
+    this.gamesRunning[gameId] = setInterval(() => {
+      this.tick(roomId, gameId);
+    }, gameSettings.timePerTurn * 1000);
+  }
+
+  private async tick(roomId, gameId) {
+    let game = await this.gameModel.findById(gameId);
+
+    // Save latest gameData in history
+    game = this.gamesHistory.save(game);
+
     // Set new date in current session
     game.gameData.date = this.gamesTime.tick(game.gameData.date);
 
@@ -114,46 +143,18 @@ export class GamesTickerService {
       game.credits,
     );
 
+    // Recalculate credits
+    game.deposits = this.gamesDeposits.generate(
+      game.modifiers.keyRate.month1,
+      game.gameData.date,
+      game.deposits,
+    );
+
     // Recalculate users data
     game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
 
     // Recalculate cryptos data
     game.cryptos = this.gamesCryptos.tick(game.cryptos);
-
-    return game;
-  }
-
-  private sendTick(roomId, game) {
-    // Send tick data to users
-    this.gamesWsEmitter.gameTick(roomId, {
-      date: game.gameData.date,
-      modifiers: game.modifiers,
-
-      shares: game.shares.map(({ history, ...shareData }) => shareData),
-      cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
-      credits: game.credits,
-    });
-
-    // Send for each user its own userData
-    game.gameData.usersData.forEach((userData) => {
-      this.gamesWsEmitter.sendUserData(userData.userId, userData);
-    });
-  }
-
-  private gameTicker(roomId, { gameId, gameSettings }) {
-    this.gamesRunning[gameId] = setInterval(() => {
-      this.gameTick(roomId, gameId);
-    }, gameSettings.timePerTurn * 1000);
-  }
-
-  private async gameTick(roomId, gameId) {
-    let game = await this.gameModel.findById(gameId);
-
-    // Save latest gameData in history
-    game = this.gamesHistory.save(game);
-
-    // Tick game
-    game = this.tick(game);
 
     // CLean tick cache
     game.userDataCache = [];

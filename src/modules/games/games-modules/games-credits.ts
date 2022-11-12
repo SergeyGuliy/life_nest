@@ -32,33 +32,22 @@ export class GamesCredits {
   }
 
   public generate(keyRate = 0, date, oldCredits?: any) {
-    if (oldCredits && oldCredits?.oldKeyRate === keyRate) {
-      return oldCredits;
-    }
+    if (oldCredits && oldCredits?.oldKeyRate === keyRate) return oldCredits;
+
     const { base, step } = this.getBaseAndStep(keyRate);
 
     const credits = creditsDuration.map((duration) => {
       const stepModifiers = (12 - duration) * step;
-      const calculatedPercent = $mBase(base - stepModifiers, 0, 0.1, 1);
-
-      return {
-        duration,
-        disabled: false,
-        percent: calculatedPercent,
-      };
+      const percent = $mBase(base - stepModifiers, 0, 0.1, 1);
+      return { duration, disabled: false, percent };
     });
-    return {
-      lastRecalculation: date,
-      credits,
-      oldKeyRate: keyRate,
-    };
+    return { date, credits, oldKeyRate: keyRate };
   }
 
-  public async takeCredit({ userId, actionData, gameId }) {
+  public async take({ userId, actionData, gameId }) {
     const game = await this.gameModel.findById(gameId);
     const user = game.gameData.usersData.find((i) => i.userId === userId);
-
-    const { cashCount, credit } = actionData;
+    const { cash, credit } = actionData;
 
     if (false) {
       // TODO Check can user pay for credit
@@ -69,33 +58,27 @@ export class GamesCredits {
       // this.errorService.e('gameUserNotEnoughCash', 'en');
     }
 
-    const creditServer = game.credits.credits.find(
+    const { duration, percent } = game.credits.credits.find(
       ({ duration }) => duration === credit.duration,
     );
-    if (creditServer.percent !== credit.percent) {
+    if (percent !== credit.percent) {
       this.errorService.e('gamesCreditsPercentNotSame', 'en');
     }
-    const monthPercent = $mChain(creditServer.percent).divide(12).done();
-    const decrementPerMonth = $mChain(cashCount)
-      .percent(monthPercent)
-      .subtract(cashCount)
-      .round(2)
-      .done();
-    const decrementTotal = $mChain(decrementPerMonth)
-      .multiply(creditServer.duration)
-      .round(2)
-      .done();
+    let perMonth = $mChain(percent).divide(12).done();
+    perMonth = $mChain(cash).percent(perMonth).subtract(cash).round(2).done();
+    const total = $mChain(perMonth).multiply(duration).round(2).done();
 
-    user.cash = $mChain(user.cash).subtract(cashCount).round(2).done();
+    user.cash = $mChain(user.cash).subtract(cash).round(2).done();
 
     user.credits.push({
-      duration: creditServer.duration,
-      percent: creditServer.percent,
-      creditStart: game.gameData.date,
-      cashCount,
-      decrementPerMonth,
-      decrementTotal,
-      creditEnd: this.gamesTime.tick(game.gameData.date, creditServer.duration),
+      duration,
+      percent,
+      cash,
+      perMonth,
+      total,
+
+      start: game.gameData.date,
+      end: this.gamesTime.tick(game.gameData.date, duration),
     });
 
     await this.gameModel.updateOne({ _id: gameId }, game);

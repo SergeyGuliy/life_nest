@@ -17,6 +17,7 @@ import { User } from '@assets/decorators/user.decorator';
 import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
 import { GamesWork } from '@modules/games/games-modules/games-work';
 import { GamesCredits } from '@modules/games/games-modules/games-credits';
+import { GamesDeposits } from '@modules/games/games-modules/games-deposits';
 
 @Controller('games')
 export class GamesController {
@@ -28,6 +29,8 @@ export class GamesController {
   private readonly gamesWork: GamesWork;
   @Inject(GamesCredits)
   private readonly gamesCredits: GamesCredits;
+  @Inject(GamesDeposits)
+  private readonly gamesDeposits: GamesDeposits;
 
   @Post('start')
   @UseGuards(JwtAuthGuard)

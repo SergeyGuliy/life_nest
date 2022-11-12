@@ -32,65 +32,48 @@ export class GamesDeposits {
   }
 
   public generate(keyRate = 0, date, oldDeposits?: any) {
-    if (oldDeposits && oldDeposits?.oldKeyRate === keyRate) {
-      return oldDeposits;
-    }
+    if (oldDeposits && oldDeposits?.oldKeyRate === keyRate) return oldDeposits;
+
     const { base, step } = this.getBaseAndStep(keyRate);
 
     const deposits = depositsDuration.map((duration) => {
       const stepModifiers = (12 - duration) * step;
-      const calculatedPercent = $mBase(base - stepModifiers, 0, 0.1, 1);
-
-      return {
-        duration,
-        disabled: false,
-        percent: calculatedPercent,
-      };
+      const percent = $mBase(base - stepModifiers, 0, 0.1, 1);
+      return { duration, disabled: false, percent };
     });
-    return {
-      lastRecalculation: date,
-      deposits,
-      oldKeyRate: keyRate,
-    };
+    return { date, deposits, oldKeyRate: keyRate };
   }
 
   public async take({ userId, actionData, gameId }) {
     const game = await this.gameModel.findById(gameId);
     const user = game.gameData.usersData.find((i) => i.userId === userId);
+    const { cash, deposit } = actionData;
 
-    const { cashCount, deposit } = actionData;
-
-    if (cashCount > user.cash) {
+    if (cash > user.cash) {
       this.errorService.e('gameUserNotEnoughCash', 'en');
     }
 
-    const depositServer = game.deposits.deposits.find(
-      ({ duration }) => duration === deposit.duration,
+    const { percent, duration } = game.deposits.deposits.find(
+      (i) => i.duration === deposit.duration,
     );
-    if (depositServer.percent !== deposit.percent) {
+    if (percent !== deposit.percent) {
       this.errorService.e('gamesCreditsPercentNotSame', 'en');
     }
-    const monthPercent = $mChain(depositServer.percent).divide(12).done();
-    const incomePerMonth = $mChain(cashCount)
-      .percent(monthPercent)
-      .subtract(cashCount)
-      .round(2)
-      .done();
-    const incomeTotal = $mChain(incomePerMonth)
-      .multiply(depositServer.duration)
-      .round(2)
-      .done();
+    let perMonth = $mChain(percent).divide(12).done();
+    perMonth = $mChain(cash).percent(perMonth).subtract(cash).round(2).done();
+    const total = $mChain(perMonth).multiply(duration).round(2).done();
 
-    user.cash = $mChain(user.cash).subtract(cashCount).round(2).done();
+    user.cash = $mChain(user.cash).subtract(cash).round(2).done();
 
     user.deposits.push({
-      duration: depositServer.duration,
-      percent: depositServer.percent,
-      depositStart: game.gameData.date,
-      cashCount,
-      incomePerMonth,
-      incomeTotal,
-      depositEnd: this.gamesTime.tick(game.gameData.date, depositServer.duration),
+      duration,
+      percent,
+      cash,
+      perMonth,
+      total,
+
+      start: game.gameData.date,
+      end: this.gamesTime.tick(game.gameData.date, duration),
     });
 
     await this.gameModel.updateOne({ _id: gameId }, game);
