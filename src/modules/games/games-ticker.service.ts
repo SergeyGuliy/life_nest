@@ -66,7 +66,9 @@ export class GamesTickerService {
       modifiers,
       gameData: {
         date,
-        usersData: usersInGameIds.map(this.gamesUsers.generate),
+        usersData: usersInGameIds.map((u) =>
+          this.gamesUsers.generate(u, modifiers.inflation.accumulated),
+        ),
       },
 
       shares: this.gamesShares.generate(),

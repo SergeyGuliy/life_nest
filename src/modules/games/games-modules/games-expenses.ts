@@ -2,16 +2,21 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GamesExpenses {
-  public generate() {
-    return {
-      productsFood: 100,
-      clothingAccessories: 100,
-      cosmeticsMedicine: 100,
-      communalPayments: 100,
-      rentalProperty: 100,
-      petrolService: 100,
-      relaxationTourism: 100,
-      other: 100,
+  public generate(accumulatedInflation) {
+    const fff = {
+      base: {
+        productsFood: 200,
+        clothingAccessories: 100,
+        cosmeticsMedicine: 50,
+        communalPayments: 100,
+        rentalProperty: 0,
+        petrolService: 0,
+        relaxationTourism: 40,
+        other: 100,
+      },
+      actual: {},
     };
+
+    return fff;
   }
 }

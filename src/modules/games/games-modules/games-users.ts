@@ -1,10 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GamesWork } from '@modules/games/games-modules/games-work';
+import { GamesExpenses } from '@modules/games/games-modules/games-expenses';
 
 @Injectable()
 export class GamesUsers {
   @Inject(GamesWork)
   private readonly gamesWork: GamesWork;
+  @Inject(GamesExpenses)
+  private readonly gamesExpenses: GamesExpenses;
 
   private tickOne(oldUserData) {
     let newCash = oldUserData.cash;
@@ -65,7 +68,7 @@ export class GamesUsers {
     return usersData.map(this.tickOne);
   }
 
-  public generate = (userId) => {
+  public generate = (userId, accumulatedInflation) => {
     return {
       userId,
       cash: 10000,
@@ -75,6 +78,7 @@ export class GamesUsers {
       cryptos: [],
       deposits: [],
       credits: [],
+      expanses: this.gamesExpenses.generate(accumulatedInflation),
     };
   };
 }
