@@ -77,7 +77,11 @@ export class GamesTickerService {
       deposits: this.gamesDeposits.generate(modifiers.keyRate.month1, date),
 
       gameHistory: [],
+
       userDataCache: [],
+
+      tickUserNews: [],
+      tickGameNews: [],
     });
 
     const game = await createdGame.save();
@@ -153,7 +157,10 @@ export class GamesTickerService {
     );
 
     // Recalculate users data
-    game.gameData.usersData = this.gamesUsers.tick(game.gameData.usersData);
+    game.gameData.usersData = this.gamesUsers.tick(
+      game.gameData.usersData,
+      game.modifiers.inflation.accumulated,
+    );
 
     // Recalculate cryptos data
     game.cryptos = this.gamesCryptos.tick(game.cryptos);

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GamesWork } from '@modules/games/games-modules/games-work';
 import { GamesExpenses } from '@modules/games/games-modules/games-expenses';
+import { $mBase, $mChain } from '@assets/mathjs';
 
 @Injectable()
 export class GamesUsers {
@@ -9,8 +10,13 @@ export class GamesUsers {
   @Inject(GamesExpenses)
   private readonly gamesExpenses: GamesExpenses;
 
-  private tickOne(oldUserData) {
+  private tickOne(oldUserData, accumulatedInflation) {
     let newCash = oldUserData.cash;
+
+    oldUserData.expanses = this.gamesExpenses.tick(
+      oldUserData.expanses,
+      accumulatedInflation,
+    );
 
     if (oldUserData.work) {
       // TODO check is fired
@@ -58,21 +64,24 @@ export class GamesUsers {
         .filter((i) => !!i);
     }
 
+    Object.entries(oldUserData.expanses.actual).forEach(([key, val]) => {
+      newCash = newCash - +val;
+    });
     return {
       ...oldUserData,
-      cash: newCash,
+      cash: $mChain(newCash).round(2).done(),
     };
   }
 
-  public tick(usersData) {
-    return usersData.map(this.tickOne);
-  }
+  public tick = (usersData, accumulatedInflation) => {
+    return usersData.map((user) => this.tickOne(user, accumulatedInflation));
+  };
 
   public generate = (userId, accumulatedInflation) => {
     return {
       userId,
       cash: 10000,
-      work: this.gamesWork.generate(),
+      work: this.gamesWork.generate(accumulatedInflation),
       skills: [],
       shares: [],
       cryptos: [],

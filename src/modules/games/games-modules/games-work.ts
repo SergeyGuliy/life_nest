@@ -16,17 +16,17 @@ export class GamesWork {
   @Inject(ErrorService)
   private readonly errorService: ErrorService;
 
-  public generate() {
+  public generate(accumulatedInflation) {
     const gamesWorksCount = gamesWorks.length - 1;
     const { workData, levels } = gamesWorks[$mRandom(0, gamesWorksCount, 0)];
 
     const { baseSalary, level } = levels[1];
 
     let { min, max } = baseSalary;
-    // TODO add modifications (inflation, unemployment...)
-    min = min;
-    // TODO add modifications (inflation, unemployment...)
-    max = max;
+    // TODO add modifications (unemployment...)
+    min = min * accumulatedInflation;
+    // TODO add modifications (unemployment...)
+    max = max * accumulatedInflation;
     const randomSalary = $mRandom(min, max, 0);
     // TODO add modifications (inflation, unemployment...)
     const modifiedSalary = randomSalary;
@@ -79,14 +79,15 @@ export class GamesWork {
     // TODO make filtration for available works
     const availableWorks = gamesWorks.filter((i) => i);
 
+    const accumulatedInflation = game.modifiers.inflation.accumulated;
     const workOpportunities = availableWorks.map(({ workData, levels }) => {
       const { level, baseSalary, trialPeriod } = levels[1];
 
       let { min, max } = baseSalary;
-      // TODO add modifications (inflation, unemployment...)
-      min = min;
-      // TODO add modifications (inflation, unemployment...)
-      max = max;
+      // TODO add modifications (unemployment...)
+      min = min * accumulatedInflation;
+      // TODO add modifications (unemployment...)
+      max = max * accumulatedInflation;
       // TODO make chance of a successful interview
       const chanceSuccessfulInterview = 50;
 
