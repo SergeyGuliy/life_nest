@@ -103,6 +103,9 @@ export class GamesCryptos {
   }
 
   private updateUserCrypto(cryptos, crypto) {
+    if (crypto.count === 0) {
+      return cryptos.filter(({ name }) => name !== crypto.name);
+    }
     const cryptoId = cryptos.findIndex(({ name }) => name === crypto.name);
 
     if (cryptoId >= 0) {
