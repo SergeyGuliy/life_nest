@@ -5,12 +5,10 @@ import * as moment from 'moment/moment';
 export class GamesTime {
   public generate(dateProp = null) {
     const date = dateProp ? moment(dateProp) : moment();
-    const month = date.month();
     const monthCode = date.format('MMM');
     const year = date.year();
     return {
       date,
-      month,
       monthCode,
       year,
     };

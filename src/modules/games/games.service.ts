@@ -24,6 +24,7 @@ export class GamesService {
       shares: game.shares.map(({ history, ...shareData }) => shareData),
       cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
       credits: game.credits,
+      deposits: game.deposits,
     };
   }
 

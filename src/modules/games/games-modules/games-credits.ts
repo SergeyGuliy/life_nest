@@ -68,7 +68,7 @@ export class GamesCredits {
     perMonth = $mChain(cash).percent(perMonth).subtract(cash).round(2).done();
     const total = $mChain(perMonth).multiply(duration).round(2).done();
 
-    user.cash = $mChain(user.cash).subtract(cash).round(2).done();
+    user.cash = $mChain(user.cash).add(cash).round(2).done();
 
     user.credits.push({
       duration,
