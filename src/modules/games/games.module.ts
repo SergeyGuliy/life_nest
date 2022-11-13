@@ -27,6 +27,8 @@ import { GamesWork } from '@modules/games/games-modules/games-work';
 import { GamesModifiers } from '@modules/games/games-modules/games-modificators';
 import { GamesDeposits } from '@modules/games/games-modules/games-deposits';
 import { GamesCredits } from '@modules/games/games-modules/games-credits';
+import { GamesTaxes } from '@modules/games/games-modules/games-taxes';
+import { GamesExpenses } from '@modules/games/games-modules/games-expenses';
 
 @Module({
   imports: [
@@ -53,6 +55,8 @@ import { GamesCredits } from '@modules/games/games-modules/games-credits';
     GamesModifiers,
     GamesDeposits,
     GamesCredits,
+    GamesTaxes,
+    GamesExpenses,
   ],
   exports: [
     GamesService,
@@ -69,6 +73,8 @@ import { GamesCredits } from '@modules/games/games-modules/games-credits';
     GamesModifiers,
     GamesDeposits,
     GamesCredits,
+    GamesTaxes,
+    GamesExpenses,
   ],
 })
 export class GamesModule {}
