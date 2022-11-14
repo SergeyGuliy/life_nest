@@ -29,6 +29,7 @@ import { GamesDeposits } from '@modules/games/games-modules/games-deposits';
 import { GamesCredits } from '@modules/games/games-modules/games-credits';
 import { GamesTaxes } from '@modules/games/games-modules/games-taxes';
 import { GamesExpenses } from '@modules/games/games-modules/games-expenses';
+import {GamesNews} from "@modules/games/games-modules/games-news";
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { GamesExpenses } from '@modules/games/games-modules/games-expenses';
     GamesCredits,
     GamesTaxes,
     GamesExpenses,
+    GamesNews,
   ],
   exports: [
     GamesService,
@@ -75,6 +77,7 @@ import { GamesExpenses } from '@modules/games/games-modules/games-expenses';
     GamesCredits,
     GamesTaxes,
     GamesExpenses,
+    GamesNews,
   ],
 })
 export class GamesModule {}

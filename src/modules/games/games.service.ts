@@ -25,12 +25,16 @@ export class GamesService {
       cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
       credits: game.credits,
       deposits: game.deposits,
+      tickGameNews: game.tickGameNews,
     };
   }
 
   public async getUserData(gameId, userId) {
     const game = await this.gameModel.findById(gameId);
-    return game.gameData.usersData.find((i) => i.userId === userId);
+    return {
+      userData: game.gameData.usersData.find((i) => i.userId === userId),
+      userNews: game.tickUserNews.find((i) => i.userId === userId),
+    };
   }
 
   public startGame(roomId, gameSettings) {

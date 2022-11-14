@@ -113,11 +113,15 @@ export class GamesTickerService {
       cryptos: game.cryptos.map(({ history, ...cryptoData }) => cryptoData),
       credits: game.credits,
       deposits: game.deposits,
+      tickGameNews: game.tickGameNews,
     });
 
     // Send for each user its own userData
     game.gameData.usersData.forEach((userData) => {
-      this.gamesWsEmitter.sendUserData(userData.userId, userData);
+      this.gamesWsEmitter.sendUserData(userData.userId, {
+        userData,
+        userNews: game.tickUserNews.find((i) => i.userId === userData.userId),
+      });
     });
   }
 
@@ -129,6 +133,9 @@ export class GamesTickerService {
 
   private async tick(roomId, gameId) {
     let game = await this.gameModel.findById(gameId);
+
+    game.tickUserNews = [];
+    game.tickGameNews = [];
 
     // Save latest gameData in history
     game = this.gamesHistory.save(game);
@@ -160,6 +167,7 @@ export class GamesTickerService {
     game.gameData.usersData = this.gamesUsers.tick(
       game.gameData.usersData,
       game.modifiers.inflation.accumulated,
+      game.tickUserNews,
     );
 
     // Recalculate cryptos data
