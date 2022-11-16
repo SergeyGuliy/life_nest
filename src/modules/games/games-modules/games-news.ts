@@ -17,7 +17,8 @@ export class GamesNews {
 
       expanses: {},
       salary: null,
-      total: null,
+      cash: null,
+      cashIncome: null,
     });
     return tickUserNews.find((i) => i.userId === userId);
   }

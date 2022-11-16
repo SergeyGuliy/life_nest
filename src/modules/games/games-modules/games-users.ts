@@ -14,7 +14,7 @@ export class GamesUsers {
   private readonly gamesNews: GamesNews;
 
   private tickOne(oldUserData, accumulatedInflation, tickUserNews) {
-    let newCash = oldUserData.cash;
+    let cashIncome: any = 0;
 
     const userHistory = this.gamesNews.getOrCreateUserHistory(
       tickUserNews,
@@ -31,7 +31,7 @@ export class GamesUsers {
 
       // TODO make minus taxes
       const salaryWithTaxes = oldUserData.work.salary - 0;
-      newCash = newCash + salaryWithTaxes;
+      cashIncome = cashIncome + salaryWithTaxes;
       userHistory.salary = {
         brutto: salaryWithTaxes,
         netto: salaryWithTaxes,
@@ -44,13 +44,13 @@ export class GamesUsers {
         .map((credit) => {
           const newDuration = credit.duration - 1;
 
-          newCash = newCash - credit.perMonth;
+          cashIncome = cashIncome - credit.perMonth;
           userHistory.creditTick.push({
             netto: -credit.perMonth,
           });
 
           if (newDuration === 0) {
-            newCash = newCash - credit.cash;
+            cashIncome = cashIncome - credit.cash;
             userHistory.creditEnd.push({
               netto: -credit.cash,
             });
@@ -69,7 +69,7 @@ export class GamesUsers {
         .map((deposit) => {
           const newDuration = deposit.duration - 1;
 
-          newCash = newCash + deposit.perMonth;
+          cashIncome = cashIncome + deposit.perMonth;
           userHistory.depositTick.push({
             brutto: deposit.perMonth,
             netto: deposit.perMonth,
@@ -77,7 +77,7 @@ export class GamesUsers {
           });
 
           if (newDuration === 0) {
-            newCash = newCash + deposit.cash;
+            cashIncome = cashIncome + deposit.cash;
             userHistory.depositEnd.push({
               netto: deposit.cash,
             });
@@ -92,17 +92,19 @@ export class GamesUsers {
     }
 
     Object.entries(oldUserData.expanses.actual).forEach(([key, val]) => {
-      newCash = newCash - +val;
-      userHistory.expanses[key] = val;
+      cashIncome = cashIncome - +val;
+      userHistory.expanses[key] = -val;
     });
 
-    const total = $mChain(newCash).round(2).done();
+    cashIncome = $mChain(cashIncome).round(2).done();
+    const cash = $mChain(oldUserData.cash).add(cashIncome).round(2).done();
 
-    userHistory.total = total;
+    userHistory.cashIncome = cashIncome;
+    userHistory.cash = cash;
 
     return {
       ...oldUserData,
-      cash: total,
+      cash,
     };
   }
 
