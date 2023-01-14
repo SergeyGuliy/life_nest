@@ -46,6 +46,9 @@ export class Game {
   @Prop({ type: Object })
   modifiers: any;
 
+  @Prop({ type: Object })
+  taxes: any;
+
   @Prop({ type: Array })
   userDataCache: any;
 
