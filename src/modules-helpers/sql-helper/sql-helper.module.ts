@@ -15,7 +15,3 @@ import { Friendships } from '../entities-services/friendships/friendships.entity
   providers: [SqlHelperService],
 })
 export class SqlHelperModule {}
-
-
-
-

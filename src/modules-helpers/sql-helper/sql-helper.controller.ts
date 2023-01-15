@@ -36,5 +36,3 @@ export class SqlHelperController {
     return await this.sqlHelperService.deleteAllFriendship();
   }
 }
-
-

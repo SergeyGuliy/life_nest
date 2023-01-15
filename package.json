@@ -24,14 +24,6 @@
     "createTable": "docker exec -it life_postgres psql -U admin -d postgres -c \"CREATE DATABASE users;\"",
     "cleanTable": "npm run deleteTable && npm run createTable"
   },
-  "husky": {
-    "hooks": {
-      "applypatch-msg": "echo \"[Husky] applypatch-msg\"",
-      "pre-applypatch": "echo \"[Husky] applypatch-msg\"",
-      "post-applypatch": "echo \"[Husky] applypatch-msg\"",
-      "pre-commit": "echo \"[Husky] applypatch-msg\""
-    }
-  },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@nestjs/common": "7.6.15",
