@@ -1,7 +1,0 @@
-{
-  "hooks": {
-    "pre-commit": "git add -a && echo 'pre-commit' && npm run lint",
-    "post-commit": "git push"
-
-  }
-}
