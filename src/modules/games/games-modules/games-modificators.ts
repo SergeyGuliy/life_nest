@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { $mBase, $mChain, $mHistory, $mGenerateLine } from '@assets/mathjs';
 
-import { reportMonths, months } from '../constants';
+import {
+  $mBase,
+  $mChain,
+  $mHistory,
+  $mGenerateLine,
+} from '../../../assets/mathjs/index.js';
+
+import { reportMonths, months } from '../constants.js';
 
 @Injectable()
 export class GamesModifiers {

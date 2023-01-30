@@ -1,8 +1,8 @@
 import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
 
-import { User } from '@assets/decorators/user.decorator';
-import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
-import { ChatsService } from './chats.service';
+import { User } from '../../assets/decorators/user.decorator.js';
+import { JwtAuthGuard } from '../../assets/guards/auth/auth.guard.js';
+import { ChatsService } from './chats.service.js';
 
 @Controller('chats')
 @UseGuards(JwtAuthGuard)

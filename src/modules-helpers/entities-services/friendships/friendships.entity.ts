@@ -5,9 +5,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BaseEntity } from '@assets/base.entity';
-import { FRIENDSHIP_STATUSES } from '@enums/index.js';
-import { Users } from '../users/users.entity';
+
+import { BaseEntity } from '../../../assets/base.entity.js';
+import { Users } from '../users/users.entity.js';
+
+import { FRIENDSHIP_STATUSES } from 'life_shared/enums/index.js';
 
 @Entity('friendships')
 export class Friendships extends BaseEntity {

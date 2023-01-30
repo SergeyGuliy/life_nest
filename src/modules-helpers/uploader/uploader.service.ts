@@ -3,7 +3,7 @@ import { thumbnail } from 'easyimage';
 import * as fs from 'fs';
 import * as util from 'util';
 
-import { UsersManager } from '../entities-services/users/users.service';
+import { UsersManager } from '../entities-services/users/users.service.js';
 
 const unlinkAsync = util.promisify(fs.unlink);
 const rmdirAsync = util.promisify(fs.rmdir);

@@ -4,8 +4,9 @@ import {
   ExecutionContext,
   Inject,
 } from '@nestjs/common';
-import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
-import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
+
+import { ErrorService } from '../../../modules-helpers/global-services/error-handler.service.js';
+import { RoomsManager } from '../../../modules-helpers/entities-services/rooms/rooms.service.js';
 
 @Injectable()
 export class RoomBlockedGuard implements CanActivate {

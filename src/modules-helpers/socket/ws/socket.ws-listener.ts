@@ -1,4 +1,5 @@
 import { Inject } from '@nestjs/common';
+import { Socket, Server } from 'socket.io';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -6,15 +7,15 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
 
-import { SocketService } from '../socket.service';
-import { SocketNameSpacerService } from '../../global-services/socket-namespaser.service';
+import { SocketService } from '../socket.service.js';
+import { SocketNameSpacerService } from '../../global-services/socket-namespaser.service.js';
+import { SocketWsEmitter } from './socket.ws-emitter.js';
+
 import {
   socketSetup_callUserIdToServer,
   socketSetup_giveUserIdToServer,
-} from '@constants/ws/socketSetup.js';
-import { SocketWsEmitter } from './socket.ws-emitter';
+} from 'life_shared/constants/ws/socketSetup.js';
 
 @WebSocketGateway()
 export class SocketWsListener

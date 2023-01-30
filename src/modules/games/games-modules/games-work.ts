@@ -1,18 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { gamesWorks } from '@modules/games/games-modules/games-works';
-import { $mRandom, $mRoundUpper } from '@assets/mathjs';
 import { InjectModel } from '@nestjs/mongoose';
+import Types from 'mongoose';
+
 import {
   Game,
   GameDocument,
-} from '@modules-helpers/entities-services/games/games.entity';
-import { Model } from 'mongoose';
-import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
+} from '../../../modules-helpers/entities-services/games/games.entity.js';
+import { gamesWorks } from './games-works.js';
+import { $mRandom, $mRoundUpper } from '../../../assets/mathjs/index.js';
+import { ErrorService } from '../../../modules-helpers/global-services/error-handler.service.js';
 
 @Injectable()
 export class GamesWork {
   @InjectModel(Game.name)
-  private readonly gameModel: Model<GameDocument>;
+  private readonly gameModel: Types.Model<GameDocument>;
   @Inject(ErrorService)
   private readonly errorService: ErrorService;
 

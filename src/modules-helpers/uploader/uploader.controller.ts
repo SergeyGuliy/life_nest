@@ -9,12 +9,12 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { diskStorage } from 'multer';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
-import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
-import { User } from '@assets/decorators/user.decorator';
-import { UploaderService } from './uploader.service';
-import { diskStorage } from 'multer';
+import { JwtAuthGuard } from '../../assets/guards/auth/auth.guard.js';
+import { User } from '../../assets/decorators/user.decorator.js';
+import { UploaderService } from './uploader.service.js';
 
 @Controller('uploader')
 export class UploaderController {

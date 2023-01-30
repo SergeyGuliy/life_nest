@@ -1,24 +1,26 @@
 {
   "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": [ "ESNext" ],
+    "target": "ES2020",
+    "outDir": "./dist",
+    "baseUrl": "./",
     "skipLibCheck": true,
-    "module": "commonjs",
-    "declaration": true,
+    "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
     "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "moduleResolution": "node",
+    "esModuleInterop": true,
     "incremental": true,
     "paths": {
-      "@constants/*": ["node_modules/life_shared/constants/*"],
-      "@enums/*": ["node_modules/life_shared/enums/*"],
-      "@assets/*": ["src/assets/*"],
-      "@modules/*": ["src/modules/*"],
-      "@modules-helpers/*": ["src/modules-helpers/*"]
+//      "@constants/*": ["node_modules/life_shared/constants/*"],
+//      "@enums/*": ["node_modules/life_shared/enums/*"],
+//      "@assets/*": ["src/assets/*"],
+//      "@modules/*": ["src/modules/*"],
+//      "@modules-helpers/*": ["src/modules-helpers/*"]
     }
   },
   "include": ["src/**/*"],
@@ -28,10 +30,10 @@
     "./node_modules/*",
   ],
   "paths": {
-    "@constants/*": ["node_modules/life_shared/constants/*"],
-    "@enums/*": ["node_modules/life_shared/enums/*"],
-    "@assets/*": ["src/assets/*"],
-    "@modules/*": ["src/modules/*"],
-    "@modules-helpers/*": ["src/modules-helpers/*"]
+//    "@constants/*": ["node_modules/life_shared/constants/*"],
+//    "@enums/*": ["node_modules/life_shared/enums/*"],
+//    "@assets/*": ["src/assets/*"],
+//    "@modules/*": ["src/modules/*"],
+//    "@modules-helpers/*": ["src/modules-helpers/*"]
   }
 }

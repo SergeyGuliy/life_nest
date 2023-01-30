@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { random } from 'lodash';
+import lodash from 'lodash';
 
-import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
+import { RoomsWsEmitter } from './ws/rooms.ws-emitter.js';
 
-import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
-import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
-import { GamesService } from '@modules/games/games.service';
+import { RoomsManager } from '../../modules-helpers/entities-services/rooms/rooms.service.js';
+import { UsersManager } from '../../modules-helpers/entities-services/users/users.service.js';
+import { GamesService } from '../games/games.service.js';
 
 @Injectable()
 export class RoomsService {
@@ -51,7 +51,8 @@ export class RoomsService {
       usersInRoomLength: usersInRoom.length,
     });
     if (roomCreatedId === roomJoinedId) {
-      const idOfNewAdmin = usersInRoom[random(usersInRoom.length - 1)].userId;
+      const idOfNewAdmin =
+        usersInRoom[lodash.random(usersInRoom.length - 1)].userId;
       await this.usersManager.db.update(idOfNewAdmin, {
         roomCreatedId: roomJoinedId,
       });

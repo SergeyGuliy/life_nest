@@ -5,8 +5,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 
-import { ChatsManager } from '@modules-helpers/entities-services/chats/chats.service';
-import { MESSAGE_RECEIVER_TYPES } from '@enums/index.js';
+import { ChatsManager } from '../../modules-helpers/entities-services/chats/chats.service.js';
+import { MESSAGE_RECEIVER_TYPES } from 'life_shared/enums/index.js';
 
 @Injectable()
 export class ChatsService {

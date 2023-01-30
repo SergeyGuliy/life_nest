@@ -4,10 +4,10 @@ import {
   ExecutionContext,
   Inject,
 } from '@nestjs/common';
-import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 
-import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
-import { AuthService } from '@modules/auth/auth.service';
+import { ErrorService } from '../../../modules-helpers/global-services/error-handler.service.js';
+import { UsersManager } from '../../../modules-helpers/entities-services/users/users.service.js';
+import { AuthService } from '../../../modules/auth/auth.service.js';
 
 @Injectable()
 export class ValidateRevalidationTokenGuard implements CanActivate {

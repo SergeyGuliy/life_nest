@@ -1,5 +1,6 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
-import { errors } from '@assets/errors';
+
+import { errors } from '../../assets/errors/index.js';
 
 @Injectable()
 export class ErrorService {

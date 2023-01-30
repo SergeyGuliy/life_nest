@@ -1,16 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import Types from 'mongoose';
+
 import {
   Game,
   GameDocument,
-} from '@modules-helpers/entities-services/games/games.entity';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { GamesTickerService } from '@modules/games/games-ticker.service';
+} from '../../modules-helpers/entities-services/games/games.entity.js';
+import { GamesTickerService } from './games-ticker.service.js';
 
 @Injectable()
 export class GamesService {
   @InjectModel(Game.name)
-  private readonly gameModel: Model<GameDocument>;
+  private readonly gameModel: Types.Model<GameDocument>;
 
   @Inject(GamesTickerService)
   private readonly gamesTickerService: GamesTickerService;

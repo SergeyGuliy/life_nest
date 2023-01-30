@@ -4,10 +4,10 @@ import {
   ExecutionContext,
   Inject,
 } from '@nestjs/common';
-import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 
-import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
-import { PasswordEncoderService } from '@modules/auth/password-encoder.service';
+import { ErrorService } from '../../../modules-helpers/global-services/error-handler.service.js';
+import { UsersManager } from '../../../modules-helpers/entities-services/users/users.service.js';
+import { PasswordEncoderService } from '../../../modules/auth/password-encoder.service.js';
 
 @Injectable()
 export class ValidateChangePasswordGuard implements CanActivate {

@@ -5,10 +5,10 @@ import {
   Inject,
 } from '@nestjs/common';
 
-import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
+import { ErrorService } from '../../../modules-helpers/global-services/error-handler.service.js';
+import { FriendshipManager } from '../../../modules-helpers/entities-services/friendships/friendships.service.js';
 
-import { FriendshipManager } from '@modules-helpers/entities-services/friendships/friendships.service';
-import { FRIENDSHIP_STATUSES } from '../../../../../life_shared/enums';
+import { FRIENDSHIP_STATUSES } from 'life_shared/enums/index.js';
 
 @Injectable()
 export class DeleteFriendshipGuard implements CanActivate {

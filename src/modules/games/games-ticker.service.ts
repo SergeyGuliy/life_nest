@@ -1,26 +1,28 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import Types from 'mongoose';
+
 import {
   Game,
   GameDocument,
-} from '@modules-helpers/entities-services/games/games.entity';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
-import { GamesWsEmitter } from '@modules/games/ws/games.ws-emitter';
-import { GamesTime } from '@modules/games/games-modules/games-time';
-import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
-import { GamesUsers } from '@modules/games/games-modules/games-users';
-import { GamesHistory } from '@modules/games/games-modules/games-history';
-import { GamesShares } from '@modules/games/games-modules/games-shares';
-import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
-import { GamesCredits } from '@modules/games/games-modules/games-credits';
-import { GamesModifiers } from '@modules/games/games-modules/games-modificators';
-import { GamesDeposits } from '@modules/games/games-modules/games-deposits';
+} from '../../modules-helpers/entities-services/games/games.entity.js';
+
+import { RoomsManager } from '../../modules-helpers/entities-services/rooms/rooms.service.js';
+import { GamesWsEmitter } from '../../modules/games/ws/games.ws-emitter.js';
+import { GamesTime } from '../../modules/games/games-modules/games-time.js';
+import { UsersManager } from '../../modules-helpers/entities-services/users/users.service.js';
+import { GamesUsers } from '../../modules/games/games-modules/games-users.js';
+import { GamesHistory } from '../../modules/games/games-modules/games-history.js';
+import { GamesShares } from '../../modules/games/games-modules/games-shares.js';
+import { GamesCryptos } from '../../modules/games/games-modules/games-cryptos.js';
+import { GamesCredits } from '../../modules/games/games-modules/games-credits.js';
+import { GamesModifiers } from '../../modules/games/games-modules/games-modificators.js';
+import { GamesDeposits } from '../../modules/games/games-modules/games-deposits.js';
 
 @Injectable()
 export class GamesTickerService {
   @InjectModel(Game.name)
-  private readonly gameModel: Model<GameDocument>;
+  private readonly gameModel: Types.Model<GameDocument>;
   @Inject(RoomsManager)
   private readonly roomsManager: RoomsManager;
   @Inject(UsersManager)

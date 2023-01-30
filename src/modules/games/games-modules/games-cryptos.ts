@@ -1,19 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import moment from 'moment';
+import Types from 'mongoose';
+
 import {
   Game,
   GameDocument,
-} from '@modules-helpers/entities-services/games/games.entity';
-import { Model } from 'mongoose';
-import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
-import { $mRandom, $mChain, $mMedian } from '@assets/mathjs/index';
-import * as moment from 'moment';
-import { GamesTime } from '@modules/games/games-modules/games-time';
+} from '../../../modules-helpers/entities-services/games/games.entity.js';
+import { ErrorService } from '../../../modules-helpers/global-services/error-handler.service.js';
+import { $mRandom, $mChain, $mMedian } from '../../../assets/mathjs/index.js';
+import { GamesTime } from './games-time.js';
 
 @Injectable()
 export class GamesCryptos {
   @InjectModel(Game.name)
-  private gameModel: Model<GameDocument>;
+  private gameModel: Types.Model<GameDocument>;
   @Inject(ErrorService)
   private readonly errorService: ErrorService;
   @Inject(GamesTime)

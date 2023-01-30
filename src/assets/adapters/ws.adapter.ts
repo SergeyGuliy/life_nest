@@ -1,10 +1,10 @@
 import { INestApplicationContext } from '@nestjs/common';
-import { isFunction, isNil } from '@nestjs/common/utils/shared.utils';
+import { isFunction, isNil } from '@nestjs/common/utils/shared.utils.js';
 import {
   AbstractWsAdapter,
   MessageMappingProperties,
 } from '@nestjs/websockets';
-import { DISCONNECT_EVENT } from '@nestjs/websockets/constants';
+import { DISCONNECT_EVENT } from '@nestjs/websockets/constants.js';
 import { fromEvent, Observable } from 'rxjs';
 import { filter, first, map, mergeMap, share, takeUntil } from 'rxjs/operators';
 import { Server } from 'socket.io';
@@ -41,6 +41,7 @@ export class SocketIoAdapter extends AbstractWsAdapter {
           credentials: true,
         },
         cookie: {
+          name: 'io',
           httpOnly: true,
           path: '/',
         },
@@ -83,7 +84,7 @@ export class SocketIoAdapter extends AbstractWsAdapter {
     });
   }
 
-  public mapPayload(payload: any): { data: any; ack?: any } {
+  public mapPayload(payload: any): { data: any; ack? } {
     if (!Array.isArray(payload)) {
       return { data: payload };
     }

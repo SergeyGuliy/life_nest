@@ -6,15 +6,17 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
+
+import { Messages } from '../chats/messages.entity.js';
+import { BaseEntity } from '../../../assets/base.entity.js';
+import { Friendships } from '../friendships/friendships.entity.js';
+import { UserSettings } from '../users-settings/users-settings.entity.js';
+
 import {
   USER_ROLES,
   USER_GAME_STATUSES,
   USER_ONLINE_STATUSES,
-} from '@enums/index.js';
-import { Messages } from '../chats/messages.entity';
-import { BaseEntity } from '@assets/base.entity';
-import { Friendships } from '../friendships/friendships.entity';
-import { UserSettings } from '../users-settings/users-settings.entity';
+} from 'life_shared/enums/index.js';
 
 @Entity('users')
 export class Users extends BaseEntity {
@@ -89,7 +91,7 @@ export class Users extends BaseEntity {
   })
   public roomCreatedId: null | number;
 
-  @OneToMany(() => Messages, (message) => message.messageSender)
+  @OneToMany(() => Messages, (message: any) => message.messageSender)
   public messages: Messages[];
 
   @Column({
@@ -97,10 +99,16 @@ export class Users extends BaseEntity {
   })
   public roomJoinedId: null | number;
 
-  @OneToMany(() => Friendships, (friendships) => friendships.friendshipReceiver)
+  @OneToMany(
+    () => Friendships,
+    (friendships: any) => friendships.friendshipReceiver,
+  )
   public friendshipReceiver: Friendships[];
 
-  @OneToMany(() => Friendships, (friendships) => friendships.friendshipSender)
+  @OneToMany(
+    () => Friendships,
+    (friendships: any) => friendships.friendshipSender,
+  )
   public friendshipSender: Friendships[];
 
   @OneToOne(() => UserSettings)

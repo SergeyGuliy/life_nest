@@ -9,15 +9,15 @@ import {
   Inject,
 } from '@nestjs/common';
 
-import { User } from '@assets/decorators/user.decorator';
+import { User } from '../../assets/decorators/user.decorator.js';
 
-import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
-import { CanSendFriendshipRequestGuard } from '@assets/guards/friendships/can-send-friendship-request.guard';
-import { IsRequestExistsGuard } from '@assets/guards/friendships/is-request-exists.guard';
-import { DeleteFriendshipGuard } from '@assets/guards/friendships/delete-friendship.guard';
-import { DeclineIfStatusGuard } from '@assets/guards/friendships/decline-if-status.guard';
+import { JwtAuthGuard } from '../../assets/guards/auth/auth.guard.js';
+import { CanSendFriendshipRequestGuard } from '../../assets/guards/friendships/can-send-friendship-request.guard.js';
+import { IsRequestExistsGuard } from '../../assets/guards/friendships/is-request-exists.guard.js';
+import { DeleteFriendshipGuard } from '../../assets/guards/friendships/delete-friendship.guard.js';
+import { DeclineIfStatusGuard } from '../../assets/guards/friendships/decline-if-status.guard.js';
 
-import { FriendshipsService } from './friendships.service';
+import { FriendshipsService } from './friendships.service.js';
 
 @Controller('friendships')
 export class FriendshipsController {

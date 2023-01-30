@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GamesWork } from '@modules/games/games-modules/games-work';
-import { GamesExpenses } from '@modules/games/games-modules/games-expenses';
-import { $mChain } from '@assets/mathjs';
-import { GamesNews } from '@modules/games/games-modules/games-news';
+
+import { $mChain } from '../../../assets/mathjs/index.js';
+import { GamesWork } from './games-work.js';
+import { GamesExpenses } from './games-expenses.js';
+import { GamesNews } from './games-news.js';
 
 @Injectable()
 export class GamesUsers {

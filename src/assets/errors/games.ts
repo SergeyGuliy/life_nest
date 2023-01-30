@@ -1,6 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
-import { gamesUser } from '@assets/errors/games/gamesUser';
-import { gamesCredits } from '@assets/errors/games/gamesCredits';
+
+import { gamesUser } from './games/gamesUser.js';
+import { gamesCredits } from './games/gamesCredits.js';
 
 export const gameErrors = {
   ...gamesUser,

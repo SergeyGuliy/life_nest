@@ -1,8 +1,9 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+
 declare let life_shared: any;
 
-import { socketSetup_forceDisconnect } from '@constants/ws/socketSetup.js';
+import { socketSetup_forceDisconnect } from 'life_shared/constants/ws/socketSetup.js';
 
 @WebSocketGateway()
 export class SocketWsEmitter {
@@ -14,7 +15,7 @@ export class SocketWsEmitter {
 
     sidsToDisconnect.forEach((sid) => {
       this.server.to(sid).emit(socketSetup_forceDisconnect);
-      this.server.to(sid).disconnectSockets(true);
+      // this.server.to(sid).disconnectSockets(true);
     });
   }
 }

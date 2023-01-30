@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { $mBase } from '@assets/mathjs';
+
+import { $mBase } from '../../../assets/mathjs/index.js';
 
 const economicSectors = {
   informationTechnology: 'informationTechnology', // компаний, которые разрабатывают или распространяют технологические товары или услуги, а также интернет-компании.

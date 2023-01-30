@@ -1,15 +1,15 @@
 import { Controller, Post, Body, UseGuards, Inject } from '@nestjs/common';
 
-import { RegistrationDto } from '@assets/dto/registrationDto';
-import { LoginDto } from '@assets/dto/loginDto';
+import { RegistrationDto } from '../../assets/dto/registrationDto.js';
+import { LoginDto } from '../../assets/dto/loginDto.js';
+import { AuthService } from './auth.service.js';
 
-import { AuthService } from './auth.service';
-import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
-import { User } from '@assets/decorators/user.decorator';
-import { UserCanBeCreatedGuard } from '@assets/guards/auth/user-can-be-created.guard';
-import { ValidateLoginPasswordGuard } from '@assets/guards/auth/validate-login-password.guard';
-import { ValidateChangePasswordGuard } from '@assets/guards/auth/validate-change-password.guard';
-import { ValidateRevalidationTokenGuard } from '@assets/guards/auth/validate-revalidation-token.guard';
+import { JwtAuthGuard } from '../../assets/guards/auth/auth.guard.js';
+import { User } from '../../assets/decorators/user.decorator.js';
+import { UserCanBeCreatedGuard } from '../../assets/guards/auth/user-can-be-created.guard.js';
+import { ValidateLoginPasswordGuard } from '../../assets/guards/auth/validate-login-password.guard.js';
+import { ValidateChangePasswordGuard } from '../../assets/guards/auth/validate-change-password.guard.js';
+import { ValidateRevalidationTokenGuard } from '../../assets/guards/auth/validate-revalidation-token.guard.js';
 
 @Controller('auth')
 export class AuthController {

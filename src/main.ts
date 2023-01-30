@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './app.module.js';
 import { ValidationPipe } from '@nestjs/common';
-import * as helmet from 'helmet';
-// import * as csurf from 'csurf';
-import { SocketIoAdapter } from '@assets/adapters/ws.adapter';
+import helmet from 'helmet';
+// import * as csurf from 'csurf.js';
+import { SocketIoAdapter } from './assets/adapters/ws.adapter.js';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('events').EventEmitter.defaultMaxListeners = 100;
 

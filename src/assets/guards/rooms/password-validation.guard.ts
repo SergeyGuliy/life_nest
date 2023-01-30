@@ -4,10 +4,11 @@ import {
   ExecutionContext,
   Inject,
 } from '@nestjs/common';
-import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
-import { RoomsManager } from '@modules-helpers/entities-services/rooms/rooms.service';
 
-import { ROOM_TYPES } from '@enums/index.js';
+import { ErrorService } from '../../../modules-helpers/global-services/error-handler.service.js';
+import { RoomsManager } from '../../../modules-helpers/entities-services/rooms/rooms.service.js';
+
+import { ROOM_TYPES } from 'life_shared/enums/index.js';
 
 @Injectable()
 export class PasswordGuard implements CanActivate {

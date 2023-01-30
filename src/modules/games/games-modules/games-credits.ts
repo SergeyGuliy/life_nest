@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-
-import { $mBase, $mChain } from '@assets/mathjs';
 import { InjectModel } from '@nestjs/mongoose';
+import Types from 'mongoose';
+
 import {
   Game,
   GameDocument,
-} from '@modules-helpers/entities-services/games/games.entity';
-import { Model } from 'mongoose';
-import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
-import { GamesTime } from '@modules/games/games-modules/games-time';
+} from '../../../modules-helpers/entities-services/games/games.entity.js';
+import { $mBase, $mChain } from '../../../assets/mathjs/index.js';
+import { ErrorService } from '../../../modules-helpers/global-services/error-handler.service.js';
+import { GamesTime } from './games-time.js';
 
 const creditIncrementKeyRate = 20;
 const creditsDuration = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -16,7 +16,7 @@ const creditsDuration = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 @Injectable()
 export class GamesCredits {
   @InjectModel(Game.name)
-  private gameModel: Model<GameDocument>;
+  private gameModel: Types.Model<GameDocument>;
   @Inject(ErrorService)
   private readonly errorService: ErrorService;
   @Inject(GamesTime)

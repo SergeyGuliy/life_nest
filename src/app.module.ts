@@ -5,7 +5,7 @@ import {
   setupDefaultModules,
   setupMongoose,
   setupTypeOrm,
-} from './setup';
+} from './setup/index.js';
 
 @Module({
   imports: [

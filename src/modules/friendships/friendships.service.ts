@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { FRIENDSHIP_STATUSES } from '@enums/index.js';
+import { FriendshipManager } from '../../modules-helpers/entities-services/friendships/friendships.service.js';
 
-import { FriendshipManager } from '@modules-helpers/entities-services/friendships/friendships.service';
+import { FRIENDSHIP_STATUSES } from 'life_shared/enums/index.js';
 
 @Injectable()
 export class FriendshipsService {

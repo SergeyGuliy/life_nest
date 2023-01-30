@@ -1,35 +1,35 @@
 import { Module } from '@nestjs/common';
 
-import { GamesController } from './games.controller';
-import { GamesService } from './games.service';
-import { RoomsSocketGateway } from './ws/game.gateway';
-import { SocketNameSpacerService } from '@modules-helpers/global-services/socket-namespaser.service';
-import { EntityManagerModule } from '@modules-helpers/entities-services/entitiy-manager.module';
-import { GlobalServicesModule } from '@modules-helpers/global-services/global-services.module';
+import { GamesController } from './games.controller.js';
+import { GamesService } from './games.service.js';
+import { RoomsSocketGateway } from './ws/game.gateway.js';
+import { SocketNameSpacerService } from '../../modules-helpers/global-services/socket-namespaser.service.js';
+import { EntityManagerModule } from '../../modules-helpers/entities-services/entitiy-manager.module.js';
+import { GlobalServicesModule } from '../../modules-helpers/global-services/global-services.module.js';
 
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   Game,
   GamesEntity,
-} from '@modules-helpers/entities-services/games/games.entity';
+} from '../../modules-helpers/entities-services/games/games.entity.js';
 import {
   GamesSettings,
   GamesSettingsEntity,
-} from '@modules-helpers/entities-services/games/games-settings.entity';
-import { GamesWsEmitter } from '@modules/games/ws/games.ws-emitter';
-import { GamesTime } from '@modules/games/games-modules/games-time';
-import { GamesHistory } from '@modules/games/games-modules/games-history';
-import { GamesUsers } from '@modules/games/games-modules/games-users';
-import { GamesTickerService } from '@modules/games/games-ticker.service';
-import { GamesShares } from '@modules/games/games-modules/games-shares';
-import { GamesCryptos } from '@modules/games/games-modules/games-cryptos';
-import { GamesWork } from '@modules/games/games-modules/games-work';
-import { GamesModifiers } from '@modules/games/games-modules/games-modificators';
-import { GamesDeposits } from '@modules/games/games-modules/games-deposits';
-import { GamesCredits } from '@modules/games/games-modules/games-credits';
-import { GamesTaxes } from '@modules/games/games-modules/games-taxes';
-import { GamesExpenses } from '@modules/games/games-modules/games-expenses';
-import { GamesNews } from '@modules/games/games-modules/games-news';
+} from '../../modules-helpers/entities-services/games/games-settings.entity.js';
+import { GamesWsEmitter } from '../../modules/games/ws/games.ws-emitter.js';
+import { GamesTime } from '../../modules/games/games-modules/games-time.js';
+import { GamesHistory } from '../../modules/games/games-modules/games-history.js';
+import { GamesUsers } from '../../modules/games/games-modules/games-users.js';
+import { GamesTickerService } from '../../modules/games/games-ticker.service.js';
+import { GamesShares } from '../../modules/games/games-modules/games-shares.js';
+import { GamesCryptos } from '../../modules/games/games-modules/games-cryptos.js';
+import { GamesWork } from '../../modules/games/games-modules/games-work.js';
+import { GamesModifiers } from '../../modules/games/games-modules/games-modificators.js';
+import { GamesDeposits } from '../../modules/games/games-modules/games-deposits.js';
+import { GamesCredits } from '../../modules/games/games-modules/games-credits.js';
+import { GamesTaxes } from '../../modules/games/games-modules/games-taxes.js';
+import { GamesExpenses } from '../../modules/games/games-modules/games-expenses.js';
+import { GamesNews } from '../../modules/games/games-modules/games-news.js';
 
 @Module({
   imports: [

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { LocalStrategy } from './strategies/local.strategy';
-import { PasswordEncoderService } from './password-encoder.service';
-import { EntityManagerModule } from '@modules-helpers/entities-services/entitiy-manager.module';
-import { GlobalServicesModule } from '@modules-helpers/global-services/global-services.module';
+import { AuthController } from './auth.controller.js';
+import { AuthService } from './auth.service.js';
+import { LocalStrategy } from './strategies/local.strategy.js';
+import { PasswordEncoderService } from './password-encoder.service.js';
+import { EntityManagerModule } from '../../modules-helpers/entities-services/entitiy-manager.module.js';
+import { GlobalServicesModule } from '../../modules-helpers/global-services/global-services.module.js';
 
 @Module({
   imports: [

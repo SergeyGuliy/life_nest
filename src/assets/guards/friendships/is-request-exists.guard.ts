@@ -5,9 +5,8 @@ import {
   Inject,
 } from '@nestjs/common';
 
-import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
-
-import { FriendshipManager } from '@modules-helpers/entities-services/friendships/friendships.service';
+import { ErrorService } from '../../../modules-helpers/global-services/error-handler.service.js';
+import { FriendshipManager } from '../../../modules-helpers/entities-services/friendships/friendships.service.js';
 
 @Injectable()
 export class IsRequestExistsGuard implements CanActivate {

@@ -1,12 +1,12 @@
+import { Injectable } from '@nestjs/common';
+import { Socket, Server } from 'socket.io';
 import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 
-import { Socket, Server } from 'socket.io';
-import { SocketNameSpacerService } from '@modules-helpers/global-services/socket-namespaser.service';
-import { Injectable } from '@nestjs/common';
+import { SocketNameSpacerService } from '../../../modules-helpers/global-services/socket-namespaser.service.js';
 
 @Injectable()
 @WebSocketGateway()

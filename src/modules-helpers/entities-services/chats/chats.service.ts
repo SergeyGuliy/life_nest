@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Messages } from './messages.entity';
+import { Messages } from './messages.entity.js';
 
 @Injectable()
 export class ChatsManager {

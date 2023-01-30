@@ -1,7 +1,6 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-
-import { Socket } from 'socket.io';
 import { Injectable } from '@nestjs/common';
+import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import { Socket } from 'socket.io';
 
 import {
   rooms_userConnectsRoom,
@@ -11,7 +10,7 @@ import {
   rooms_setNewAdminInRoom,
   rooms_userJoinRoom,
   rooms_RoomsUpdater,
-} from '@constants/ws/rooms.js';
+} from 'life_shared/constants/ws/rooms.js';
 
 @Injectable()
 @WebSocketGateway()

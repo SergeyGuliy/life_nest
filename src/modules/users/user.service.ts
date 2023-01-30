@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
+import { UsersManager } from '../../modules-helpers/entities-services/users/users.service.js';
 
 @Injectable()
 export class UserService {

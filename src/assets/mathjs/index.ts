@@ -1,6 +1,7 @@
 import { create, all, multiply, add, round, divide, sum, random } from 'mathjs';
 
-import { customFunctions } from '@assets/mathjs/custom-functions';
+import { customFunctions } from './custom-functions.js';
+
 declare module 'mathjs' {
   interface MathJsChain<TValue> {
     percent(this: any, n?: any): any;

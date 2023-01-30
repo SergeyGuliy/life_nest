@@ -1,7 +1,7 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 
-import { chat_messageToClient } from '@constants/ws/chats';
+import { chat_messageToClient } from 'life_shared/constants/ws/chats.js';
 
 @WebSocketGateway()
 export class ChatsWsEmitter {

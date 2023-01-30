@@ -1,8 +1,8 @@
 import { Controller, Post, Body, UseGuards, Inject } from '@nestjs/common';
 
-import { UsersSettingsService } from './users-settings.service';
-import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
-import { User } from '@assets/decorators/user.decorator';
+import { UsersSettingsService } from './users-settings.service.js';
+import { JwtAuthGuard } from '../../assets/guards/auth/auth.guard.js';
+import { User } from '../../assets/decorators/user.decorator.js';
 
 @Controller('users-settings')
 export class UsersSettingsController {

@@ -1,13 +1,13 @@
-import { SocketModule } from '@modules-helpers/socket/socket.module';
-import { UploaderModule } from '@modules-helpers/uploader/uploader.module';
-import { AuthModule } from '@modules/auth/auth.module';
-import { UserModule } from '@modules/users/user.module';
-import { UsersSettingsModule } from '@modules/users-settings/users-settings.module';
-import { RoomsModule } from '@modules/rooms/rooms.module';
-import { ChatsModule } from '@modules/chats/chats.module';
-import { FriendshipsModule } from '@modules/friendships/friendships.module';
-import { GamesModule } from '@modules/games/games.module';
-import { SqlHelperModule } from '@modules-helpers/sql-helper/sql-helper.module';
+import { SocketModule } from '../modules-helpers/socket/socket.module.js';
+import { UploaderModule } from '../modules-helpers/uploader/uploader.module.js';
+import { AuthModule } from '../modules/auth/auth.module.js';
+import { UserModule } from '../modules/users/user.module.js';
+import { UsersSettingsModule } from '../modules/users-settings/users-settings.module.js';
+import { RoomsModule } from '../modules/rooms/rooms.module.js';
+import { ChatsModule } from '../modules/chats/chats.module.js';
+import { FriendshipsModule } from '../modules/friendships/friendships.module.js';
+import { GamesModule } from '../modules/games/games.module.js';
+import { SqlHelperModule } from '../modules-helpers/sql-helper/sql-helper.module.js';
 
 export const setupDefaultModules = () => {
   const defaultModules = [

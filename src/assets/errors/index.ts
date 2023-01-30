@@ -1,8 +1,8 @@
-import { gameErrors } from '@assets/errors/games';
-import { authErrors } from '@assets/errors/auth';
-import { friendshipsErrors } from '@assets/errors/friendships';
-import { roomsErrors } from '@assets/errors/rooms';
-import { usersErrors } from '@assets/errors/users';
+import { gameErrors } from './games.js';
+import { authErrors } from './auth.js';
+import { friendshipsErrors } from './friendships.js';
+import { roomsErrors } from './rooms.js';
+import { usersErrors } from './users.js';
 
 export const errors = {
   ...authErrors,

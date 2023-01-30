@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { RoomsController } from './rooms.controller';
-import { RoomsService } from './rooms.service';
-import { RoomsWsListener } from './ws/rooms.ws-listener';
-import { RoomsWsEmitter } from './ws/rooms.ws-emitter';
-import { SocketNameSpacerService } from '@modules-helpers/global-services/socket-namespaser.service';
-import { EntityManagerModule } from '@modules-helpers/entities-services/entitiy-manager.module';
-import { GlobalServicesModule } from '@modules-helpers/global-services/global-services.module';
-import { GamesModule } from '@modules/games/games.module';
+import { RoomsController } from './rooms.controller.js';
+import { RoomsService } from './rooms.service.js';
+import { RoomsWsListener } from './ws/rooms.ws-listener.js';
+import { RoomsWsEmitter } from './ws/rooms.ws-emitter.js';
+import { SocketNameSpacerService } from '../../modules-helpers/global-services/socket-namespaser.service.js';
+import { EntityManagerModule } from '../../modules-helpers/entities-services/entitiy-manager.module.js';
+import { GlobalServicesModule } from '../../modules-helpers/global-services/global-services.module.js';
+import { GamesModule } from '../games/games.module.js';
 
 @Module({
   imports: [GlobalServicesModule, EntityManagerModule, GamesModule],

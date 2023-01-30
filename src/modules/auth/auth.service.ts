@@ -3,9 +3,9 @@ import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import * as phone from 'phone';
 
-import { PasswordEncoderService } from './password-encoder.service';
-import { UsersManager } from '@modules-helpers/entities-services/users/users.service';
-import { UsersSettingsManager } from '@modules-helpers/entities-services/users-settings/users-settings.service';
+import { PasswordEncoderService } from './password-encoder.service.js';
+import { UsersManager } from '../../modules-helpers/entities-services/users/users.service.js';
+import { UsersSettingsManager } from '../../modules-helpers/entities-services/users-settings/users-settings.service.js';
 
 @Injectable()
 export class AuthService {

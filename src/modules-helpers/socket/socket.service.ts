@@ -1,14 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { debounce } from 'throttle-debounce';
 
-import { USER_ONLINE_STATUSES } from '@enums/index.js';
+import { SocketNameSpacerService } from '../global-services/socket-namespaser.service.js';
+import { RoomsService } from '../../modules/rooms/rooms.service.js';
+import { UsersManager } from '../entities-services/users/users.service.js';
+import { ErrorService } from '../global-services/error-handler.service.js';
 
-import { RoomsService } from '@modules/rooms/rooms.service';
-
-import { SocketNameSpacerService } from '../global-services/socket-namespaser.service';
-import { UsersManager } from '../entities-services/users/users.service';
-import { ErrorService } from '../global-services/error-handler.service';
-import { LOGOUT_TIMEOUT } from '@constants/index.js';
+import { USER_ONLINE_STATUSES } from 'life_shared/enums/index.js';
+import { LOGOUT_TIMEOUT } from 'life_shared/constants/index.js';
 
 @Injectable()
 export class SocketService {

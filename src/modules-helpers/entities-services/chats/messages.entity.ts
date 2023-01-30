@@ -5,9 +5,14 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BaseEntity } from '@assets/base.entity';
-import { Users } from '../users/users.entity';
-import { MESSAGE_RECEIVER_TYPES, MESSAGE_TYPES } from '@enums/index.js';
+
+import { BaseEntity } from '../../../assets/base.entity.js';
+import { Users } from '../users/users.entity.js';
+
+import {
+  MESSAGE_RECEIVER_TYPES,
+  MESSAGE_TYPES,
+} from 'life_shared/enums/index.js';
 
 @Entity('messages10')
 export class Messages extends BaseEntity {

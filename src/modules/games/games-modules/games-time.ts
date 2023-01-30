@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as moment from 'moment/moment';
+import moment from 'moment';
 
 @Injectable()
 export class GamesTime {

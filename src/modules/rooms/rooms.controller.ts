@@ -11,15 +11,14 @@ import {
   Inject,
 } from '@nestjs/common';
 
-import { RoomsService } from './rooms.service';
-import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
-import { CreateRoomDto } from '@assets/dto/createRoom.dto';
-import { User } from '@assets/decorators/user.decorator';
-
-import { IsRoomAdminGuard } from '@assets/guards/rooms/is-room-admin.guard';
-import { RoomBlockedGuard } from '@assets/guards/rooms/is-room-blocked.guard';
-import { PasswordGuard } from '@assets/guards/rooms/password-validation.guard';
-import { CountOfUsersValidationGuard } from '@assets/guards/rooms/count-of-users-validation.guard';
+import { RoomsService } from './rooms.service.js';
+import { JwtAuthGuard } from '../../assets/guards/auth/auth.guard.js';
+import { CreateRoomDto } from '../../assets/dto/createRoom.dto.js';
+import { User } from '../../assets/decorators/user.decorator.js';
+import { IsRoomAdminGuard } from '../../assets/guards/rooms/is-room-admin.guard.js';
+import { RoomBlockedGuard } from '../../assets/guards/rooms/is-room-blocked.guard.js';
+import { PasswordGuard } from '../../assets/guards/rooms/password-validation.guard.js';
+import { CountOfUsersValidationGuard } from '../../assets/guards/rooms/count-of-users-validation.guard.js';
 
 @UseGuards(JwtAuthGuard)
 @Controller('rooms')

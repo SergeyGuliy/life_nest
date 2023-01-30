@@ -1,8 +1,8 @@
 import { Controller, Get, Param, UseGuards, Inject } from '@nestjs/common';
 
-import { UserService } from './user.service';
-import { JwtAuthGuard } from '@assets/guards/auth/auth.guard';
-import { IsUserExistGuard } from '@assets/guards/users/is-user-exist.guard';
+import { UserService } from './user.service.js';
+import { JwtAuthGuard } from '../../assets/guards/auth/auth.guard.js';
+import { IsUserExistGuard } from '../../assets/guards/users/is-user-exist.guard.js';
 
 @Controller('users')
 export class UserController {

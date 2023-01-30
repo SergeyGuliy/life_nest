@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { $mBase } from '@assets/mathjs';
+
+import { $mBase } from '../../../assets/mathjs/index.js';
 
 function generateBasic(price) {
   return +$mBase(price, price / 20, 1);

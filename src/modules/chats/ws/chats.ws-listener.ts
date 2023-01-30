@@ -6,12 +6,12 @@ import {
 import { Inject } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 
-import { ChatsService } from '../chats.service';
-import { SocketNameSpacerService } from '@modules-helpers/global-services/socket-namespaser.service';
+import { ChatsService } from '../chats.service.js';
+import { SocketNameSpacerService } from '../../../modules-helpers/global-services/socket-namespaser.service.js';
+import { ChatsWsEmitter } from './chats.ws-emitter.js';
 
-import { MESSAGE_RECEIVER_TYPES } from '@enums/index.js';
-import { chat_messageToServer } from '@constants/ws/chats.js';
-import { ChatsWsEmitter } from './chats.ws-emitter';
+import { MESSAGE_RECEIVER_TYPES } from 'life_shared/enums/index.js';
+import { chat_messageToServer } from 'life_shared/constants/ws/chats.js';
 
 @WebSocketGateway()
 export class ChatsWsListener {
