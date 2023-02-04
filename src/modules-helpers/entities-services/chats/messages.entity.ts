@@ -1,13 +1,6 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '../../../assets/base.entity.js';
-import { Users } from '../users/users.entity.js';
 
 import {
   MESSAGE_RECEIVER_TYPES,
@@ -33,9 +26,10 @@ export class Messages extends BaseEntity {
   })
   public messageType: MESSAGE_TYPES;
 
-  @ManyToOne(() => Users, (user) => user.messages)
   @JoinColumn()
-  public messageSender: Users;
+  public messageSender: {
+    userId: number;
+  };
 
   @Column({ default: null })
   public messageReceiverRoomId: number;

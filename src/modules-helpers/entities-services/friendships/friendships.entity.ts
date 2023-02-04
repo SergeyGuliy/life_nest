@@ -1,13 +1,6 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '../../../assets/base.entity.js';
-import { Users } from '../users/users.entity.js';
 
 import { FRIENDSHIP_STATUSES } from 'life_shared/enums/index.js';
 
@@ -23,11 +16,13 @@ export class Friendships extends BaseEntity {
   })
   public friendshipsStatus: FRIENDSHIP_STATUSES;
 
-  @ManyToOne(() => Users, (user) => user.friendshipReceiver)
   @JoinColumn()
-  public friendshipReceiver: Users;
+  public friendshipReceiver: {
+    userId: number;
+  };
 
-  @ManyToOne(() => Users, (user) => user.friendshipSender)
   @JoinColumn()
-  public friendshipSender: Users;
+  public friendshipSender: {
+    userId: number;
+  };
 }

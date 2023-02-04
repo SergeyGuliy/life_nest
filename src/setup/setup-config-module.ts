@@ -1,5 +1,5 @@
 import { ConfigModule } from '@nestjs/config';
-import * as Joi from '@hapi/joi';
+import Joi from '@hapi/joi';
 
 export const setupConfigModule = () => {
   return ConfigModule.forRoot({
