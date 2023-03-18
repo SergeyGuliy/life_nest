@@ -9,6 +9,8 @@ export class ChatsWsEmitter {
   private readonly server: Server;
 
   public sendMessageToClient(target, messageData): void {
+    console.log(target);
+    console.log(messageData);
     this.server.to(target).emit(chat_messageToClient, messageData);
   }
 }

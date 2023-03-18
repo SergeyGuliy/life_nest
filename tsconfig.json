@@ -14,8 +14,8 @@
     "moduleResolution": "node",
     "incremental": true,
     "paths": {
-      "@constants/*": ["node_modules/life_shared/constants/*"],
-      "@enums/*": ["node_modules/life_shared/enums/*"],
+      "@constants/*": ["node_modules/life_shared/cjs/constants/*"],
+      "@enums/*": ["node_modules/life_shared/cjs/enums/*"],
       "@assets/*": ["src/assets/*"],
       "@modules/*": ["src/modules/*"],
       "@modules-helpers/*": ["src/modules-helpers/*"]
@@ -28,8 +28,8 @@
     "./node_modules/*",
   ],
   "paths": {
-    "@constants/*": ["node_modules/life_shared/constants/*"],
-    "@enums/*": ["node_modules/life_shared/enums/*"],
+    "@constants/*": ["node_modules/life_shared/cjs/constants/*"],
+    "@enums/*": ["node_modules/life_shared/cjs/enums/*"],
     "@assets/*": ["src/assets/*"],
     "@modules/*": ["src/modules/*"],
     "@modules-helpers/*": ["src/modules-helpers/*"]

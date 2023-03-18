@@ -9,7 +9,9 @@ import {
 import { ErrorService } from '@modules-helpers/global-services/error-handler.service';
 
 import { FriendshipManager } from '@modules-helpers/entities-services/friendships/friendships.service';
-import { FRIENDSHIP_STATUSES } from '../../../../../life_shared/enums';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { FRIENDSHIP_STATUSES } from '@enums/index.js';
 
 export const DeclineIfStatusGuard = (type): Type<CanActivate> => {
   class DeclineIfStatusGuardMixin implements CanActivate {
