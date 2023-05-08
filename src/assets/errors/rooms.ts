@@ -25,4 +25,10 @@ export const roomsErrors = {
       en: 'Room is blocked',
     },
   },
+  roomNotExist: {
+    status: HttpStatus.BAD_REQUEST,
+    locales: {
+      en: 'Room not exist',
+    },
+  },
 };

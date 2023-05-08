@@ -96,10 +96,9 @@ export class RoomsService {
   }
 
   public async getRoomById(roomId) {
+    const roomData = await this.roomsManager.db.findOne(roomId);
     const usersInRoom = await this.usersManager.getUsersInRoom(roomId);
-    const roomData = await this.roomsManager.db.findOne({
-      where: { roomId },
-    });
+
     return {
       ...roomData,
       usersInRoom,

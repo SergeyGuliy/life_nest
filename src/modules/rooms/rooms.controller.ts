@@ -20,6 +20,7 @@ import { IsRoomAdminGuard } from '@assets/guards/rooms/is-room-admin.guard';
 import { RoomBlockedGuard } from '@assets/guards/rooms/is-room-blocked.guard';
 import { PasswordGuard } from '@assets/guards/rooms/password-validation.guard';
 import { CountOfUsersValidationGuard } from '@assets/guards/rooms/count-of-users-validation.guard';
+import { RoomNotExistGuard } from '@assets/guards/rooms/is-room-exists';
 
 @UseGuards(JwtAuthGuard)
 @Controller('rooms')
@@ -34,8 +35,9 @@ export class RoomsController {
   }
 
   @Get(':roomId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoomNotExistGuard)
   async getRoomById(@Param('roomId') roomId: string) {
+    console.log(roomId);
     return await this.roomsService.getRoomById(roomId);
   }
 
@@ -54,6 +56,7 @@ export class RoomsController {
   @Patch(':roomId/join')
   @UseGuards(
     JwtAuthGuard,
+    RoomNotExistGuard,
     RoomBlockedGuard,
     PasswordGuard,
     CountOfUsersValidationGuard,
@@ -63,7 +66,7 @@ export class RoomsController {
   }
 
   @Patch(':roomId/kick-user')
-  @UseGuards(JwtAuthGuard, IsRoomAdminGuard)
+  @UseGuards(JwtAuthGuard, RoomNotExistGuard, IsRoomAdminGuard)
   async kickUserFromRoom(
     @Param('roomId') roomId: number,
     @User() { userId },
@@ -77,7 +80,7 @@ export class RoomsController {
   }
 
   @Patch(':roomId/set-new-admin')
-  @UseGuards(JwtAuthGuard, IsRoomAdminGuard)
+  @UseGuards(JwtAuthGuard, RoomNotExistGuard, IsRoomAdminGuard)
   async setNewRoomAdmin(
     @Param('roomId') roomId: number,
     @User() { userId },
@@ -91,7 +94,7 @@ export class RoomsController {
   }
 
   @Patch(':roomId/toggle-lock-room')
-  @UseGuards(JwtAuthGuard, IsRoomAdminGuard)
+  @UseGuards(JwtAuthGuard, RoomNotExistGuard, IsRoomAdminGuard)
   async toggleLockRoom(
     @Param('roomId') roomId: number,
     @User() { userId },
@@ -101,7 +104,7 @@ export class RoomsController {
   }
 
   @Delete(':roomId/delete-room')
-  @UseGuards(JwtAuthGuard, IsRoomAdminGuard)
+  @UseGuards(JwtAuthGuard, RoomNotExistGuard, IsRoomAdminGuard)
   async deleteRoom(@Param('roomId') roomId: number, @User() { userId }) {
     return await this.roomsService.deleteRoomRequest(+userId, +roomId);
   }
